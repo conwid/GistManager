@@ -1,0 +1,14 @@
+﻿<Window x:Class="GistManager.GistService.Wpf.WpfAuthenticationDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GistManager"
+             xmlns:toolkit="clr-namespace:Microsoft.Toolkit.Win32.UI.Controls.WPF;assembly=Microsoft.Toolkit.Win32.UI.Controls"
+             mc:Ignorable="d" 
+             Loaded="Window_Loaded"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <toolkit:WebView x:Name="webBrowser" />
+    </Grid>
+</Window>

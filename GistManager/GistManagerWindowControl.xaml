@@ -1,0 +1,146 @@
+﻿<UserControl x:Class="GistManager.GistManagerWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+             xmlns:local="clr-namespace:GistManager"
+             xmlns:controls="clr-namespace:GistManager.Controls"             
+             xmlns:behaviors="clr-namespace:GistManager.Behaviors"
+             xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
+             xmlns:converters="clr-namespace:GistManager.Converters"
+             mc:Ignorable="d"             
+             Name="GistManager"                       
+             >
+    <UserControl.Resources>
+        <converters:CommandFailedConverter x:Key="commandFailedConverter" />
+        <converters:BoolsToVisibilityConverter x:Key="boolsToVisibilityConverter" />
+        <converters:StringAggregatorConverter x:Key="stringAggregatorConverter" />
+        <converters:SubstringConverter x:Key="substringConverter" />
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibilityConverter" />
+        <converters:NotZeroToBoolConverter x:Key="notZeroToBoolConverter" />
+        <converters:EmptyStringToVisibilityConverter x:Key="emptyStringToVisibilityConverter" />
+        <styleSelectors:TreeViewItemStyleSelector x:Key="treeViewItemStyleSelector" />
+        <CollectionViewSource x:Key="publicGistsSource" 
+                              Source="{Binding Gists}"                               
+                              behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PublicFilterCommand}"
+                              behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
+        <CollectionViewSource x:Key="privateGistsSource" 
+                              Source="{Binding Gists}"
+                              behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
+                              behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
+        <Style x:Key="toolBarButtonStyle" TargetType="Button" >
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Width" Value="16" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ToolBarTray Background="Transparent" Grid.Row="0" >
+            <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
+                <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
+                    <Image Source="Resources/login.png" Stretch="Uniform" />
+                </Button>
+                <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
+                    <Image Stretch="Uniform">
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAuthenticated}" Value="True">
+                                        <Setter Property="Source" Value="Resources/refresh.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsAuthenticated}" Value="False">
+                                        <Setter Property="Source" Value="Resources/refresh_disabled.png" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Button>
+                <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Image Source="Resources/logout.png" Stretch="Uniform" />
+                </Button>
+            </controls:OverflowlessToolbar>
+        </ToolBarTray>
+        <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
+        </StackPanel>
+        <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
+            <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
+                <TextBox.Template>
+                    <ControlTemplate>
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
+                                <Label Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
+                                       VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" />
+                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="1">
+                                    <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png"  />
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </TextBox.Template>
+            </TextBox>
+            <controls:GistTreeViewDisplay ExpanderHeader="Public gists" 
+                                          ExpanderIsExpanded="True"
+                                          Margin="4,0,4,10"
+                                          ExpanderIsEnabled="{Binding Source={StaticResource publicGistsSource}, Path=Count, Converter={StaticResource notZeroToBoolConverter}}"
+                                          TreeViewItemsSource="{Binding Source={StaticResource publicGistsSource}}"
+                                          Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
+                                          CreateGistCommand="{Binding CreatePublicGistCommand}"
+                                          RemoveGistCommand="{Binding RemoveGistCommand}"
+                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
+            <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
+                                          Margin="4,0,4,10"
+                                          ExpanderIsExpanded="False"
+                                          ExpanderIsEnabled="{Binding Source={StaticResource privateGistsSource}, Path=Count, Converter={StaticResource notZeroToBoolConverter}}"
+                                          TreeViewItemsSource="{Binding Source={StaticResource privateGistsSource}}"
+                                          Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
+                                          CreateGistCommand="{Binding CreatePrivateGistCommand}"
+                                          RemoveGistCommand="{Binding RemoveGistCommand}"
+                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
+                <LineBreak />
+                <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
+           </TextBlock>
+        </StackPanel>
+        <StatusBar Grid.Row="3">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem Grid.Column="0" Margin="5,0">
+                <TextBlock Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10,0">
+                <ProgressBar Height="2" Foreground="Blue" IsIndeterminate="True"
+                             Visibility="{Binding AsyncOperationStatusManager.CurrentOperation.Execution.IsNotCompleted, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</UserControl>

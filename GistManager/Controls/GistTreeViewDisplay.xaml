@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="GistManager.Controls.GistTreeViewDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GistManager.Controls"
+             mc:Ignorable="d" 
+             xmlns:editable="clr-namespace:GistManager.Controls.EditableTextBlock"             
+             xmlns:viewmodels="clr-namespace:GistManager.ViewModels"     
+             xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
+             xmlns:converters="clr-namespace:GistManager.Converters"
+             xmlns:directDragTree="clr-namespace:GistManager.Controls.DirectDragTree"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converters:SubstringConverter x:Key="substringConverter" />
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+        <styleSelectors:TreeViewItemStyleSelector x:Key="treeViewItemStyleSelector" />
+        <SolidColorBrush x:Key="dragEnterBrush" Color="Blue" />
+        <SolidColorBrush x:Key="dragLeaveBrush" Color="Transparent" />
+    </UserControl.Resources>
+    <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
+              IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
+              IsEnabled="{Binding ExpanderIsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+        <directDragTree:DirectDragTreeView ItemsSource="{Binding TreeViewItemsSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
+                  ItemContainerStyleSelector="{StaticResource treeViewItemStyleSelector}"                       
+                  MouseMove="TreeView_MouseMove"      
+                  DragEnter="TreeView_DragEnter"                                   
+                  DragOver="TreeView_DragOver"
+                  DragLeave="DirectDragTreeView_DragLeave"
+                  Drop="TreeView_Drop"                      
+                  AllowDrop="True"
+                  KeyDown="TreeView_KeyDown"       
+                  BorderThickness="0"
+            >
+            <directDragTree:DirectDragTreeView.Resources>
+                <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />
+                <Image x:Key="copyUrlImage" Source="..\Resources\copyurl.png" x:Shared="False" />
+                <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" />
+                <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" />
+                <Storyboard x:Key="dragEnterStoryBoard">
+                    <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
+                </Storyboard>
+                <Storyboard x:Key="dragLeaveStoryBoard">
+                    <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:000000.1" />
+                </Storyboard>
+                <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="..\Resources\gist.png" Stretch="Fill" Margin="5,0" />
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="..\Resources\gistfile.png" Stretch="Fill" Margin="5,0" />
+                        <editable:EditableTextBlock Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
+                    </StackPanel>
+                </DataTemplate>
+                <Style TargetType="ToolTip">
+                    <Style.Triggers>
+                        <Trigger Property="Content" Value="{x:Static sys:String.Empty}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="Content" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                <Style TargetType="{x:Type directDragTree:DirectDragTreeViewItem}" x:Key="gistStyle">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="directDragTree:DirectDragTreeViewItem.DirectDragEnter">
+                            <BeginStoryboard Storyboard="{StaticResource dragEnterStoryBoard}" />
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="directDragTree:DirectDragTreeViewItem.DirectDragLeave">
+                            <BeginStoryboard Storyboard="{StaticResource dragLeaveStoryBoard}" />
+                        </EventTrigger>
+                    </Style.Triggers>
+                    <Setter Property="ToolTip" Value="{Binding Description}" />
+                    <Setter Property="IsEnabled" Value="True" />
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
+                                <MenuItem Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
+                                <MenuItem Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
+                                    <MenuItem.ItemTemplate>
+                                        <DataTemplate>
+                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
+                                                <TextBlock>
+                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </RadioButton>
+                                        </DataTemplate>
+                                    </MenuItem.ItemTemplate>
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                <Style TargetType="{x:Type directDragTree:DirectDragTreeViewItem}" x:Key="gistFileStyle">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="directDragTree:DirectDragTreeViewItem.DirectDragEnter">
+                            <BeginStoryboard Storyboard="{StaticResource dragEnterStoryBoard}" />
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="directDragTree:DirectDragTreeViewItem.DirectDragLeave">
+                            <BeginStoryboard Storyboard="{StaticResource dragLeaveStoryBoard}" />
+                        </EventTrigger>
+                    </Style.Triggers>
+                    <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="Copy File RawURL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistFileUrlCommand}" />
+                                <MenuItem Header="Delete file" Icon="{DynamicResource deleteFileImage}" Command="{Binding DeleteGistFileCommand}" />
+                                <MenuItem Header="Checkout version" ItemsSource="{Binding History}" Icon="{DynamicResource checkoutImage}">
+                                    <MenuItem.ItemTemplate>
+                                        <DataTemplate>
+                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
+                                                <TextBlock>
+                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </RadioButton>
+                                        </DataTemplate>
+                                    </MenuItem.ItemTemplate>
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="{x:Type MenuItem}">
+                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </directDragTree:DirectDragTreeView.Resources>
+        </directDragTree:DirectDragTreeView>
+    </Expander>
+</UserControl>
