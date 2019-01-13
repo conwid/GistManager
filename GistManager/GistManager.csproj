@@ -71,6 +71,11 @@
     <Compile Include="Converters\EmptyStringToVisibilityConverter.cs" />
     <Compile Include="Converters\NotZeroToBoolConverter.cs" />
     <Compile Include="Converters\StringAggregatorConverter.cs" />
+    <Compile Include="GistManagerWindowPackage1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GistManagerWindowPackage.vsct</DependentUpon>
+    </Compile>
     <Compile Include="Mvvm\Commands\IErrorHandler.cs" />
     <Compile Include="ErrorHandling\WpfErrorHandler.cs" />
     <Compile Include="GistService\AuthenticationHandlerBase.cs" />
@@ -155,6 +160,8 @@
     <Resource Include="Resources\refresh_disabled.png" />
     <VSCTCompile Include="GistManagerWindowPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>GistManagerWindowPackage1.cs</LastGenOutput>
     </VSCTCompile>
     <Resource Include="Resources\checkout.png" />
     <Resource Include="Resources\copyurl.png" />

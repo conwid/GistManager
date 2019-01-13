@@ -37,15 +37,10 @@ namespace GistManager
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(GistManagerWindow))]
-    [Guid(GistManagerWindowPackage.PackageGuidString)]
+    [Guid(PackageGuids.guidGistManagerWindowPackageString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class GistManagerWindowPackage : AutofacEnabledAsyncPackage
-    {
-        /// <summary>
-        /// GistManagerWindowPackage GUID string.
-        /// </summary>
-        public const string PackageGuidString = "3ad644d8-5bf1-4188-b7f8-3be7a2fad242";
-
+    {        
         /// <summary>
         /// Initializes a new instance of the <see cref="GistManagerWindowPackage"/> class.
         /// </summary>
