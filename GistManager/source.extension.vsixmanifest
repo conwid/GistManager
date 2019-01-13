@@ -7,6 +7,7 @@
         <MoreInfo>https://github.com/conwid/GistManager</MoreInfo>
         <License>LICENSE.txt</License>
         <GettingStartedGuide>https://github.com/conwid/GistManager</GettingStartedGuide>
+        <Icon>gistmanager_icon.png</Icon>
         <Tags>Gist, Github</Tags>
     </Metadata>
     <Installation>
