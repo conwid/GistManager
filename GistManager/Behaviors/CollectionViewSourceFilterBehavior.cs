@@ -20,11 +20,8 @@ namespace GistManager.Behaviors
 
         private static void OnFilterCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var collectionViewSource = d as CollectionViewSource;
-            if (collectionViewSource == null)
-            {
+            if (!(d is CollectionViewSource collectionViewSource))
                 return;
-            }
 
             if (e.NewValue != null)
             {
@@ -51,11 +48,8 @@ namespace GistManager.Behaviors
 
         private static void OnFilterTextBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var collectionViewSource = d as CollectionViewSource;
-            if (collectionViewSource == null)
-            {
+            if (!(d is CollectionViewSource collectionViewSource))
                 return;
-            }
 
             if (e.NewValue != null)
             {

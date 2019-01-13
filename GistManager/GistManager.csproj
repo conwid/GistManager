@@ -58,7 +58,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AutofacEnabledAsyncPackage.cs" />
-    <Compile Include="Behaviors\WindowLoadedBehavior.cs" />
     <Compile Include="BusinessServicesModule.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeView.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeViewItem.cs" />

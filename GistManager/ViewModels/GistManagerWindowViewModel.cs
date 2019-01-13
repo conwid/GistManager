@@ -59,8 +59,7 @@ namespace GistManager.ViewModels
         public ICommand CreatePrivateGistCommand { get; }
         public ICommand CreateGistFileCommand { get; }
         public RelayCommand<GistViewModel> RemoveGistCommand { get; }
-        public ICommand LoginCommand { get; }
-        public ICommand LoadedCommand { get; }
+        public ICommand LoginCommand { get; }        
         public ICommand RefreshCommand { get; }
         public ICommand LogoutCommand { get; }
         #endregion
