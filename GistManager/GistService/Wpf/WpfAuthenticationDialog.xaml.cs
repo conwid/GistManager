@@ -32,7 +32,7 @@ namespace GistManager.GistService.Wpf
 
         private void webBrowser_NavigationCompleted(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationCompletedEventArgs e)
         {
-            if (e.Uri.AbsoluteUri.StartsWith("http://vsgistintegration/authResult"))
+            if (e.Uri.AbsoluteUri.StartsWith(Constants.RedirectUri))
             {
                 if (e.Uri.AbsoluteUri.Contains("code="))
                 {
