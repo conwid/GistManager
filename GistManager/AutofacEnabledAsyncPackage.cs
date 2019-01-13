@@ -46,8 +46,6 @@ namespace GistManager
             {
                 container?.Dispose();
             }
-            // HACK: When disposing, exceptions are swallowed
-            // Container is only disposed when the app is disposed
             catch { }
             finally
             {
