@@ -1,7 +1,9 @@
 # GistManager extension
 
 This is a Visual Studio extension that let's you intuitively and comfortably manage your Github gists. 
+
 You can download the extension from the Visual Studio MarketPlace:
+
 You can check out my blog on the process of creating the extension:
 
 ## Contributing
