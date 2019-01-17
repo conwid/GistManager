@@ -28,7 +28,7 @@ namespace GistManager.GistService
             {
                 return new TokenResult(false);
             }
-            var requestUri = new Uri($"https://github.com/login/oauth/access_token?client_id={Constants.ClientId}&client_secret={Constants.ClientSecret}&code={authenticationResult.AuthenticationCode}");
+            var requestUri = new Uri($"https://github.com/login/oauth/access_token?client_id={ClientInfo.ClientId}&client_secret={ClientInfo.ClientSecret}&code={authenticationResult.AuthenticationCode}");
             using (var httpClient = this.CreateHttpClient())
             using (var response = await httpClient.PostAsync(requestUri, null))
             {

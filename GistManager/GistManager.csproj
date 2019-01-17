@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="AutofacEnabledAsyncPackage.cs" />
     <Compile Include="BusinessServicesModule.cs" />
+    <Compile Include="ClientInfo.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeView.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeViewItem.cs" />
     <Compile Include="Controls\GistTreeViewDisplay.xaml.cs">
