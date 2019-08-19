@@ -10,6 +10,19 @@ You can check out my blog on the process of creating the extension:
 
 If you have any ideas or requests, feel free to create an issue or submit a PR.
 
+The file ClientInfo.cs is intentionally missing from the project, because it contains sensitive information (I know there are better ways to handle this, but for now it suits my purposes; that can be one of the PRs :) ). If you want to build your code, you first have to register your own Github app, then add the ClientInfo.cs with the following structure (and don't forget NOT to commit it :) ):
+
+```csharp
+namespace GistManager
+{
+    public static class ClientInfo
+    {
+        public const string ClientId = "your app's client id";
+        public const string ClientSecret = "your app's client secret";
+    }
+}
+```
+
 ## Features
 
 List and search your private and public gists:
