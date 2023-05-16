@@ -1,3 +1,6 @@
+# The Gist manager has been updated for VS 2022 with WebView2! Repository is under (slow) maintenance again!
+
+
 # GistManager extension
 
 This is a Visual Studio extension that let's you intuitively and comfortably manage your Github gists. 
