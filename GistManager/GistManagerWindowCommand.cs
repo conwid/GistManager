@@ -1,20 +1,32 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.ComponentModel.Design;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
 namespace GistManager
-{    
+{
+    /// <summary>
+    /// Command handler
+    /// </summary>
     internal sealed class GistManagerWindowCommand
     {
+        /// <summary>
+        /// Command ID.
+        /// </summary>
         public const int CommandId = 0x0100;
 
-        public static readonly Guid CommandSet = new Guid("201a26b6-c0e5-44c5-9d0f-840f00a17d1b");
+        /// <summary>
+        /// Command menu group (command set GUID).
+        /// </summary>
+        public static readonly Guid CommandSet = new Guid("6f2acbca-125f-4437-aac9-9293ba6f9f8d");
 
+        /// <summary>
+        /// VS Package that provides this command, not null.
+        /// </summary>
         private readonly AsyncPackage package;
 
         /// <summary>
@@ -33,9 +45,25 @@ namespace GistManager
             commandService.AddCommand(menuItem);
         }
 
-        public static GistManagerWindowCommand Instance { get; private set; }
+        /// <summary>
+        /// Gets the instance of the command.
+        /// </summary>
+        public static GistManagerWindowCommand Instance
+        {
+            get;
+            private set;
+        }
 
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider => package;        
+        /// <summary>
+        /// Gets the service provider from the owner package.
+        /// </summary>
+        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        {
+            get
+            {
+                return this.package;
+            }
+        }
 
         /// <summary>
         /// Initializes the singleton instance of the command.
@@ -58,19 +86,14 @@ namespace GistManager
         /// <param name="e">The event args.</param>
         private void Execute(object sender, EventArgs e)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            // Get the instance number 0 of this tool window. This window is single instance so this instance
-            // is actually the only one.
-            // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(GistManagerWindow), 0, true);
-            if ((null == window) || (null == window.Frame))
+            this.package.JoinableTaskFactory.RunAsync(async delegate
             {
-                throw new NotSupportedException("Cannot create tool window");
-            }
-
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                ToolWindowPane window = await this.package.ShowToolWindowAsync(typeof(GistManagerWindow), 0, true, this.package.DisposalToken);
+                if ((null == window) || (null == window.Frame))
+                {
+                    throw new NotSupportedException("Cannot create tool window");
+                }
+            });
         }
     }
 }

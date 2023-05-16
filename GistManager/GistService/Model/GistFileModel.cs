@@ -24,7 +24,7 @@ namespace GistManager.GistService.Model
             get
             {
                 var data = Url.Split('/');
-                return data[data.Length - 2];
+                return data[data.Length - 1];
             }
         }
     }

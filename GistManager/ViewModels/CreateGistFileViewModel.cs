@@ -1,13 +1,7 @@
 ﻿using GistManager.GistService;
-using GistManager.GistService.Model;
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
-using Octokit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GistManager.ViewModels

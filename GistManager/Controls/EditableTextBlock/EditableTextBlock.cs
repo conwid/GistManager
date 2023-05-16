@@ -67,10 +67,6 @@ namespace GistManager.Controls.EditableTextBlock
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F2)
-            {
-                IsInEditMode = true;
-            }
             if (e.Key == Key.Enter)
             {
                 var layer = AdornerLayer.GetAdornerLayer(this);

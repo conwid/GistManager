@@ -1,20 +1,14 @@
-﻿using GistManager.ErrorHandling;
-using GistManager.GistService;
+﻿using GistManager.GistService;
 using GistManager.GistService.Model;
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
-using Octokit;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace GistManager.ViewModels

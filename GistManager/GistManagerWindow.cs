@@ -1,10 +1,9 @@
-﻿namespace GistManager
-{
-    using System;
-    using System.Runtime.InteropServices;
-    using GistManager.ViewModels;
-    using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
+using System;
+using System.Runtime.InteropServices;
 
+namespace GistManager
+{
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -16,7 +15,7 @@
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid("56fb8899-6f9c-4eab-8ccd-c1c6ec0f451e")]
+    [Guid("dc4d2401-3326-434e-9204-24434652b484")]
     public class GistManagerWindow : ToolWindowPane
     {
         /// <summary>

@@ -1,8 +1,6 @@
 ﻿using GistManager.GistService.Model;
 using GistManager.Mvvm;
-using GistManager.Mvvm.Commands.Async.AsyncCommand;
 using System;
-using System.Threading.Tasks;
 
 namespace GistManager.ViewModels
 {

@@ -21,7 +21,6 @@
         <converters:SubstringConverter x:Key="substringConverter" />
         <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
         <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibilityConverter" />
-        <converters:NotZeroToBoolConverter x:Key="notZeroToBoolConverter" />
         <converters:EmptyStringToVisibilityConverter x:Key="emptyStringToVisibilityConverter" />
         <styleSelectors:TreeViewItemStyleSelector x:Key="treeViewItemStyleSelector" />
         <CollectionViewSource x:Key="publicGistsSource" 
@@ -100,7 +99,7 @@
             <controls:GistTreeViewDisplay ExpanderHeader="Public gists" 
                                           ExpanderIsExpanded="True"
                                           Margin="4,0,4,10"
-                                          ExpanderIsEnabled="{Binding Source={StaticResource publicGistsSource}, Path=Count, Converter={StaticResource notZeroToBoolConverter}}"
+                                          ExpanderIsEnabled="True"
                                           TreeViewItemsSource="{Binding Source={StaticResource publicGistsSource}}"
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePublicGistCommand}"
@@ -109,7 +108,7 @@
             <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
                                           Margin="4,0,4,10"
                                           ExpanderIsExpanded="False"
-                                          ExpanderIsEnabled="{Binding Source={StaticResource privateGistsSource}, Path=Count, Converter={StaticResource notZeroToBoolConverter}}"
+                                          ExpanderIsEnabled="True"
                                           TreeViewItemsSource="{Binding Source={StaticResource privateGistsSource}}"
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePrivateGistCommand}"

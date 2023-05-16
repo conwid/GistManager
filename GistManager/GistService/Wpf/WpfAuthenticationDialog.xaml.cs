@@ -1,42 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
 
 namespace GistManager.GistService.Wpf
 {
     public partial class WpfAuthenticationDialog : Window
     {
-        private readonly Uri loginUri;
-        public WpfAuthenticationDialog(Uri uri)
+        private readonly string loginUri;
+        public WpfAuthenticationDialog(string uri)
         {
             InitializeComponent();
             loginUri = uri;
-            webBrowser.NavigationCompleted += webBrowser_NavigationCompleted;
+            webBrowser.NavigationCompleted += WebBrowser_NavigationCompleted;
         }
 
-        public string AuthCode { get; private set; }
-
-        private void webBrowser_NavigationCompleted(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationCompletedEventArgs e)
+        private void WebBrowser_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
-            if (e.Uri.AbsoluteUri.StartsWith(Constants.RedirectUri))
+            if (webBrowser.Source.AbsoluteUri.StartsWith(Constants.RedirectUri))
             {
-                if (e.Uri.AbsoluteUri.Contains("code="))
+                if (webBrowser.Source.AbsoluteUri.Contains("code="))
                 {
-                    this.AuthCode = e.Uri.AbsoluteUri.Split(new[] { "code=" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                    this.AuthCode = webBrowser.Source.AbsoluteUri.Split(new[] { "code=" }, StringSplitOptions.RemoveEmptyEntries)[1];
                     this.DialogResult = true;
                 }
                 else
@@ -46,14 +31,19 @@ namespace GistManager.GistService.Wpf
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        public string AuthCode { get; private set; }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.webBrowser.Navigate(loginUri);
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GistManager");
+            this.webBrowser.CreationProperties = new Microsoft.Web.WebView2.Wpf.CoreWebView2CreationProperties { UserDataFolder = path };
+            await this.webBrowser.EnsureCoreWebView2Async();
+            this.webBrowser.CoreWebView2.Navigate(loginUri);
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            this.webBrowser.NavigationCompleted -= webBrowser_NavigationCompleted;
+            this.webBrowser.NavigationCompleted -= WebBrowser_NavigationCompleted;
             base.OnClosing(e);
         }
     }

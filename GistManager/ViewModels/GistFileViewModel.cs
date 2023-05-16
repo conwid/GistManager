@@ -1,19 +1,11 @@
-﻿using GistManager.ErrorHandling;
-using GistManager.GistService;
+﻿using GistManager.GistService;
 using GistManager.GistService.Model;
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
-using Octokit;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -63,7 +55,7 @@ namespace GistManager.ViewModels
             {
                 var originalFileName = fileName;
                 SetProperty(ref fileName, value);
-                if (!Refreshing)
+                if (!Refreshing && !string.IsNullOrWhiteSpace(originalFileName))
                 {
                     OnFileNameChangedAsync(originalFileName, fileName);
                 }
@@ -111,7 +103,7 @@ namespace GistManager.ViewModels
             get
             {
                 var data = Url.Split('/');
-                return data[data.Length - 2];
+                return data[data.Length - 1];
             }
         }
 
