@@ -104,7 +104,8 @@
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePublicGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
-                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
+                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"
+                                          />
             <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
                                           Margin="4,0,4,10"
                                           ExpanderIsExpanded="False"

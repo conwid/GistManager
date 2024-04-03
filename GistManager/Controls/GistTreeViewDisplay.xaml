@@ -21,7 +21,8 @@
     </UserControl.Resources>
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
-              IsEnabled="{Binding ExpanderIsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
+              IsEnabled="{Binding ExpanderIsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
+              Foreground="AliceBlue">
         <directDragTree:DirectDragTreeView ItemsSource="{Binding TreeViewItemsSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
                   ItemContainerStyleSelector="{StaticResource treeViewItemStyleSelector}"                       
                   MouseMove="TreeView_MouseMove"      

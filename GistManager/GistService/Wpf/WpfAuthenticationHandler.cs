@@ -12,6 +12,7 @@ namespace GistManager.GistService.Wpf
     {
         public WpfAuthenticationHandler(HttpClient httpClient) : base(httpClient)
         {
+
         }
 
         protected override AuthenticationResult GetAuthenticationCode()
