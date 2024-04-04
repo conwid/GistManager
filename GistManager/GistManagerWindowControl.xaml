@@ -128,9 +128,9 @@
         <StackPanel x:Name="gistDetails"  Grid.Row="2">
             <TextBlock x:Name="ParentGistName"></TextBlock>
             <TextBlock x:Name="ParentGistDescription"></TextBlock>
-            <TextBlock x:Name="GistName"></TextBlock>
+            <TextBlock x:Name="GistFilename"></TextBlock>
             <TextBlock x:Name="GistDescription"></TextBlock>
-            <TextBlock x:Name="Code"></TextBlock>
+            <TextBlock x:Name="GistCode"></TextBlock>
         </StackPanel>
         
         <StackPanel x:Name="errorPanel" Grid.Row="3" >

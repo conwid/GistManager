@@ -102,12 +102,17 @@ namespace GistManager.Controls.EditableTextBlock
         {
             if (e.ChangedButton == MouseButton.Middle)
             {
-                var dave = Helpers.FindParentOfType<GistManagerWindowControl>(this);
+                GistManagerWindowControl mainForm = Helpers.FindParentOfType<GistManagerWindowControl>(this);
                 var stan = (this.DataContext as DirectDragTreeViewItem);
 
                 GistFileViewModel gistFileVM = this.DataContext as GistFileViewModel;
                 GistFileModel gistParentFile = gistFileVM.GistFile;
 
+                mainForm.ParentGistName.Text = gistParentFile.Name;
+                mainForm.ParentGistDescription.Text = "desc";
+                mainForm.GistFilename.Text = gistFileVM.FileName;
+                mainForm.GistDescription.Text = "desc";
+                mainForm.GistCode.Text = gistFileVM.Content;
                 //dave.GistName.Text = gistFileVM.GistFile.Name;
             }
 
