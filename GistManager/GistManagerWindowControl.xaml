@@ -12,8 +12,7 @@
              xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
              xmlns:converters="clr-namespace:GistManager.Converters"
              mc:Ignorable="d"             
-             Name="GistManager"                       
-             >
+             Name="GistManager">
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
         <converters:BoolsToVisibilityConverter x:Key="boolsToVisibilityConverter" />
