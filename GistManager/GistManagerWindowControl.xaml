@@ -32,8 +32,8 @@
                               behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
         <Style x:Key="toolBarButtonStyle" TargetType="Button" >
-            <Setter Property="Height" Value="16" />
-            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Width" Value="24" />
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -45,12 +45,12 @@
         </Grid.RowDefinitions>
         <ToolBarTray Background="Transparent" Grid.Row="0" >
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
-                <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
-                    <Image Source="Resources/login.png" Stretch="Uniform" />
+                <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False">
+                    <Image Source="Resources/login.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" />
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
-                    <Image Stretch="Uniform">
+                    <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant">
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Style.Triggers>
@@ -67,15 +67,19 @@
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Image Source="Resources/logout.png" Stretch="Uniform" />
-                </Button>
+                    <Image Source="Resources/logout.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button >
+                <ToggleButton x:Name="DarkModeToggleButton"  Width="24" Height="24" Checked="ToggleButton_Checked" 
+                              ToolTip="Toggle Dark Mode" Unchecked="ToggleButton_Unchecked" Focusable="False">
+                    <Image Source="Resources/darktheme.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </ToggleButton>
             </controls:OverflowlessToolbar>
         </ToolBarTray>
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
-            <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
+            <TextBox Name="SearchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
                 <TextBox.Template>
                     <ControlTemplate>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
@@ -86,10 +90,10 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
-                                <Label Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
-                                       VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" />
-                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="1">
-                                    <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png"  />
+                                <Label x:Name="searchLabel" Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
+                                       VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" Loaded="searchLabel_Loaded" />
+                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2">
+                                    <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png" RenderOptions.BitmapScalingMode="Fant" />
                                 </Border>
                             </Grid>
                         </Border>
@@ -123,21 +127,24 @@
                 <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
            </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="3" x:Name="StatusBar">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0" Margin="5,0">
-                <TextBlock Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
+            <Image x:Name="StatusBarImage" Width="0" Height="24" Source="Resources/exclamationpoint.png" >                
+            </Image>
+            <StatusBarItem Grid.Column="1" Margin="5,0">
+                <TextBlock x:Name="StatusBarLabal" Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10,0">
+            <StatusBarItem Grid.Column="2" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10,0">
                 <ProgressBar Height="2" Foreground="Blue" IsIndeterminate="True"
                              Visibility="{Binding AsyncOperationStatusManager.CurrentOperation.Execution.IsNotCompleted, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
             </StatusBarItem>

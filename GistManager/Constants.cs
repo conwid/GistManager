@@ -12,6 +12,6 @@ namespace GistManager
         public const string ProductHeaderValue = "GistManagerForVsByConwid";
         public const string UserAgentHeaderValue = "GistManagerForVsByConwid";
         public const string AcceptHeaderValue = "application/json";
-        public const string RedirectUri = "https://dotnetfalcon.com/gistmanagerredirect";        
+        public const string RedirectUri = "https://stigzler.github.io/";        
     }
 }

@@ -4,12 +4,23 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Data;
 using System.Linq;
+using GistManager.Utils;
+using System.Windows.Media;
 
 namespace GistManager.Controls.EditableTextBlock
 {
     // https://www.codeproject.com/articles/72544/editable-text-block-in-wpf
     public class EditableTextBlock : TextBlock
     {
+        public EditableTextBlock()
+        {
+            if (SystemConfiguraiton.DarkModeSelected())
+            {
+                this.Background = new SolidColorBrush(Color.FromArgb(00, 32, 32, 32));
+                this.Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
+            }
+        }
+
         private EditableTextBlockAdorner adorner;
 
         public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register("MaxLength", typeof(int), typeof(EditableTextBlock), new UIPropertyMetadata(0));

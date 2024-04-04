@@ -1,22 +1,16 @@
 ﻿using GistManager.Controls.DirectDragTree;
 using GistManager.Mvvm.Commands.GistCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
+using GistManager.Utils;
 using GistManager.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.Win32;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace GistManager.Controls
 {
@@ -26,6 +20,15 @@ namespace GistManager.Controls
         public GistTreeViewDisplay()
         {
             InitializeComponent();
+
+            int res = (int)Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "SystemUsesLightTheme", -1);
+
+            if (SystemConfiguraiton.DarkModeSelected())
+            {
+                Expander.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+                TreeView.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+                TreeView.Foreground = new SolidColorBrush(Color.FromArgb(255, 236, 236, 236));
+            }
         }
 
         #region dependency properties
@@ -151,7 +154,7 @@ namespace GistManager.Controls
         }
         #endregion
 
-        private bool CanHandleDrag(DragEventArgs e) => 
+        private bool CanHandleDrag(DragEventArgs e) =>
             e.Data.GetDataPresent(DataFormats.UnicodeText) && !e.Data.GetDataPresent(ProprietaryDragFormat);
         private void DragInternal(DragEventArgs e)
         {
@@ -238,5 +241,24 @@ namespace GistManager.Controls
         }
         private void DirectDragTreeView_DragLeave(object sender, DragEventArgs e) => RaiseDirectEventForCurrentTreeViewItem(DirectDragTreeViewItem.DirectDragLeaveEvent, e.OriginalSource);
 
+        private void TextBlock_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Hacky, but couldn't get to the GistItem via X:name due to it being in a DataTemplate
+            if (SystemConfiguraiton.DarkModeSelected())
+            {
+                ((TextBlock)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
+            }
+        }
+
+        private void Expander_LostFocus(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void TreeView_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("TreeView_LostFocus");
+        }
     }
 }
+

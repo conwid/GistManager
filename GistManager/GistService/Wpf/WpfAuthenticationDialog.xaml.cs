@@ -1,6 +1,8 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace GistManager.GistService.Wpf
@@ -11,18 +13,28 @@ namespace GistManager.GistService.Wpf
         public WpfAuthenticationDialog(string uri)
         {
             InitializeComponent();
+
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            Height = 800;
+            Width = 600;
+
             loginUri = uri;
+
             webBrowser.NavigationCompleted += WebBrowser_NavigationCompleted;
         }
 
-        private void WebBrowser_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        private async void WebBrowser_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
             if (webBrowser.Source.AbsoluteUri.StartsWith(Constants.RedirectUri))
             {
                 if (webBrowser.Source.AbsoluteUri.Contains("code="))
                 {
                     this.AuthCode = webBrowser.Source.AbsoluteUri.Split(new[] { "code=" }, StringSplitOptions.RemoveEmptyEntries)[1];
+
+                    await Task.Run(() => { Thread.Sleep(2000); });
+
                     this.DialogResult = true;
+
                 }
                 else
                 {

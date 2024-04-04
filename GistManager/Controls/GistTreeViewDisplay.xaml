@@ -22,7 +22,7 @@
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
               IsEnabled="{Binding ExpanderIsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"
-              Foreground="AliceBlue">
+              x:Name="Expander" LostFocus="Expander_LostFocus">
         <directDragTree:DirectDragTreeView ItemsSource="{Binding TreeViewItemsSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
                   ItemContainerStyleSelector="{StaticResource treeViewItemStyleSelector}"                       
                   MouseMove="TreeView_MouseMove"      
@@ -33,6 +33,8 @@
                   AllowDrop="True"
                   KeyDown="TreeView_KeyDown"       
                   BorderThickness="0"
+                  x:Name="TreeView" LostFocus="TreeView_LostFocus"
+                                           
             >
             <directDragTree:DirectDragTreeView.Resources>
                 <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />
@@ -45,16 +47,21 @@
                 <Storyboard x:Key="dragLeaveStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Transparent" Duration="0:0:000000.1" />
                 </Storyboard>
+                <!-- Style the inactive selection the same as active -->
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
+                     Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
+                     Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="..\Resources\gist.png" Stretch="Fill" Margin="5,0" />
-                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="..\Resources\gistfile.png" Stretch="Fill" Margin="5,0" />
-                        <editable:EditableTextBlock Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
+                        <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
                 <Style TargetType="ToolTip">

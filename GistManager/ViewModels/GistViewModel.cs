@@ -29,7 +29,7 @@ namespace GistManager.ViewModels
             Files = new ObservableRangeCollection<GistFileViewModel>();
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
             DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager,errorHandler) { ExecutionInfo = "Deleting gist" };
-            CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
+            CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);            
         }
 
         public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
