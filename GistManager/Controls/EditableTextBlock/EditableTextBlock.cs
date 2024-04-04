@@ -1,5 +1,9 @@
-﻿using GistManager.Utils;
+﻿using GistManager.Controls.DirectDragTree;
+using GistManager.GistService.Model;
+using GistManager.Utils;
+using GistManager.ViewModels;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -99,7 +103,12 @@ namespace GistManager.Controls.EditableTextBlock
             if (e.ChangedButton == MouseButton.Middle)
             {
                 var dave = Helpers.FindParentOfType<GistManagerWindowControl>(this);
+                var stan = (this.DataContext as DirectDragTreeViewItem);
 
+                GistFileViewModel gistFileVM = this.DataContext as GistFileViewModel;
+                GistFileModel gistParentFile = gistFileVM.GistFile;
+
+                dave.GistName.Text = gistFileVM.GistFile.Name;
             }
 
 
