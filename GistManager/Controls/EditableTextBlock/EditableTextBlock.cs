@@ -73,7 +73,7 @@ namespace GistManager.Controls.EditableTextBlock
             }
         }
 
-        private void TextBoxLostFocus(object sender, RoutedEventArgs e) => IsInEditMode = false;        
+        private void TextBoxLostFocus(object sender, RoutedEventArgs e) => IsInEditMode = false;
 
         private void TextBoxKeyUp(object sender, KeyEventArgs e)
         {
@@ -96,6 +96,13 @@ namespace GistManager.Controls.EditableTextBlock
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            if (e.ChangedButton == MouseButton.Middle)
+            {
+                var dave = Helpers.FindParentOfType<GistManagerWindowControl>(this);
+
+            }
+
+
             if (e.ClickCount == 2)
             {
                 IsInEditMode = true;

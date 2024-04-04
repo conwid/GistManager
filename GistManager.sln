@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GistManager", "GistManager\GistManager.csproj", "{FC83F869-6333-4D64-8EAE-77517127816C}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Dev", "Dev\Dev.shproj", "{6A78F72F-B835-4098-A4A4-D5348431CDEB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,5 +35,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9E63F9BB-2201-4899-870C-23B4C3B7B288}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Dev\Dev.projitems*{6a78f72f-b835-4098-a4a4-d5348431cdeb}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

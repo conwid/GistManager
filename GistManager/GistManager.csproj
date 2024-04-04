@@ -121,6 +121,7 @@
     </Compile>
     <Compile Include="StyleSelectors\TreeViewItemStyleSelector.cs" />
     <Compile Include="Utils\FuncEqualityComparer`2.cs" />
+    <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Utils\SystemConfiguraitons.cs" />
     <Compile Include="ViewModels\CreateGistFileViewModel.cs" />
     <Compile Include="ViewModels\CreateGistViewModel.cs" />
