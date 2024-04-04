@@ -12,7 +12,6 @@ namespace GistManager.Controls.DirectDragTree
     {       
         protected override DependencyObject GetContainerForItemOverride() => new DirectDragTreeViewItem();
         protected override bool IsItemItsOwnContainerOverride(object item) => item is DirectDragTreeViewItem;
-
     }
 }
 

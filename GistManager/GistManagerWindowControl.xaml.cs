@@ -29,10 +29,10 @@ namespace GistManager
             DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
             if (SystemConfiguraiton.DarkModeSelected())
             {
-                SearchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246,246,246));
-                SearchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24,24,24));
-                StatusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-                StatusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40,40,40));
+                searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246,246,246));
+                searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24,24,24));
+                statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
+                statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40,40,40));
             }
             //LogInButton.Focusable = false;
             //LogInButton.Focusable = true;

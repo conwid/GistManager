@@ -84,7 +84,7 @@ namespace GistManager
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
-        private async void Execute(object sender, EventArgs e)
+        private void Execute(object sender, EventArgs e)
         {
             this.package.JoinableTaskFactory.RunAsync(async delegate
             {

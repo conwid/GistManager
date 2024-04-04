@@ -78,7 +78,7 @@
             <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
-            <TextBox Name="SearchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
+            <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
                 <TextBox.Template>
                     <ControlTemplate>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
@@ -107,8 +107,7 @@
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePublicGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
-                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"
-                                          />
+                                          CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
             <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
                                           Margin="4,0,4,10"
                                           ExpanderIsExpanded="False"
@@ -126,7 +125,7 @@
                 <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
            </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="3" x:Name="StatusBar">
+        <StatusBar Grid.Row="3" x:Name="statusBar">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
