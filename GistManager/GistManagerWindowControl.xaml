@@ -13,7 +13,7 @@
              xmlns:converters="clr-namespace:GistManager.Converters"
              mc:Ignorable="d"             
              Name="GistManager">
-    
+
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
         <converters:BoolsToVisibilityConverter x:Key="boolsToVisibilityConverter" />
@@ -36,17 +36,18 @@
             <Setter Property="Width" Value="24" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
-        <ToolBarTray Background="Transparent" Grid.Row="0" >
+
+        <ToolBarTray  Grid.Row="0" Background="Transparent">
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False">
@@ -78,12 +79,12 @@
                 </ToggleButton>
             </controls:OverflowlessToolbar>
         </ToolBarTray>
-        
-        <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
+  
+        <StackPanel  Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" >
             <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
-       
-        <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
+
+        <StackPanel Grid.Row="1" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical">
             <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
                 <TextBox.Template>
                     <ControlTemplate>
@@ -125,14 +126,16 @@
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
         </StackPanel>
 
-        <StackPanel x:Name="gistDetails"  Grid.Row="2">
-            <TextBlock x:Name="ParentGistName"></TextBlock>
+        <GridSplitter Grid.Column="1" Background="DarkGray" Width="3" BorderThickness="1" BorderBrush="Gray" VerticalAlignment="Stretch"/>
+
+        <StackPanel  Grid.Row="2" x:Name="gistDetails" >
+            <TextBlock x:Name="ParentGistName" FontWeight="Bold"></TextBlock>
             <TextBlock x:Name="ParentGistDescription"></TextBlock>
-            <TextBlock x:Name="GistFilename"></TextBlock>
+            <TextBlock x:Name="GistFilename"  FontWeight="Bold"></TextBlock>
             <TextBlock x:Name="GistDescription"></TextBlock>
-            <TextBlock x:Name="GistCode"></TextBlock>
+            <TextBlock x:Name="GistCode" FontFamily="Consolas"></TextBlock>
         </StackPanel>
-        
+
         <StackPanel x:Name="errorPanel" Grid.Row="3" >
             <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
                 <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
@@ -140,7 +143,7 @@
                 <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
            </TextBlock>
         </StackPanel>
-        
+
         <StatusBar x:Name="statusBar" Grid.Row="4" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -153,7 +156,7 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <Image x:Name="StatusBarImage" Width="0" Height="24" Source="Resources/exclamationpoint.png" >                
+            <Image x:Name="StatusBarImage" Width="0" Height="24" Source="Resources/exclamationpoint.png" >
             </Image>
             <StatusBarItem Grid.Column="1" Margin="5,0">
                 <TextBlock x:Name="StatusBarLabal" Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
@@ -163,7 +166,7 @@
                              Visibility="{Binding AsyncOperationStatusManager.CurrentOperation.Execution.IsNotCompleted, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
             </StatusBarItem>
         </StatusBar>
-        
-        
+
+
     </Grid>
 </UserControl>
