@@ -13,6 +13,7 @@
              xmlns:converters="clr-namespace:GistManager.Converters"
              mc:Ignorable="d"             
              Name="GistManager">
+    
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
         <converters:BoolsToVisibilityConverter x:Key="boolsToVisibilityConverter" />
@@ -35,13 +36,16 @@
             <Setter Property="Width" Value="24" />
         </Style>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        
         <ToolBarTray Background="Transparent" Grid.Row="0" >
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
@@ -74,9 +78,11 @@
                 </ToggleButton>
             </controls:OverflowlessToolbar>
         </ToolBarTray>
+        
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
+       
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
             <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
                 <TextBox.Template>
@@ -118,14 +124,24 @@
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
         </StackPanel>
-        <StackPanel Grid.Row="2">
+
+        <StackPanel x:Name="gistDetails"  Grid.Row="2">
+            <TextBlock x:Name="ParentGistName"></TextBlock>
+            <TextBlock x:Name="ParentGistDescription"></TextBlock>
+            <TextBlock x:Name="GistName"></TextBlock>
+            <TextBlock x:Name="GistDescription"></TextBlock>
+            <TextBlock x:Name="Code"></TextBlock>
+        </StackPanel>
+        
+        <StackPanel x:Name="errorPanel" Grid.Row="3" >
             <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
                 <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
                 <LineBreak />
                 <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
            </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="3" x:Name="statusBar">
+        
+        <StatusBar x:Name="statusBar" Grid.Row="4" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -147,5 +163,7 @@
                              Visibility="{Binding AsyncOperationStatusManager.CurrentOperation.Execution.IsNotCompleted, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
             </StatusBarItem>
         </StatusBar>
+        
+        
     </Grid>
 </UserControl>

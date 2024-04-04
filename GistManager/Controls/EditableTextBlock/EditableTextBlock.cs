@@ -108,7 +108,7 @@ namespace GistManager.Controls.EditableTextBlock
                 GistFileViewModel gistFileVM = this.DataContext as GistFileViewModel;
                 GistFileModel gistParentFile = gistFileVM.GistFile;
 
-                dave.GistName.Text = gistFileVM.GistFile.Name;
+                //dave.GistName.Text = gistFileVM.GistFile.Name;
             }
 
 
