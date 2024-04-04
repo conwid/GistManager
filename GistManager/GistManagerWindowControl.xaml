@@ -37,17 +37,9 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+    <DockPanel >
 
-        <ToolBarTray  Grid.Row="0" Background="Transparent">
+        <ToolBarTray  DockPanel.Dock="Top" Background="Transparent">
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False">
@@ -79,34 +71,45 @@
                 </ToggleButton>
             </controls:OverflowlessToolbar>
         </ToolBarTray>
-  
-        <StackPanel  Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" >
-            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
-        </StackPanel>
 
-        <StackPanel Grid.Row="1" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical">
-            <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
-                <TextBox.Template>
-                    <ControlTemplate>
-                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
-                                <Label x:Name="searchLabel" Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
+
+        <Grid DockPanel.Dock="Top">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <GridSplitter Grid.Row="1" Background="#808080"  BorderThickness="1" BorderBrush="#606060" HorizontalAlignment="Stretch" ClipToBounds="True"/>
+
+            <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" >
+                <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
+            </StackPanel>
+
+            <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical">
+                <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
+                    <TextBox.Template>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
+                                    <Label x:Name="searchLabel" Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
                                        VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" Loaded="searchLabel_Loaded" />
-                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2">
-                                    <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png" RenderOptions.BitmapScalingMode="Fant" />
-                                </Border>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </TextBox.Template>
-            </TextBox>
-            <controls:GistTreeViewDisplay ExpanderHeader="Public gists" 
+                                    <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2">
+                                        <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png" RenderOptions.BitmapScalingMode="Fant" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </ControlTemplate>
+                    </TextBox.Template>
+                </TextBox>
+                <controls:GistTreeViewDisplay ExpanderHeader="Public gists" 
                                           ExpanderIsExpanded="True"
                                           Margin="4,0,4,10"
                                           ExpanderIsEnabled="True"
@@ -115,7 +118,7 @@
                                           CreateGistCommand="{Binding CreatePublicGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
-            <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
+                <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
                                           Margin="4,0,4,10"
                                           ExpanderIsExpanded="False"
                                           ExpanderIsEnabled="True"
@@ -124,27 +127,18 @@
                                           CreateGistCommand="{Binding CreatePrivateGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
-        </StackPanel>
+            </StackPanel>
 
-        <GridSplitter Grid.Column="1" Background="DarkGray" Width="3" BorderThickness="1" BorderBrush="Gray" VerticalAlignment="Stretch"/>
+            <StackPanel MinHeight="40" Grid.Row="2" x:Name="gistDetails" Margin="4">
+                <TextBlock x:Name="ParentGistName" FontWeight="ExtraBlack" Padding="2"></TextBlock>
+                <TextBlock x:Name="ParentGistDescription" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" MaxHeight="100" TextTrimming="CharacterEllipsis"></TextBlock>
+                <TextBlock x:Name="GistFilename"  FontWeight="Bold" Padding="2"></TextBlock>
+                <TextBlock x:Name="GistCode" FontFamily="Consolas" Padding="2"></TextBlock>
+            </StackPanel>
 
-        <StackPanel  Grid.Row="2" x:Name="gistDetails" >
-            <TextBlock x:Name="ParentGistName" FontWeight="Bold"></TextBlock>
-            <TextBlock x:Name="ParentGistDescription"></TextBlock>
-            <TextBlock x:Name="GistFilename"  FontWeight="Bold"></TextBlock>
-            <TextBlock x:Name="GistDescription"></TextBlock>
-            <TextBlock x:Name="GistCode" FontFamily="Consolas"></TextBlock>
-        </StackPanel>
-
-        <StackPanel x:Name="errorPanel" Grid.Row="3" >
-            <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
-                <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
-                <LineBreak />
-                <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
-           </TextBlock>
-        </StackPanel>
-
-        <StatusBar x:Name="statusBar" Grid.Row="4" >
+        </Grid>
+        
+        <StatusBar x:Name="statusBar" DockPanel.Dock="Bottom" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -168,5 +162,19 @@
         </StatusBar>
 
 
-    </Grid>
+        <StackPanel DockPanel.Dock="Bottom" x:Name="errorPanel" Width="auto" >
+            <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
+                <LineBreak />
+                <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
+           </TextBlock>
+        </StackPanel>
+
+
+
+    </DockPanel>
+
+
+
+
 </UserControl>
