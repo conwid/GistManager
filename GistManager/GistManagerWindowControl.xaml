@@ -11,8 +11,10 @@
              xmlns:behaviors="clr-namespace:GistManager.Behaviors"
              xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
              xmlns:converters="clr-namespace:GistManager.Converters"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              mc:Ignorable="d"             
-             Name="GistManager">
+             Name="GistManager" Loaded="GistManager_Loaded">
 
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
@@ -69,7 +71,7 @@
                               ToolTip="Toggle Dark Mode" Unchecked="ToggleButton_Unchecked" Focusable="False">
                     <Image Source="Resources/darktheme.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </ToggleButton>
-   
+
             </controls:OverflowlessToolbar>
         </ToolBarTray>
 
@@ -126,7 +128,7 @@
 
         <StackPanel x:Name="errorPanel" DockPanel.Dock="Bottom"
                     Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
-            
+
             <ToolBarTray DockPanel.Dock="Top" Background="Transparent">
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                     <Button x:Name="CollapseErrorDialog" Style="{StaticResource toolBarButtonStyle}" ToolTip="Close Error" Click="CollapseErrorDialog_Click"  >
@@ -212,13 +214,14 @@
                     <StackPanel Grid.Row="3" >
                         <TextBlock x:Name="GistFilename" DockPanel.Dock="Top" FontWeight="Bold" Padding="2"></TextBlock>
                     </StackPanel>
-                    
+
                 </Grid>
 
-                <ScrollViewer x:Name="CodeTreeScroller" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
-                    <TextBlock x:Name="GistCode" Height="auto" FontFamily="Consolas" Padding="2"></TextBlock>
-                </ScrollViewer>
-
+                <!--<ScrollViewer x:Name="CodeTreeScroller" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >-->
+                <!--<syncfusion:EditControl x:Name="GistCode" >
+                </syncfusion:EditControl>-->
+                <!--</ScrollViewer>-->
+                <syncfusion:EditControl x:Name="GistCodeEditor" Foreground="Black" DocumentLanguage="CSharp"/>
 
             </DockPanel>
 

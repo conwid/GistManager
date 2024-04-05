@@ -1,6 +1,8 @@
 ﻿using GistManager.Utils;
 using GistManager.ViewModels;
+using Microsoft.VisualStudio.Shell.Interop;
 using Octokit;
+using Syncfusion.SfSkinManager;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,16 +17,25 @@ namespace GistManager
     /// </summary>
     public partial class GistManagerWindowControl : UserControl
     {
-        private bool darkModeButtonSetupCleared = false;
         private readonly GistManagerWindowViewModel viewModel;
+
+        private bool darkModeButtonSetupCleared = false;
+
+        internal CodeEditorManager CodeEditorManager;
+
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GistManagerWindowControl"/> class.
         /// </summary>
         public GistManagerWindowControl(GistManagerWindowViewModel gistManagerWindowViewModel)
         {
+
+            SfSkinManager.SetTheme(this, new Theme("MaterialDark", new string[] { "GistCodeEditor" }));
+
             this.InitializeComponent();
             viewModel = gistManagerWindowViewModel;
-            DataContext = viewModel;
+            DataContext = viewModel;                       
 
             DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
             if (SystemConfiguraiton.DarkModeSelected())
@@ -36,7 +47,7 @@ namespace GistManager
             }
 
             darkModeButtonSetupCleared = true; // soz - super hacky!
-
+            CodeEditorManager = new CodeEditorManager(this);
         }
 
         /// <summary>
@@ -60,6 +71,7 @@ namespace GistManager
                 ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
             }
 
+
         }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -79,6 +91,8 @@ namespace GistManager
             Properties.Settings.Default.Save();
             StatusBarLabal.Text = "Theme will refresh on restart";
             StatusBarImage.Width = 24;
+            
+
         }
         private void ToggleErrorWordwrap_Click(object sender, RoutedEventArgs e)
         {
@@ -95,6 +109,11 @@ namespace GistManager
         private void CollapseErrorDialog_Click(object sender, RoutedEventArgs e)
         {
             errorPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void GistManager_Loaded(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }

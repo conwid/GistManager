@@ -105,15 +105,9 @@ namespace GistManager.Controls.EditableTextBlock
                 if (e.ClickCount == 1)
                 {
                     GistManagerWindowControl mainForm = Helpers.FindParentOfType<GistManagerWindowControl>(this);
-                    var stan = (this.DataContext as DirectDragTreeViewItem);
+                    mainForm.CodeEditorManager.GistFileVM = this.DataContext as GistFileViewModel;
 
-                    GistFileViewModel gistFileVM = this.DataContext as GistFileViewModel;
-                    GistViewModel gistParentFile = gistFileVM.ParentGist;
-
-                    mainForm.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
-                    mainForm.ParentGistDescription.Text = gistParentFile.Description;
-                    mainForm.GistFilename.Text = $"File: {gistFileVM.FileName}";
-                    mainForm.GistCode.Text = gistFileVM.Content;
+                   // mainForm.GistCode.Text = gistFileVM.Content;
                 }
                 else if (e.ClickCount == 2)
                 {
