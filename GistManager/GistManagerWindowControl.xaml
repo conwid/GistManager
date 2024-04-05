@@ -69,9 +69,7 @@
                               ToolTip="Toggle Dark Mode" Unchecked="ToggleButton_Unchecked" Focusable="False">
                     <Image Source="Resources/darktheme.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </ToggleButton>
-                <Button Click="Button_Click">
-                    <TextBlock Text="Toggle Error" ></TextBlock>
-                </Button>
+   
             </controls:OverflowlessToolbar>
         </ToolBarTray>
 
@@ -156,7 +154,7 @@
 
         </StackPanel>
 
-        <Grid x:Name="MidPanel" DockPanel.Dock="Top"
+        <Grid x:Name="MidPanel" 
                 Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
 
             <Grid.RowDefinitions>
@@ -193,14 +191,14 @@
                 </Grid>
             </ScrollViewer>
 
-            <DockPanel Grid.Row="2" x:Name="gistDetailsPanel">
+            <DockPanel  x:Name="gistDetailsPanel" Grid.Row="2" >
                 <Grid  DockPanel.Dock="Top" Grid.Row="2" Margin="4" Height="auto">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*" MinHeight="30"/>
+                        <RowDefinition Height="auto" MinHeight="30"/>
                         <RowDefinition Height="2" />
-                        <RowDefinition Height="auto"  />
+                        <RowDefinition Height="*"  />
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="ParentGistName" Grid.Row="0" FontWeight="ExtraBlack" Padding="2"></TextBlock>
@@ -214,6 +212,7 @@
                     <StackPanel Grid.Row="3" >
                         <TextBlock x:Name="GistFilename" DockPanel.Dock="Top" FontWeight="Bold" Padding="2"></TextBlock>
                     </StackPanel>
+                    
                 </Grid>
 
                 <ScrollViewer x:Name="CodeTreeScroller" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >

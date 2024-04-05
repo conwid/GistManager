@@ -80,14 +80,6 @@ namespace GistManager
             StatusBarLabal.Text = "Theme will refresh on restart";
             StatusBarImage.Width = 24;
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (errorPanel.Visibility == Visibility.Collapsed || errorPanel.Visibility == Visibility.Hidden)
-                errorPanel.Visibility = Visibility.Visible;
-            else errorPanel.Visibility = Visibility.Collapsed;
-        }
-
         private void ToggleErrorWordwrap_Click(object sender, RoutedEventArgs e)
         {
             if (ErrorMessageDetailsTB.TextWrapping == TextWrapping.NoWrap)
@@ -95,7 +87,6 @@ namespace GistManager
             else
                 ErrorMessageDetailsTB.TextWrapping = TextWrapping.NoWrap;
         }
-
         private void CopyErrorText_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(ErrorMessageDetailsTB.Text);
