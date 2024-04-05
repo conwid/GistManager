@@ -29,13 +29,11 @@ namespace GistManager
             DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
             if (SystemConfiguraiton.DarkModeSelected())
             {
-                searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246,246,246));
-                searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24,24,24));
+                searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
+                searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
                 statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-                statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40,40,40));
+                statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40, 40, 40));
             }
-            //LogInButton.Focusable = false;
-            //LogInButton.Focusable = true;
 
             darkModeButtonSetupCleared = true; // soz - super hacky!
 
@@ -59,7 +57,7 @@ namespace GistManager
         {
             if (SystemConfiguraiton.DarkModeSelected())
             {
-                ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80,80,80));
+                ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
             }
 
         }
@@ -81,6 +79,31 @@ namespace GistManager
             Properties.Settings.Default.Save();
             StatusBarLabal.Text = "Theme will refresh on restart";
             StatusBarImage.Width = 24;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (errorPanel.Visibility == Visibility.Collapsed || errorPanel.Visibility == Visibility.Hidden)
+                errorPanel.Visibility = Visibility.Visible;
+            else errorPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void ToggleErrorWordwrap_Click(object sender, RoutedEventArgs e)
+        {
+            if (ErrorMessageDetailsTB.TextWrapping == TextWrapping.NoWrap)
+                ErrorMessageDetailsTB.TextWrapping = TextWrapping.Wrap;
+            else
+                ErrorMessageDetailsTB.TextWrapping = TextWrapping.NoWrap;
+        }
+
+        private void CopyErrorText_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(ErrorMessageDetailsTB.Text);
+        }
+
+        private void CollapseErrorDialog_Click(object sender, RoutedEventArgs e)
+        {
+            errorPanel.Visibility = Visibility.Collapsed;
         }
     }
 }
