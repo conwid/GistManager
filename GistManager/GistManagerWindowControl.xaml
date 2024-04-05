@@ -133,13 +133,13 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="300" MinHeight="100" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="4" />
                 <RowDefinition  MinHeight="200" />
             </Grid.RowDefinitions>
 
             <GridSplitter Grid.Row="1" Background="#808080"  BorderThickness="1" BorderBrush="#606060" HorizontalAlignment="Stretch" ClipToBounds="True"/>
 
-            <ScrollViewer x:Name="GistTreeScroller"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+            <ScrollViewer x:Name="GistTreeScroller" Grid.Row="0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
 
                 <Grid MinHeight="200">
                     <StackPanel x:Name="GistTree" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical">
@@ -166,22 +166,40 @@
 
                 </Grid>
 
-            </ScrollViewer>
+            </ScrollViewer>           
+            
 
-            <Grid x:Name="gistDetails" Height="Auto" Grid.Row="2" Margin="4">
+            <Grid x:Name="gistDetailsGrid" Height="Auto" Grid.Row="2" Margin="4">
+
                 <Grid.RowDefinitions>
-                    <RowDefinition  Height="Auto"/>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="30"/>
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="auto" MinHeight="200" />
+
                 </Grid.RowDefinitions>
 
                 <TextBlock x:Name="ParentGistName" Grid.Row="0" FontWeight="ExtraBlack" Padding="2"></TextBlock>
-                <TextBlock x:Name="ParentGistDescription" Grid.Row="1" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" MaxHeight="100" TextTrimming="CharacterEllipsis"></TextBlock>
-                <TextBlock x:Name="GistFilename" Grid.Row="2" FontWeight="Bold" Padding="2"></TextBlock>
-                <ScrollViewer x:Name="CodeTreeScroller" Grid.Row="3"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
-                    <TextBlock x:Name="GistCode" FontFamily="Consolas" Padding="2"></TextBlock>
+
+                <ScrollViewer x:Name="ParentGistDescriptionScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                    <TextBlock x:Name="ParentGistDescription"  VerticalAlignment="Top" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
                 </ScrollViewer>
+
+                <GridSplitter  Background="#808080" Grid.Row="2" BorderThickness="1" BorderBrush="#606060" HorizontalAlignment="Stretch"/>
+
+                <Grid Grid.Row="3" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="GistFilename" Grid.Row="0"   FontWeight="Bold" Padding="2"></TextBlock>
+
+                    <ScrollViewer x:Name="CodeTreeScroller" Grid.Row="1"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+                        <TextBlock  x:Name="GistCode" FontFamily="Consolas" Padding="2"></TextBlock>
+                    </ScrollViewer>
+
+
+                </Grid>
 
             </Grid>
 

@@ -107,8 +107,6 @@ namespace GistManager.Controls.EditableTextBlock
                     GistManagerWindowControl mainForm = Helpers.FindParentOfType<GistManagerWindowControl>(this);
                     var stan = (this.DataContext as DirectDragTreeViewItem);
 
-
-
                     GistFileViewModel gistFileVM = this.DataContext as GistFileViewModel;
                     GistViewModel gistParentFile = gistFileVM.ParentGist;
 
