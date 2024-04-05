@@ -44,6 +44,12 @@ namespace GistManager
                 searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
                 statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
                 statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40, 40, 40));
+
+                GistCodeEditor.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
+                GistCodeEditor.Foreground = new SolidColorBrush(Color.FromArgb(255, 230,230,230));
+                GistCodeEditor.LineNumberAreaBackground = new SolidColorBrush(Color.FromArgb(255, 30,30,30));
+                GistCodeEditor.LineNumberTextForeground = new SolidColorBrush(Color.FromArgb(255, 150,150,150));
+                GistCodeEditor.CaretBrush = new SolidColorBrush(Color.FromArgb(255, 250,250,250));
             }
 
             darkModeButtonSetupCleared = true; // soz - super hacky!

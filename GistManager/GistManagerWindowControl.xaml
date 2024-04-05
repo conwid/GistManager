@@ -221,7 +221,7 @@
                 <!--<syncfusion:EditControl x:Name="GistCode" >
                 </syncfusion:EditControl>-->
                 <!--</ScrollViewer>-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" Foreground="Black" DocumentLanguage="CSharp"/>
+                <syncfusion:EditControl x:Name="GistCodeEditor" DocumentLanguage="CSharp" FontFamily="Consolas"  />
 
             </DockPanel>
 
