@@ -9,6 +9,7 @@
     <Import_RootNamespace>Dev</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Documentation\Immediate.md" />
     <None Include="$(MSBuildThisFileDirectory)Documentation\Research.md" />
   </ItemGroup>
 </Project>

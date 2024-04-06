@@ -2,7 +2,9 @@
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GistManager.ViewModels
 {

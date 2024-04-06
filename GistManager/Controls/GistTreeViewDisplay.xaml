@@ -41,8 +41,6 @@
                 <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" />
                 <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" />
                 <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" />
-                <Image x:Key="addFileImage"  Source="..\Resources\AddFile.png" x:Shared="False" />
-                <Image x:Key="addGistImage"  Source="..\Resources\AddFile.png" x:Shared="False" />
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -93,9 +91,6 @@
                             <ContextMenu>
                                 <MenuItem Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
                                 <MenuItem Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
-                                <MenuItem Header="Add new gist file" Icon ="{DynamicResource addFileImage}" Command="{Binding CreateGistFileCommand}" />
-                                <MenuItem Header="Add new gist" Icon ="{DynamicResource addFileImage}" Command="{Binding CreateGistCommand}" />
-
                                 <MenuItem Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
                                     <MenuItem.ItemTemplate>
                                         <DataTemplate>

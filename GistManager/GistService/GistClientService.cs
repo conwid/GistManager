@@ -37,14 +37,15 @@ namespace GistManager.GistService
             return (await gitHubConnection.Get<T>(new Uri(url), downloadTimeOut)).Body;
         }
 
-        public async Task CreateGistFileAsync(string gistId, string fileName, string fileContent)
+        public async Task<Gist> CreateGistFileAsync(string gistId, string fileName, string fileContent)
         {
             var update = new GistUpdate();
             update.Files.Add(fileName, new GistFileUpdate { Content = fileContent, NewFileName = fileName });
-            await gistClient.Edit(gistId, update);
+            Gist response = await gistClient.Edit(gistId, update);
+            return response;
         }
 
-        public async Task CreateNewGistFileAsync(string gistId, string filename, string comment, string content)
+        public async Task<Gist> CreateNewGistFileAsync(string gistId, string filename, string comment, string content)
         {
             var newGist = new NewGist()
             {
@@ -52,10 +53,11 @@ namespace GistManager.GistService
                 Description = comment,
             };
             newGist.Files.Add(filename, content);
-            await gistClient.Create(newGist);
+            Gist response = await gistClient.Create(newGist);
+            return response;
         }
 
-        public async Task CreateGistAsync(string gistName, string firstFileContent, bool isPublic)
+        public async Task<Gist> CreateGistAsync(string gistName, string firstFileContent, bool isPublic)
         {
             var newGist = new NewGist
             {                
@@ -63,17 +65,18 @@ namespace GistManager.GistService
                 Description = "Gist created from visual studio extension",
             };
             newGist.Files.Add(gistName, firstFileContent);
-            await gistClient.Create(newGist);
+            Gist response = await gistClient.Create(newGist);
+            return response;
+
         }
 
-        public async Task RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content, string comment)
+        public async Task<Gist> RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content, string comment)
         {
             var update = new GistUpdate() { Description = comment };
             update.Files.Add(originalFileName, new GistFileUpdate { Content = content, NewFileName = newFileName});
-            await gistClient.Edit(gistId, update);
+            Gist response = await gistClient.Edit(gistId, update);
+            return response;
         }
-
-
 
         public async Task DeleteGistFileAsync(string gistId, string fileName)
         {
@@ -124,7 +127,6 @@ namespace GistManager.GistService
             return Task.CompletedTask;
         }
 
-    
 
         public bool IsAuthenticated { get; private set; }
     }

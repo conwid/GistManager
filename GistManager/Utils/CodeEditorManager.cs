@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using GistManager.GistService;
 using GistManager.ViewModels;
 using Newtonsoft.Json.Linq;
 using Octokit;
@@ -21,8 +22,6 @@ namespace GistManager.Utils
 {
     internal class CodeEditorManager
     {
-
-
         public GistFileViewModel GistFileVM
         {
             get { return _gistFileVM; }
@@ -33,11 +32,11 @@ namespace GistManager.Utils
             }
         }
 
-
+        public bool GistEdited { get; set; } = false;
 
         private GistFileViewModel _gistFileVM = null;
         private string gistTempFile = null;
-
+        private bool gistIsDirty = false;
 
         private GistManagerWindowControl mainWindowControl;
 
@@ -47,8 +46,16 @@ namespace GistManager.Utils
             //  mainWindowControl.LanguageSelectorCB.Items = Syncfusion.EditWPFAssembly.
         }
 
-        private void OnGistFileChanged()
+        private async void OnGistFileChanged()
         {
+            // Checks to see if the gist has been edited. If so, saves it. 
+            if (GistEdited)
+            {
+                mainWindowControl.MidPanel.IsEnabled = false;
+                var reposnse = await mainWindowControl.ViewModel.gistClientService.RenameGistFileAsync(GistFileVM.ParentGist.Gist.Id, GistFileVM.FileName, GistFileVM.FileName, GistFileVM.Content, GistFileVM.ParentGist.Description);
+                await UpdateGist();
+            }
+
             GistViewModel gistParentFile = _gistFileVM.ParentGist;
 
             mainWindowControl.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
@@ -67,12 +74,13 @@ namespace GistManager.Utils
 
             gistTempFile = Path.Combine(Path.GetTempPath(), gistTempFile);
 
-
             File.WriteAllText(gistTempFile, _gistFileVM.Content);
 
             mainWindowControl.GistCodeEditor.DocumentSource = gistTempFile;
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
 
+            mainWindowControl.MidPanel.IsEnabled = true;
+            GistEdited = false;
         }
 
         internal void ToggleOutline()
@@ -81,20 +89,14 @@ namespace GistManager.Utils
             mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
         }
 
-        internal void UpdateGist()
+        internal async Task UpdateGist()
         {
             GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
             GistFileVM.ParentGist.Description = mainWindowControl.ParentGistDescriptionTB.Text;
 
-            // Changing the filename also updates the code
+            // Changing the filename causes update to Gists API
             GistFileVM.FileName = mainWindowControl.GistFilenameTB.Text;
         }
-
-        internal void AddNewGist()
-        {
-
-        }
-
 
         internal void ApplyDarkModeToLanguageSelector()
         {

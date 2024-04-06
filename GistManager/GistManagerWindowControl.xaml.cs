@@ -15,6 +15,7 @@ using Color = System.Windows.Media.Color;
 using Brush = System.Windows.Media.Brush;
 using System.Management.Instrumentation;
 using System.Threading.Tasks;
+using System;
 
 namespace GistManager
 {
@@ -23,7 +24,7 @@ namespace GistManager
     /// </summary>
     public partial class GistManagerWindowControl : UserControl
     {
-        private readonly GistManagerWindowViewModel viewModel;
+        internal readonly GistManagerWindowViewModel ViewModel;
 
         internal CodeEditorManager CodeEditorManager;
 
@@ -33,8 +34,8 @@ namespace GistManager
         public GistManagerWindowControl(GistManagerWindowViewModel gistManagerWindowViewModel)
         {
             this.InitializeComponent();
-            viewModel = gistManagerWindowViewModel;
-            DataContext = viewModel;
+            ViewModel = gistManagerWindowViewModel;
+            DataContext = ViewModel;
 
             CodeEditorManager = new CodeEditorManager(this);
 
@@ -61,7 +62,7 @@ namespace GistManager
 
                 ApplyTheme(); // this ensures the right text color
 
-                viewModel.IsAuthenticated = false;
+                ViewModel.IsAuthenticated = false;
                 TopToolbar.Visibility = Visibility.Hidden;
                 LoginPromptTB.Text = "Visual Studio Restart needed to reset theme.";
             }
@@ -207,9 +208,25 @@ namespace GistManager
                 CodeEditorManager.UpdateGist();
         }
 
-        private void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
+        private async void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
         {
-            viewModel.gistClientService.CreateGistAsync(" New Gist", "Gist File created in Visual Studio", true);
+            var reposnse = await ViewModel.gistClientService.CreateGistAsync("#New Gist", "Gist File created in Visual Studio", true);
+        
+        }
+
+        private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            //if (CodeEditorManager.GistFileVM is null) return;
+
+          var reposnse =  await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
+                 $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
+                 "Gist file created in Visual Studio Extension.");
+            
+        }
+
+        private void GistCodeEditor_TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CodeEditorManager.GistEdited = true;
         }
     }
 }

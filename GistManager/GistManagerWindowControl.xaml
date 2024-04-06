@@ -362,11 +362,14 @@
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="SaveButton_Click">
                     <Image Source="Resources/exclamationpoint.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save"/>
                 </Button>
-                <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Add New Gist"
+                <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistBT_ClickAsync" >
                     <Image Source="Resources/AddGist.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </Button >
-
+                <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistFileBT_ClickAsync" >
+                    <Image Source="Resources/AddFile.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button >
 
             </controls:OverflowlessToolbar>
         </ToolBarTray>
@@ -443,7 +446,7 @@
                 <TextBlock Foreground="Red"  Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" Margin="2" />
             </StackPanel>
 
-            <ScrollViewer Width="{Binding ElementName=errorPanel, Path=ActualWidth}" MinHeight="300" >
+            <ScrollViewer Width="{Binding ElementName=errorPanel, Path=ActualWidth}" MinHeight="100" >
                 <TextBlock x:Name="ErrorMessageDetailsTB" TextWrapping="Wrap" Margin="2" Foreground="AliceBlue"
                             Text="{Binding ErrorHandler.ErrorInfo}" />
             </ScrollViewer>
@@ -518,7 +521,10 @@
                 <!--<syncfusion:EditControl x:Name="GistCode" >
                 </syncfusion:EditControl>-->
                 <!--</ScrollViewer>-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" OutliningAreaBackground="Transparent" Background="Transparent" DocumentLanguage="CSharp" FontFamily="Consolas"/>
+                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent"
+                                        OutliningAreaBackground="Transparent" Background="Transparent"
+                                        DocumentLanguage="CSharp" FontFamily="Consolas" 
+                                        TextChanged="GistCodeEditor_TextChanged"/>
 
             </DockPanel>
 
