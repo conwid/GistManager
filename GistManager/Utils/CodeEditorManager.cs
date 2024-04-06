@@ -65,15 +65,14 @@ namespace GistManager.Utils
 
         }
 
-        internal void ToggleLineNumbers()
-        {
-            mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
-        }
-
         internal void ToggleOutline()
         {
             mainWindowControl.GistCodeEditor.EnableOutlining = !mainWindowControl.GistCodeEditor.EnableOutlining;
+            mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
         }
+
+
+ 
 
         internal void ApplyDarkModeToLanguageSelector()
         {

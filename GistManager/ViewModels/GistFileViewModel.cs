@@ -28,6 +28,7 @@ namespace GistManager.ViewModels
             GistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
             this.asyncOperationStatusManager = asyncOperationStatusManager ?? throw new ArgumentNullException(nameof(asyncOperationStatusManager));
             FileNameChangedCommand = new AsyncCommand<string>(RenameGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Renaming gist file" };
+            FileNameChangedCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
             CheckoutCommand = new AsyncCommand<GistHistoryEntryModel>(RefreshGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Checking out file", SuppressCompletionCommand = true };
         }
 
@@ -126,6 +127,8 @@ namespace GistManager.ViewModels
         }
 
         private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
+
+        private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
 
         private async Task DeleteGistFileAsync() => await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
 

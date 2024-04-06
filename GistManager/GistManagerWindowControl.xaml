@@ -15,7 +15,7 @@
             xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              mc:Ignorable="d"             
-             Name="GistManager" Loaded="GistManager_Loaded">
+             Name="GistManager">
 
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
@@ -351,16 +351,7 @@
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
                     <Image Source="Resources/logout.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </Button >
-                <ToggleButton x:Name="DarkModeToggleButton"  Width="24" Height="24" Checked="ToggleButton_Checked" 
-                              ToolTip="Toggle Dark Mode" Unchecked="ToggleButton_Unchecked" Focusable="False">
-                    <Image Source="Resources/darktheme.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
-                </ToggleButton>
                 <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <Button x:Name="LineNumbersButton" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Toggle Line Numbers"
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
-		                Click="LineNumbersButton_Click">
-                    <Image Source="Resources/BulletList.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
-                </Button>
                 <Button x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
 		                Click="OutlineButton_Click">
@@ -373,7 +364,7 @@
             </controls:OverflowlessToolbar>
         </ToolBarTray>
 
-        <TextBox Name="searchBox" DockPanel.Dock="Top" Margin="6,8"
+        <TextBox x:Name="searchBox" DockPanel.Dock="Top" Margin="6,8"
                  Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                  Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
             <TextBox.Template>
@@ -386,8 +377,8 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
-                            <Label x:Name="searchLabel" Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
-                                       VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" Loaded="searchLabel_Loaded" />
+                            <Label x:Name="searchLabel" Foreground="Gray" Margin="2" Grid.Column="0"  Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
+                                       VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" />
                             <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="2">
                                 <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png" RenderOptions.BitmapScalingMode="Fant" />
                             </Border>
@@ -398,7 +389,7 @@
         </TextBox>
 
         <StackPanel x:Name="LoginPrompt" DockPanel.Dock="Top" Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" >
-            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
+            <TextBlock x:Name="LoginPromptTB" TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
 
         <StatusBar x:Name="statusBar" DockPanel.Dock="Bottom" Background="Transparent">
@@ -413,8 +404,6 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <Image x:Name="StatusBarImage" Width="0" Height="24" Source="Resources/exclamationpoint.png">
-            </Image>
             <StatusBarItem Grid.Column="1" Margin="5,0" Background="Transparent">
                 <TextBlock x:Name="StatusBarLabal" Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
             </StatusBarItem>
@@ -520,7 +509,7 @@
                 <!--<syncfusion:EditControl x:Name="GistCode" >
                 </syncfusion:EditControl>-->
                 <!--</ScrollViewer>-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" OutliningAreaBackground="Transparent" Background="Transparent" DocumentLanguage="CSharp" FontFamily="Consolas" ShowLineNumber="False" EnableOutlining="False"  />
+                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" OutliningAreaBackground="Transparent" Background="Transparent" DocumentLanguage="CSharp" FontFamily="Consolas"/>
 
             </DockPanel>
 

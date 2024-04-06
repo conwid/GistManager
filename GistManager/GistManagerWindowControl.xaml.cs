@@ -24,10 +24,6 @@ namespace GistManager
     {
         private readonly GistManagerWindowViewModel viewModel;
 
-
-
-        private bool instantiated = false;
-
         internal CodeEditorManager CodeEditorManager;
 
 
@@ -37,7 +33,6 @@ namespace GistManager
         /// </summary>
         public GistManagerWindowControl(GistManagerWindowViewModel gistManagerWindowViewModel)
         {
-            SfSkinManager.SetTheme(this, new Theme("MaterialDark", new string[] { "GistCodeEditor" }));
 
             this.InitializeComponent();
             viewModel = gistManagerWindowViewModel;
@@ -45,37 +40,33 @@ namespace GistManager
 
             CodeEditorManager = new CodeEditorManager(this);
 
-            ApplyTheme();
+            viewModel.LoginCommand
 
+            ApplyTheme();
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            instantiated = true;
         }
 
         private void ApplyTheme()
         {
-
-            bool darkMode = Helpers.IsDarkMode();
-            UpdateTheme(darkMode);
-
+            UpdateTheme(Helpers.IsDarkMode());
         }
 
         private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
         {
-            if (!instantiated) return;
-            MessageBox.Show("Theme changed event args message: " + e.Message);
+            bool themeChangedToDarkMode = Helpers.IsDarkMode();
 
-            if (this.IsLoaded)
+            if (Properties.Settings.Default.DarkMode != themeChangedToDarkMode)
             {
                 Properties.Settings.Default.DarkMode = Helpers.IsDarkMode();
                 Properties.Settings.Default.Save();
 
+                ApplyTheme(); // this ensures the right text color
+
                 viewModel.IsAuthenticated = false;
                 TopToolbar.Visibility = Visibility.Hidden;
-                StatusBarLabal.Text = "Restart needed to reset theme.";
-                StatusBarImage.Width = 24;
+                LoginPromptTB.Text = "Visual Studio Restart needed to reset theme.";
             }
-
         }
 
         /// <summary>
@@ -97,28 +88,35 @@ namespace GistManager
         #region MyCode =========================================================================================
         // MyCode ==============================================================================================
 
+        /// <summary>
+        /// <!-- May need to form a spearate Theme class if get any more colros to pass in -->
+        /// </summary>
+        /// <param name="darkMode"></param>
         private void UpdateTheme(bool darkMode)
         {
+            // DARK MODE
             SolidColorBrush globalTextColorBrushDark = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
+            SolidColorBrush backgroundTextBoxTextDark = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
 
+
+            // LIGHT MODE
             SolidColorBrush globalTextColorBrushLight = new SolidColorBrush(Color.FromArgb(255, 10, 10, 10));
+            SolidColorBrush backgroundTextBoxTextLight = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
 
 
             if (darkMode)
             {
-                SfSkinManager.SetTheme(this, new Theme("MaterialDark", new string[] { "GistCodeEditor" }));
-                UpdateThemeElements(globalTextColorBrushDark);
+                SfSkinManager.SetTheme(this, new Theme("MaterialDark"));
+                UpdateThemeElements(globalTextColorBrushDark, backgroundTextBoxTextDark);
             }
             else
             {
-                SfSkinManager.SetTheme(this, new Theme("MaterialLight", new string[] { "GistCodeEditor" }));
-                UpdateThemeElements(globalTextColorBrushLight);
+                SfSkinManager.SetTheme(this, new Theme("MaterialLight"));
+                UpdateThemeElements(globalTextColorBrushLight, backgroundTextBoxTextLight);
             }
-
-            DarkModeToggleButton.IsChecked = darkMode;
         }
 
-        private void UpdateThemeElements(Brush globalTextColorBrush)
+        private void UpdateThemeElements(Brush globalTextColorBrush, SolidColorBrush backgroundTextBoxText)
         {
             PublicGistGTVD.Expander.Foreground = globalTextColorBrush;
             PublicGistGTVD.TreeView.Foreground = globalTextColorBrush;
@@ -131,38 +129,22 @@ namespace GistManager
             GistCodeEditor.LineNumberTextForeground = globalTextColorBrush;
             LanguageSelectorCB.Foreground = globalTextColorBrush;
 
+            searchBox.Foreground = globalTextColorBrush;
+
             GistCodeEditor.InvalidateVisual();
 
         }
 
 
-        private void searchLabel_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (SystemConfiguraiton.DarkModeSelected())
-            {
-                ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
-            }
-        }
+        //private void searchLabel_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    if (SystemConfiguraiton.DarkModeSelected())
+        //    {
+        //        ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
+        //    }
+        //}
 
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
-        {
-            UpdateDarkModeSettings();
-        }
 
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            UpdateDarkModeSettings();
-        }
-
-        private void UpdateDarkModeSettings()
-        {
-            Properties.Settings.Default.DarkMode = (bool)DarkModeToggleButton.IsChecked;
-            Properties.Settings.Default.Save();
-            UpdateTheme((bool)DarkModeToggleButton.IsChecked);
-
-            StatusBarLabal.Text = "Theme will refresh on restart";
-            StatusBarImage.Width = 24;
-        }
         private void ToggleErrorWordwrap_Click(object sender, RoutedEventArgs e)
         {
             if (ErrorMessageDetailsTB.TextWrapping == TextWrapping.NoWrap)
@@ -180,17 +162,12 @@ namespace GistManager
             errorPanel.Visibility = Visibility.Collapsed;
         }
 
-        private void GistManager_Loaded(object sender, RoutedEventArgs e)
-        {
+        //private void GistManager_Loaded(object sender, RoutedEventArgs e)
+        //{
 
 
 
-        }
-
-        private void LineNumbersButton_Click(object sender, RoutedEventArgs e)
-        {
-            CodeEditorManager.ToggleLineNumbers();
-        }
+        //}
 
         private void OutlineButton_Click(object sender, RoutedEventArgs e)
         {
