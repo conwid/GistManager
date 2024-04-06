@@ -34,7 +34,7 @@
                   KeyDown="TreeView_KeyDown"       
                   BorderThickness="0"
                   x:Name="TreeView" LostFocus="TreeView_LostFocus"
-                                           
+                  Background="Transparent"                                           
             >
             <directDragTree:DirectDragTreeView.Resources>
                 <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />

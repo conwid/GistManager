@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows;
+using Microsoft.VisualStudio.PlatformUI;
 
 namespace GistManager.Utils
 {
@@ -22,5 +23,19 @@ namespace GistManager.Utils
             while (parentDepObj != null);
             return null;
         }
+
+        /// <summary>
+        /// Sure there's a better way to do this, but meh
+        /// Examines VS's ToolWindowBackgroundColorKey. If Red lower than 100 (arbitrary) return dark mode is true
+        /// Red due to BGs RGB values all being same(ish?)
+        /// </summary>
+        /// <returns></returns>
+        internal static bool IsDarkMode()
+        {
+            var defaultBackground = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+            if (defaultBackground.R < 100) return true;
+            return false;
+        }
+
     }
 }

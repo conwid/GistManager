@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Syncfusion.Windows.Edit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace GistManager.Utils
             }            
         }
 
+ 
+
         private GistFileViewModel _gistFileVM = null;
         private string gistTempFile = null;
 
@@ -39,7 +42,8 @@ namespace GistManager.Utils
 
         public CodeEditorManager(GistManagerWindowControl mainWindowControl)
         {
-            this.mainWindowControl = mainWindowControl;  
+            this.mainWindowControl = mainWindowControl;
+            //  mainWindowControl.LanguageSelectorCB.Items = Syncfusion.EditWPFAssembly.
         }
 
         private void OnGistFileChanged()
@@ -73,6 +77,17 @@ namespace GistManager.Utils
 
         internal void ApplyDarkModeToLanguageSelector()
         {
+            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());
+
+            // mainWindowControl.GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages
+
+            //foreach (var language in Syncfusion.Windows.Edit.Languages)
+            //{
+
+            //}
+
+          //  mainWindowControl.LanguageSelectorCB.Items = Enum.GetValues(typeof(Syncfusion.Windows.Edit.Languages));
+
             //ComboBox cb = mainWindowControl.LanguageSelectorCB;
 
             //            < Setter Property = "Background" Value = "#202020" />
@@ -82,13 +97,13 @@ namespace GistManager.Utils
             //cb.Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
             //cb.BorderBrush = new SolidColorBrush(Colors.Red);
 
-            
+
 
             //Style cbStyle = new Style();
             //cbStyle.TargetType = typeof(ComboBox);
             //Setter setter = new Setter();
             //setter.Property = 
-            
+
         }
 
 

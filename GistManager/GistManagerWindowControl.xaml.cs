@@ -9,6 +9,11 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.VisualStudio.PlatformUI;
+using System.Drawing;
+using Color = System.Windows.Media.Color;
+using Brush = System.Windows.Media.Brush;
+using System.Management.Instrumentation;
 
 namespace GistManager
 {
@@ -19,7 +24,9 @@ namespace GistManager
     {
         private readonly GistManagerWindowViewModel viewModel;
 
-        private bool darkModeSetupCleared = false;
+
+
+        private bool instantiated = false;
 
         internal CodeEditorManager CodeEditorManager;
 
@@ -30,7 +37,6 @@ namespace GistManager
         /// </summary>
         public GistManagerWindowControl(GistManagerWindowViewModel gistManagerWindowViewModel)
         {
-
             SfSkinManager.SetTheme(this, new Theme("MaterialDark", new string[] { "GistCodeEditor" }));
 
             this.InitializeComponent();
@@ -38,8 +44,38 @@ namespace GistManager
             DataContext = viewModel;
 
             CodeEditorManager = new CodeEditorManager(this);
-            // DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
-            if (SystemConfiguraiton.DarkModeSelected()) ApplyDarkMode();
+
+            ApplyTheme();
+
+            VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+
+            instantiated = true;
+        }
+
+        private void ApplyTheme()
+        {
+
+            bool darkMode = Helpers.IsDarkMode();
+            UpdateTheme(darkMode);
+
+        }
+
+        private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
+        {
+            if (!instantiated) return;
+            MessageBox.Show("Theme changed event args message: " + e.Message);
+
+            if (this.IsLoaded)
+            {
+                Properties.Settings.Default.DarkMode = Helpers.IsDarkMode();
+                Properties.Settings.Default.Save();
+
+                viewModel.IsAuthenticated = false;
+                TopToolbar.Visibility = Visibility.Hidden;
+                StatusBarLabal.Text = "Restart needed to reset theme.";
+                StatusBarImage.Width = 24;
+            }
+
         }
 
         /// <summary>
@@ -61,25 +97,45 @@ namespace GistManager
         #region MyCode =========================================================================================
         // MyCode ==============================================================================================
 
-        private void ApplyDarkMode()
+        private void UpdateTheme(bool darkMode)
         {
-            DarkModeToggleButton.IsChecked = true;
+            SolidColorBrush globalTextColorBrushDark = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
 
-            searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-            searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
-            statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-            statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40, 40, 40));
+            SolidColorBrush globalTextColorBrushLight = new SolidColorBrush(Color.FromArgb(255, 10, 10, 10));
 
-            GistCodeEditor.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
-            GistCodeEditor.Foreground = new SolidColorBrush(Color.FromArgb(255, 230, 230, 230));
-            GistCodeEditor.LineNumberAreaBackground = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
-            GistCodeEditor.LineNumberTextForeground = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
-            GistCodeEditor.CaretBrush = new SolidColorBrush(Color.FromArgb(255, 250, 250, 250));
 
-            this.CodeEditorManager.ApplyDarkModeToLanguageSelector();
+            if (darkMode)
+            {
+                SfSkinManager.SetTheme(this, new Theme("MaterialDark", new string[] { "GistCodeEditor" }));
+                UpdateThemeElements(globalTextColorBrushDark);
+            }
+            else
+            {
+                SfSkinManager.SetTheme(this, new Theme("MaterialLight", new string[] { "GistCodeEditor" }));
+                UpdateThemeElements(globalTextColorBrushLight);
+            }
 
-            darkModeSetupCleared = true; // soz - super hacky!
+            DarkModeToggleButton.IsChecked = darkMode;
         }
+
+        private void UpdateThemeElements(Brush globalTextColorBrush)
+        {
+            PublicGistGTVD.Expander.Foreground = globalTextColorBrush;
+            PublicGistGTVD.TreeView.Foreground = globalTextColorBrush;
+
+            PrivateGistGTVD.Expander.Foreground = globalTextColorBrush;
+            PrivateGistGTVD.TreeView.Foreground = globalTextColorBrush;
+
+            statusBar.Foreground = globalTextColorBrush;
+            GistCodeEditor.Foreground = globalTextColorBrush;
+            GistCodeEditor.LineNumberTextForeground = globalTextColorBrush;
+            LanguageSelectorCB.Foreground = globalTextColorBrush;
+
+            GistCodeEditor.InvalidateVisual();
+
+        }
+
+
         private void searchLabel_Loaded(object sender, RoutedEventArgs e)
         {
             if (SystemConfiguraiton.DarkModeSelected())
@@ -100,9 +156,10 @@ namespace GistManager
 
         private void UpdateDarkModeSettings()
         {
-            if (!darkModeSetupCleared) return;
             Properties.Settings.Default.DarkMode = (bool)DarkModeToggleButton.IsChecked;
             Properties.Settings.Default.Save();
+            UpdateTheme((bool)DarkModeToggleButton.IsChecked);
+
             StatusBarLabal.Text = "Theme will refresh on restart";
             StatusBarImage.Width = 24;
         }

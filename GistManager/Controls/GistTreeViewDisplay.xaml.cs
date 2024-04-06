@@ -21,14 +21,13 @@ namespace GistManager.Controls
         {
             InitializeComponent();
 
-            int res = (int)Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "SystemUsesLightTheme", -1);
 
-            if (SystemConfiguraiton.DarkModeSelected())
-            {
-                Expander.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-                TreeView.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
-                TreeView.Foreground = new SolidColorBrush(Color.FromArgb(255, 236, 236, 236));
-            }
+            //if (SystemConfiguraiton.DarkModeSelected())
+            //{
+            //    Expander.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+            //    //TreeView.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
+            //    TreeView.Foreground = new SolidColorBrush(Color.FromArgb(255, 236, 236, 236));
+            //}
         }
 
         #region dependency properties
