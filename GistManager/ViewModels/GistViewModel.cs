@@ -30,6 +30,7 @@ namespace GistManager.ViewModels
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
             DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager,errorHandler) { ExecutionInfo = "Deleting gist" };
             CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
+            CreateNewGistCommand = new AsyncRelayCommand(CreateNewGistAsync, errorHandler);
         }
 
         public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
@@ -57,11 +58,14 @@ namespace GistManager.ViewModels
         #region commands
         public ICommand DeleteGistCommand { get; }
         public ICommand CopyGistUrlCommand { get; }
+        public ICommand CreateNewGistCommand { get; }
         #endregion
 
         #region command implementations
         private async Task DeleteGistAsync() => await GistClientService.DeleteGistAsync(Gist.Id);
         private void CopyGistUrl() => Clipboard.SetText(this.Url);
+        private async Task CreateNewGistAsync() => await GistClientService.CreateGistAsync("NewGist.txt",  "New Gist File - consider renaming" , true);
+
         #endregion
 
         #region bound properties

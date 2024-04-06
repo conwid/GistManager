@@ -90,6 +90,11 @@ namespace GistManager.Utils
             GistFileVM.FileName = mainWindowControl.GistFilenameTB.Text;
         }
 
+        internal void AddNewGist()
+        {
+
+        }
+
 
         internal void ApplyDarkModeToLanguageSelector()
         {

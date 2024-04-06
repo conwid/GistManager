@@ -11,6 +11,7 @@ namespace GistManager.GistService
         Task CreateGistAsync(string gistName, string firstFileContent, bool isPublic);
         Task CreateGistFileAsync(string gistId, string fileName, string fileContent);
         Task DeleteGistAsync(string gistId);
+        Task CreateNewGistFileAsync(string gistId, string filename, string comment, string content);
         Task DeleteGistFileAsync(string gistId, string fileName);
         Task<string> GetGistFileContentAsync(string fileUrl);
         Task<IReadOnlyList<GistHistoryEntryModel>> GetGistHistoryEntriesAsync(string gistId);

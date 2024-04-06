@@ -362,6 +362,10 @@
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="SaveButton_Click">
                     <Image Source="Resources/exclamationpoint.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save"/>
                 </Button>
+                <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Add New Gist"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistBT_ClickAsync" >
+                    <Image Source="Resources/AddGist.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button >
 
 
             </controls:OverflowlessToolbar>

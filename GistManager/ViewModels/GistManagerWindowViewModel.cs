@@ -20,7 +20,7 @@ namespace GistManager.ViewModels
         private readonly FuncEqualityComparer<GistModel, string> gistEqualityComparer = new FuncEqualityComparer<GistModel, string>(g => g.Id);
         private readonly FuncEqualityComparer<GistFileModel, string> gistFileEqualityComparer = new FuncEqualityComparer<GistFileModel, string>(g => g.Id);
 
-        private readonly IGistClientService gistClientService;
+        internal IGistClientService gistClientService;
         public IAsyncOperationStatusManager AsyncOperationStatusManager { get; }
         public IErrorHandler ErrorHandler { get; }
         public GistManagerWindowViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)

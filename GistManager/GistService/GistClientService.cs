@@ -43,10 +43,22 @@ namespace GistManager.GistService
             update.Files.Add(fileName, new GistFileUpdate { Content = fileContent, NewFileName = fileName });
             await gistClient.Edit(gistId, update);
         }
+
+        public async Task CreateNewGistFileAsync(string gistId, string filename, string comment, string content)
+        {
+            var newGist = new NewGist()
+            {
+                Public = true,
+                Description = comment,
+            };
+            newGist.Files.Add(filename, content);
+            await gistClient.Create(newGist);
+        }
+
         public async Task CreateGistAsync(string gistName, string firstFileContent, bool isPublic)
         {
             var newGist = new NewGist
-            {
+            {                
                 Public = isPublic,
                 Description = "Gist created from visual studio extension",
             };
@@ -111,6 +123,9 @@ namespace GistManager.GistService
             this.IsAuthenticated = false;
             return Task.CompletedTask;
         }
+
+    
+
         public bool IsAuthenticated { get; private set; }
     }
 }

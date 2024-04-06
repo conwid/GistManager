@@ -14,6 +14,7 @@ using System.Drawing;
 using Color = System.Windows.Media.Color;
 using Brush = System.Windows.Media.Brush;
 using System.Management.Instrumentation;
+using System.Threading.Tasks;
 
 namespace GistManager
 {
@@ -204,8 +205,11 @@ namespace GistManager
         {
             if (e.Key == System.Windows.Input.Key.Enter)
                 CodeEditorManager.UpdateGist();
-
         }
 
+        private void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            viewModel.gistClientService.CreateGistAsync(" New Gist", "Gist File created in Visual Studio", true);
+        }
     }
 }
