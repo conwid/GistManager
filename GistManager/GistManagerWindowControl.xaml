@@ -358,7 +358,10 @@
                     <Image Source="Resources/DocumentOutline.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </Button>
                 <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}"  Width="100"></ComboBox>
-
+                <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="SaveButton_Click">
+                    <Image Source="Resources/exclamationpoint.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save"/>
+                </Button>
 
 
             </controls:OverflowlessToolbar>
@@ -452,11 +455,12 @@
                 <RowDefinition  MinHeight="200" />
             </Grid.RowDefinitions>
 
-            <GridSplitter Grid.Row="1" Background="Transparent" BorderThickness="1" BorderBrush="#909090" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Row="1" Background="Transparent" BorderThickness="1" BorderBrush="#909090" 
+                          HorizontalAlignment="Stretch" SizeChanged="GridSplitter_SizeChanged"  />
 
-            <ScrollViewer x:Name="GistTreeScroller" Grid.Row="0"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+            <ScrollViewer x:Name="GistTreeScroller" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" SizeChanged="GistTreeScroller_SizeChanged" >
                 <Grid>
-                    <StackPanel x:Name="GistTree" Orientation="Vertical">
+                    <StackPanel x:Name="GistTreeSP" Orientation="Vertical" SizeChanged="GistTree_SizeChanged">
                         <controls:GistTreeViewDisplay x:Name="PublicGistGTVD"
                                           ExpanderHeader="Public gists" 
                                           ExpanderIsExpanded="True"

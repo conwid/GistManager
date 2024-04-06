@@ -64,6 +64,7 @@ namespace GistManager.GistService
         {
             var update = new GistUpdate();
             update.Files.Add(originalFileName, new GistFileUpdate { Content = content, NewFileName = newFileName });
+            
             await gistClient.Edit(gistId, update);
         }
         public async Task DeleteGistFileAsync(string gistId, string fileName)

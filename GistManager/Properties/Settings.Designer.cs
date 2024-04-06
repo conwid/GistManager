@@ -34,5 +34,17 @@ namespace GistManager.Properties {
                 this["DarkMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public double GistTreeScrollerHeight {
+            get {
+                return ((double)(this["GistTreeScrollerHeight"]));
+            }
+            set {
+                this["GistTreeScrollerHeight"] = value;
+            }
+        }
     }
 }

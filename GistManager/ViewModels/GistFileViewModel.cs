@@ -5,6 +5,7 @@ using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
+using Microsoft.VisualStudio;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,7 +29,7 @@ namespace GistManager.ViewModels
             GistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
             this.asyncOperationStatusManager = asyncOperationStatusManager ?? throw new ArgumentNullException(nameof(asyncOperationStatusManager));
             FileNameChangedCommand = new AsyncCommand<string>(RenameGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Renaming gist file" };
-            FileNameChangedCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
+            UpdateGistCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
             CheckoutCommand = new AsyncCommand<GistHistoryEntryModel>(RefreshGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Checking out file", SuppressCompletionCommand = true };
         }
 
@@ -115,6 +116,10 @@ namespace GistManager.ViewModels
         
         // HACK: Command should be readonly
         protected AsyncCommand<string> FileNameChangedCommand { get; set; }
+
+        internal AsyncCommand<string> UpdateGistCommand { get; set; }
+
+
         #endregion
 
         #region command implementation
@@ -125,10 +130,14 @@ namespace GistManager.ViewModels
             if (!string.IsNullOrEmpty(originalName) && newName != originalName)
                 await FileNameChangedCommand.ExecuteAsync(newName);
         }
-
         private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
 
         private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
+
+        internal async void UpdateGist()
+        {
+            await GistClientService.UpdateGistFilenameAndContentAsync(Id, fileName, fileName, content);
+        }
 
         private async Task DeleteGistFileAsync() => await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
 

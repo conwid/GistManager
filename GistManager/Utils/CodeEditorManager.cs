@@ -56,7 +56,11 @@ namespace GistManager.Utils
 
             // Now load editor - need to create a temp file
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
+
             gistTempFile = Path.Combine(Path.GetTempPath(), _gistFileVM.FileName.Replace("Gist: ", ""));
+
+            // Check for illegal chars
+            foreach (var c in Path.GetInvalidFileNameChars()) gistTempFile = gistTempFile.Replace(c, '-');
 
             File.WriteAllText(gistTempFile, _gistFileVM.Content);
 
@@ -71,37 +75,15 @@ namespace GistManager.Utils
             mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
         }
 
+        internal void UpdateGist()
+        {
+            GistFileVM.UpdateGist();
+        }
 
- 
 
         internal void ApplyDarkModeToLanguageSelector()
         {
-            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());
-
-            // mainWindowControl.GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages
-
-            //foreach (var language in Syncfusion.Windows.Edit.Languages)
-            //{
-
-            //}
-
-          //  mainWindowControl.LanguageSelectorCB.Items = Enum.GetValues(typeof(Syncfusion.Windows.Edit.Languages));
-
-            //ComboBox cb = mainWindowControl.LanguageSelectorCB;
-
-            //            < Setter Property = "Background" Value = "#202020" />
-            //< Setter Property = "Foreground" Value = "#d0d0d0" />
-
-            //cb.Background = new SolidColorBrush(Color.FromArgb(255,30,30,30));
-            //cb.Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
-            //cb.BorderBrush = new SolidColorBrush(Colors.Red);
-
-
-
-            //Style cbStyle = new Style();
-            //cbStyle.TargetType = typeof(ComboBox);
-            //Setter setter = new Setter();
-            //setter.Property = 
+            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());      
 
         }
 

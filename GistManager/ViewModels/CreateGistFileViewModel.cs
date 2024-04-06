@@ -11,7 +11,7 @@ namespace GistManager.ViewModels
         #region constructors        
         public CreateGistFileViewModel(GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : base(parent, gistClientService, asyncOperationStatusManager, errorHandler)
         {
-            FileNameChangedCommand = new AsyncCommand<string>(CreateGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Creating gist file" };
+            //FileNameChangedCommand = new AsyncCommand<string>(CreateGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Creating gist file" };
         }
         #endregion
 

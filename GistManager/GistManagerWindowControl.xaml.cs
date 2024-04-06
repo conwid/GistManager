@@ -26,25 +26,21 @@ namespace GistManager
 
         internal CodeEditorManager CodeEditorManager;
 
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GistManagerWindowControl"/> class.
         /// </summary>
         public GistManagerWindowControl(GistManagerWindowViewModel gistManagerWindowViewModel)
         {
-
             this.InitializeComponent();
             viewModel = gistManagerWindowViewModel;
             DataContext = viewModel;
 
             CodeEditorManager = new CodeEditorManager(this);
 
-            viewModel.LoginCommand
+            GistTreeSP.Height = Properties.Settings.Default.GistTreeScrollerHeight;
 
             ApplyTheme();
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
-
         }
 
         private void ApplyTheme()
@@ -162,20 +158,31 @@ namespace GistManager
             errorPanel.Visibility = Visibility.Collapsed;
         }
 
-        //private void GistManager_Loaded(object sender, RoutedEventArgs e)
-        //{
-
-
-
-        //}
-
         private void OutlineButton_Click(object sender, RoutedEventArgs e)
         {
             CodeEditorManager.ToggleOutline();
         }
 
+
         #endregion End: MyCode =================================================================================
 
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.UpdateGist();
+        }
 
+        private void GistTree_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        }
+
+        private void GridSplitter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        }
+
+        private void GistTreeScroller_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Properties.Settings.Default.GistTreeScrollerHeight = GistTreeSP.Height;
+            Properties.Settings.Default.Save();
+        }
     }
 }
