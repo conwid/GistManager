@@ -17,6 +17,6 @@ namespace GistManager.GistService
         Task<IReadOnlyList<GistModel>> GetGistsAsync();
         Task<GistModel> GetGistVersionAsync(string url);
         Task LogoutAsync();
-        Task RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content);
+        Task RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content, string comment);
     }
 }

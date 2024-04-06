@@ -52,7 +52,7 @@ namespace GistManager.Utils
             GistViewModel gistParentFile = _gistFileVM.ParentGist;
 
             mainWindowControl.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
-            mainWindowControl.ParentGistDescription.Text = gistParentFile.Description;
+            mainWindowControl.ParentGistDescriptionTB.Text = gistParentFile.Description;
             mainWindowControl.GistFilenameTB.Text = $"{_gistFileVM.FileName}";
 
             // Now load editor - need to create a temp file
@@ -81,9 +81,10 @@ namespace GistManager.Utils
             mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
         }
 
-        internal void UpdateGist(string content)
+        internal void UpdateGist()
         {
             GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
+            GistFileVM.ParentGist.Description = mainWindowControl.ParentGistDescriptionTB.Text;
 
             // Changing the filename also updates the code
             GistFileVM.FileName = mainWindowControl.GistFilenameTB.Text;

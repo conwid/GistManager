@@ -130,9 +130,9 @@ namespace GistManager.ViewModels
             //if (!string.IsNullOrEmpty(originalName) && newName != originalName)
                 await FileNameChangedCommand.ExecuteAsync(newName);
         }
-        private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
+        private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content, ParentGist.Description);
 
-        private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
+        private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content, ParentGist.Description);
 
         private async Task DeleteGistFileAsync() => await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
 

@@ -445,9 +445,9 @@
             </ScrollViewer>
 
         </StackPanel>
-        
-        
-        
+
+
+
 
         <Grid x:Name="MidPanel" 
                 Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
@@ -459,11 +459,11 @@
             </Grid.RowDefinitions>
 
             <GridSplitter Grid.Row="1" Background="Transparent" BorderThickness="1" BorderBrush="#909090" 
-                          HorizontalAlignment="Stretch" SizeChanged="GridSplitter_SizeChanged"  />
+                          HorizontalAlignment="Stretch"  />
 
             <ScrollViewer x:Name="GistTreeScroller" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" SizeChanged="GistTreeScroller_SizeChanged" >
                 <Grid>
-                    <StackPanel x:Name="GistTreeSP" Orientation="Vertical" SizeChanged="GistTree_SizeChanged">
+                    <StackPanel x:Name="GistTreeSP" Orientation="Vertical" >
                         <controls:GistTreeViewDisplay x:Name="PublicGistGTVD"
                                           ExpanderHeader="Public gists" 
                                           ExpanderIsExpanded="True"
@@ -495,20 +495,18 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="auto" MinHeight="30"/>
                         <RowDefinition Height="3" />
-                        <RowDefinition Height="*"  />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <TextBlock x:Name="ParentGistName" Grid.Row="0" FontWeight="ExtraBlack" Padding="2"></TextBlock>
 
                     <ScrollViewer x:Name="ParentGistDescriptionScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
-                        <TextBlock x:Name="ParentGistDescription"  VerticalAlignment="Top" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"></TextBlock>
+                        <TextBox x:Name="ParentGistDescriptionTB"  VerticalAlignment="Top" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" LostFocus="ParentGistDescriptionTB_LostFocus" KeyUp="ParentGistDescriptionTB_KeyUp"></TextBox>
                     </ScrollViewer>
 
                     <GridSplitter Grid.Row="2" Background="Transparent" BorderThickness="1" BorderBrush="#909090" HorizontalAlignment="Stretch"/>
 
-                    <StackPanel Grid.Row="3" >
-                        <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2" />
-                    </StackPanel>
+                    <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2" LostFocus="GistFilenameTB_LostFocus" KeyUp="GistFilenameTB_KeyUp" />
 
                 </Grid>
 

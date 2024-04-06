@@ -38,9 +38,10 @@
             >
             <directDragTree:DirectDragTreeView.Resources>
                 <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />
-                <Image x:Key="copyUrlImage" Source="..\Resources\copyurl.png" x:Shared="False" />
+                <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" />
                 <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" />
                 <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" />
+                <Image x:Key="addFileImage"  Source="..\Resources\AddFile.png" x:Shared="False" />
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -91,6 +92,8 @@
                             <ContextMenu>
                                 <MenuItem Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
                                 <MenuItem Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
+                                <MenuItem Header="Add gist file" Icon ="{DynamicResource addFileImage}" Command="{Binding DeleteGistCommand}" />
+
                                 <MenuItem Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
                                     <MenuItem.ItemTemplate>
                                         <DataTemplate>

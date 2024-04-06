@@ -53,10 +53,11 @@ namespace GistManager.GistService
             newGist.Files.Add(gistName, firstFileContent);
             await gistClient.Create(newGist);
         }
-        public async Task RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content)
+
+        public async Task RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content, string comment)
         {
-            var update = new GistUpdate();
-            update.Files.Add(originalFileName, new GistFileUpdate { Content = content, NewFileName = newFileName });
+            var update = new GistUpdate() { Description = comment };
+            update.Files.Add(originalFileName, new GistFileUpdate { Content = content, NewFileName = newFileName});
             await gistClient.Edit(gistId, update);
         }
 

@@ -172,24 +172,40 @@ namespace GistManager
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            CodeEditorManager.UpdateGist(GistCodeEditor.Text);
+            CodeEditorManager.UpdateGist();
         }
 
-        private void GistTree_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
 
-        private void GridSplitter_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
 
         private void GistTreeScroller_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             GridLengthConverter converter = new GridLengthConverter();
-
-
-            Properties.Settings.Default.GistTreeGridLength = converter.ConvertToString( GistTreeRow.Height);
+            Properties.Settings.Default.GistTreeGridLength = converter.ConvertToString(GistTreeRow.Height);
             Properties.Settings.Default.Save();
         }
+
+        private void ParentGistDescriptionTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.UpdateGist();
+        }
+
+        private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                CodeEditorManager.UpdateGist();
+        }
+
+        private void GistFilenameTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.UpdateGist();
+        }
+
+        private void GistFilenameTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                CodeEditorManager.UpdateGist();
+
+        }
+
     }
 }
