@@ -1,12 +1,19 @@
-﻿using GistManager.ViewModels;
+﻿using EnvDTE;
+using GistManager.ViewModels;
+using Newtonsoft.Json.Linq;
 using Syncfusion.Windows.Edit;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
+using Color = System.Windows.Media.Color;
 
 namespace GistManager.Utils
 {
@@ -54,6 +61,35 @@ namespace GistManager.Utils
 
         }
 
+        internal void ToggleLineNumbers()
+        {
+            mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
+        }
+
+        internal void ToggleOutline()
+        {
+            mainWindowControl.GistCodeEditor.EnableOutlining = !mainWindowControl.GistCodeEditor.EnableOutlining;
+        }
+
+        internal void ApplyDarkModeToLanguageSelector()
+        {
+            //ComboBox cb = mainWindowControl.LanguageSelectorCB;
+
+            //            < Setter Property = "Background" Value = "#202020" />
+            //< Setter Property = "Foreground" Value = "#d0d0d0" />
+
+            //cb.Background = new SolidColorBrush(Color.FromArgb(255,30,30,30));
+            //cb.Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
+            //cb.BorderBrush = new SolidColorBrush(Colors.Red);
+
+            
+
+            //Style cbStyle = new Style();
+            //cbStyle.TargetType = typeof(ComboBox);
+            //Setter setter = new Setter();
+            //setter.Property = 
+            
+        }
 
 
 

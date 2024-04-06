@@ -19,7 +19,7 @@ namespace GistManager
     {
         private readonly GistManagerWindowViewModel viewModel;
 
-        private bool darkModeButtonSetupCleared = false;
+        private bool darkModeSetupCleared = false;
 
         internal CodeEditorManager CodeEditorManager;
 
@@ -35,25 +35,11 @@ namespace GistManager
 
             this.InitializeComponent();
             viewModel = gistManagerWindowViewModel;
-            DataContext = viewModel;                       
+            DataContext = viewModel;
 
-            DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
-            if (SystemConfiguraiton.DarkModeSelected())
-            {
-                searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-                searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
-                statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
-                statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40, 40, 40));
-
-                GistCodeEditor.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
-                GistCodeEditor.Foreground = new SolidColorBrush(Color.FromArgb(255, 230,230,230));
-                GistCodeEditor.LineNumberAreaBackground = new SolidColorBrush(Color.FromArgb(255, 30,30,30));
-                GistCodeEditor.LineNumberTextForeground = new SolidColorBrush(Color.FromArgb(255, 150,150,150));
-                GistCodeEditor.CaretBrush = new SolidColorBrush(Color.FromArgb(255, 250,250,250));
-            }
-
-            darkModeButtonSetupCleared = true; // soz - super hacky!
             CodeEditorManager = new CodeEditorManager(this);
+            // DarkModeToggleButton.IsChecked = Properties.Settings.Default.DarkMode;
+            if (SystemConfiguraiton.DarkModeSelected()) ApplyDarkMode();
         }
 
         /// <summary>
@@ -70,14 +56,36 @@ namespace GistManager
                 "GistManagerWindow");
         }
 
+
+
+        #region MyCode =========================================================================================
+        // MyCode ==============================================================================================
+
+        private void ApplyDarkMode()
+        {
+            DarkModeToggleButton.IsChecked = true;
+
+            searchBox.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
+            searchBox.Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
+            statusBar.Foreground = new SolidColorBrush(Color.FromArgb(255, 246, 246, 246));
+            statusBar.Background = new SolidColorBrush(Color.FromArgb(255, 40, 40, 40));
+
+            GistCodeEditor.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
+            GistCodeEditor.Foreground = new SolidColorBrush(Color.FromArgb(255, 230, 230, 230));
+            GistCodeEditor.LineNumberAreaBackground = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
+            GistCodeEditor.LineNumberTextForeground = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+            GistCodeEditor.CaretBrush = new SolidColorBrush(Color.FromArgb(255, 250, 250, 250));
+
+            this.CodeEditorManager.ApplyDarkModeToLanguageSelector();
+
+            darkModeSetupCleared = true; // soz - super hacky!
+        }
         private void searchLabel_Loaded(object sender, RoutedEventArgs e)
         {
             if (SystemConfiguraiton.DarkModeSelected())
             {
                 ((System.Windows.Controls.Label)sender).Foreground = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
             }
-
-
         }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -92,13 +100,11 @@ namespace GistManager
 
         private void UpdateDarkModeSettings()
         {
-            if (!darkModeButtonSetupCleared) return;
+            if (!darkModeSetupCleared) return;
             Properties.Settings.Default.DarkMode = (bool)DarkModeToggleButton.IsChecked;
             Properties.Settings.Default.Save();
             StatusBarLabal.Text = "Theme will refresh on restart";
             StatusBarImage.Width = 24;
-            
-
         }
         private void ToggleErrorWordwrap_Click(object sender, RoutedEventArgs e)
         {
@@ -119,7 +125,23 @@ namespace GistManager
 
         private void GistManager_Loaded(object sender, RoutedEventArgs e)
         {
-           
+
+
+
         }
+
+        private void LineNumbersButton_Click(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.ToggleLineNumbers();
+        }
+
+        private void OutlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.ToggleOutline();
+        }
+
+        #endregion End: MyCode =================================================================================
+
+
     }
 }

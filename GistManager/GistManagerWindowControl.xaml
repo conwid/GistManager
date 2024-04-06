@@ -71,7 +71,21 @@
                               ToolTip="Toggle Dark Mode" Unchecked="ToggleButton_Unchecked" Focusable="False">
                     <Image Source="Resources/darktheme.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </ToggleButton>
-
+                <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <Button x:Name="LineNumbersButton" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Toggle Line Numbers"
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
+		                Click="LineNumbersButton_Click">
+                    <Image Source="Resources/BulletList.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button>
+                <Button x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+		                Click="OutlineButton_Click">
+                    <Image Source="Resources/DocumentOutline.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button>
+                <ComboBox x:Name="LanguageSelectorCB" Width="100">
+                    
+                </ComboBox>;
+                
             </controls:OverflowlessToolbar>
         </ToolBarTray>
 
@@ -221,7 +235,7 @@
                 <!--<syncfusion:EditControl x:Name="GistCode" >
                 </syncfusion:EditControl>-->
                 <!--</ScrollViewer>-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" DocumentLanguage="CSharp" FontFamily="Consolas"  />
+                <syncfusion:EditControl x:Name="GistCodeEditor" DocumentLanguage="CSharp" FontFamily="Consolas" ShowLineNumber="False" EnableOutlining="False"  />
 
             </DockPanel>
 
