@@ -38,12 +38,12 @@ namespace GistManager.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public double GistTreeScrollerHeight {
+        public string GistTreeGridLength {
             get {
-                return ((double)(this["GistTreeScrollerHeight"]));
+                return ((string)(this["GistTreeGridLength"]));
             }
             set {
-                this["GistTreeScrollerHeight"] = value;
+                this["GistTreeGridLength"] = value;
             }
         }
     }

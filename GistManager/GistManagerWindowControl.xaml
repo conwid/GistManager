@@ -445,14 +445,17 @@
             </ScrollViewer>
 
         </StackPanel>
+        
+        
+        
 
         <Grid x:Name="MidPanel" 
                 Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="100" MinHeight="100"  />
+                <RowDefinition Height="100" MinHeight="100" x:Name="GistTreeRow" />
                 <RowDefinition Height="3" />
-                <RowDefinition  MinHeight="200" />
+                <RowDefinition  MinHeight="200" x:Name="GistDetailsRow"/>
             </Grid.RowDefinitions>
 
             <GridSplitter Grid.Row="1" Background="Transparent" BorderThickness="1" BorderBrush="#909090" 
@@ -504,7 +507,7 @@
                     <GridSplitter Grid.Row="2" Background="Transparent" BorderThickness="1" BorderBrush="#909090" HorizontalAlignment="Stretch"/>
 
                     <StackPanel Grid.Row="3" >
-                        <TextBlock x:Name="GistFilename" DockPanel.Dock="Top" FontWeight="Bold" Padding="2"></TextBlock>
+                        <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2" />
                     </StackPanel>
 
                 </Grid>

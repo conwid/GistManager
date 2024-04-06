@@ -37,7 +37,8 @@ namespace GistManager
 
             CodeEditorManager = new CodeEditorManager(this);
 
-            GistTreeSP.Height = Properties.Settings.Default.GistTreeScrollerHeight;
+            GridLengthConverter converter = new GridLengthConverter();
+            GistTreeRow.Height = (GridLength)converter.ConvertFromString(Properties.Settings.Default.GistTreeGridLength);
 
             ApplyTheme();
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
@@ -121,8 +122,11 @@ namespace GistManager
             PrivateGistGTVD.TreeView.Foreground = globalTextColorBrush;
 
             statusBar.Foreground = globalTextColorBrush;
+
             GistCodeEditor.Foreground = globalTextColorBrush;
             GistCodeEditor.LineNumberTextForeground = globalTextColorBrush;
+            GistCodeEditor.CaretBrush = globalTextColorBrush;
+
             LanguageSelectorCB.Foreground = globalTextColorBrush;
 
             searchBox.Foreground = globalTextColorBrush;
@@ -168,7 +172,7 @@ namespace GistManager
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            CodeEditorManager.UpdateGist();
+            CodeEditorManager.UpdateGist(GistCodeEditor.Text);
         }
 
         private void GistTree_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -181,7 +185,10 @@ namespace GistManager
 
         private void GistTreeScroller_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Properties.Settings.Default.GistTreeScrollerHeight = GistTreeSP.Height;
+            GridLengthConverter converter = new GridLengthConverter();
+
+
+            Properties.Settings.Default.GistTreeGridLength = converter.ConvertToString( GistTreeRow.Height);
             Properties.Settings.Default.Save();
         }
     }

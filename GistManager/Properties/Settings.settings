@@ -5,7 +5,7 @@
     <Setting Name="DarkMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="GistTreeScrollerHeight" Type="System.Double" Scope="User">
+    <Setting Name="GistTreeGridLength" Type="System.String" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
   </Settings>

@@ -127,17 +127,12 @@ namespace GistManager.ViewModels
 
         protected async virtual Task OnFileNameChangedAsync(string originalName, string newName)
         {
-            if (!string.IsNullOrEmpty(originalName) && newName != originalName)
+            //if (!string.IsNullOrEmpty(originalName) && newName != originalName)
                 await FileNameChangedCommand.ExecuteAsync(newName);
         }
         private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
 
         private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content);
-
-        internal async void UpdateGist()
-        {
-            await GistClientService.UpdateGistFilenameAndContentAsync(Id, fileName, fileName, content);
-        }
 
         private async Task DeleteGistFileAsync() => await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
 

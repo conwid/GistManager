@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using GistManager.ViewModels;
 using Newtonsoft.Json.Linq;
+using Octokit;
 using Syncfusion.Windows.Edit;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace GistManager.Utils
     internal class CodeEditorManager
     {
 
- 
+
         public GistFileViewModel GistFileVM
         {
             get { return _gistFileVM; }
@@ -29,10 +30,10 @@ namespace GistManager.Utils
             {
                 _gistFileVM = value;
                 OnGistFileChanged();
-            }            
+            }
         }
 
- 
+
 
         private GistFileViewModel _gistFileVM = null;
         private string gistTempFile = null;
@@ -49,18 +50,23 @@ namespace GistManager.Utils
         private void OnGistFileChanged()
         {
             GistViewModel gistParentFile = _gistFileVM.ParentGist;
-            
+
             mainWindowControl.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
             mainWindowControl.ParentGistDescription.Text = gistParentFile.Description;
-            mainWindowControl.GistFilename.Text = $"File: {_gistFileVM.FileName}";
+            mainWindowControl.GistFilenameTB.Text = $"{_gistFileVM.FileName}";
 
             // Now load editor - need to create a temp file
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
 
-            gistTempFile = Path.Combine(Path.GetTempPath(), _gistFileVM.FileName.Replace("Gist: ", ""));
+            // Now update to new gistTempFile
+            // get rid of the "gist" prefix"
+            gistTempFile = _gistFileVM.FileName.Replace("Gist: ", "");
 
-            // Check for illegal chars
+            // replace any illegal chars
             foreach (var c in Path.GetInvalidFileNameChars()) gistTempFile = gistTempFile.Replace(c, '-');
+
+            gistTempFile = Path.Combine(Path.GetTempPath(), gistTempFile);
+
 
             File.WriteAllText(gistTempFile, _gistFileVM.Content);
 
@@ -75,15 +81,18 @@ namespace GistManager.Utils
             mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
         }
 
-        internal void UpdateGist()
+        internal void UpdateGist(string content)
         {
-            GistFileVM.UpdateGist();
+            GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
+
+            // Changing the filename also updates the code
+            GistFileVM.FileName = mainWindowControl.GistFilenameTB.Text;
         }
 
 
         internal void ApplyDarkModeToLanguageSelector()
         {
-            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());      
+            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());
 
         }
 
