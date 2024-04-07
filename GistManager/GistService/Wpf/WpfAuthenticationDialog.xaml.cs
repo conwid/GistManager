@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace GistManager.GistService.Wpf
 {
@@ -15,8 +16,8 @@ namespace GistManager.GistService.Wpf
             InitializeComponent();
 
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            Height = 800;
-            Width = 600;
+            Height = 500;
+            Width = 500;
 
             loginUri = uri;
 
@@ -34,7 +35,6 @@ namespace GistManager.GistService.Wpf
                     await Task.Run(() => { Thread.Sleep(2000); });
 
                     this.DialogResult = true;
-
                 }
                 else
                 {

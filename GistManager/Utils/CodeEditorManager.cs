@@ -1,22 +1,12 @@
-﻿using EnvDTE;
-using GistManager.GistService;
-using GistManager.ViewModels;
-using Newtonsoft.Json.Linq;
-using Octokit;
+﻿using GistManager.ViewModels;
 using Syncfusion.Windows.Edit;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Color = System.Windows.Media.Color;
 
 namespace GistManager.Utils
@@ -25,20 +15,40 @@ namespace GistManager.Utils
     {
         public GistFileViewModel GistFileVM
         {
-            get { return _gistFileVM; }
+            get { return gistFileVM; }
             set
             {
-                _gistFileVM = value;
+                //ensure any residual changes not trigge
+                CheckForChangesBeforeGistFileVMChange();
+
+                gistFileVM = value;
                 OnGistFileChanged();
             }
         }
 
-        private GistFileViewModel _gistFileVM = null;
+        private GistFileViewModel gistFileVM = null;
         private string gistTempFile = null;
         private BitmapImage saveEnabled;
         private BitmapImage saveDisabled;
 
         private GistManagerWindowControl mainWindowControl;
+
+        private Dictionary<List<String>, Languages> codeLanguageMappings = new Dictionary<List<string>, Languages>()
+            {
+            {new List<string>() {"c" }, Languages.C },
+            {new List<string>() {"cs" }, Languages.CSharp },
+            {new List<string>() {"dpr", "pas", "dfm" }, Languages.Delphi },
+            {new List<string>() {"html", "htm" }, Languages.HTML },
+            {new List<string>() {"java" }, Languages.Java },
+            {new List<string>() {"js", "cjs", "mjs" }, Languages.JScript },
+            {new List<string>() {"ps1" }, Languages.PowerShell },
+            {new List<string>() {"sql" }, Languages.SQL },
+            {new List<string>() {"txt" }, Languages.Text },
+            {new List<string>() {"vbs" }, Languages.VBScript },
+            {new List<string>() {"vb" }, Languages.VisualBasic },
+            {new List<string>() {"xaml" }, Languages.XAML },
+            {new List<string>() {"xml" }, Languages.XML },
+        };
 
         public CodeEditorManager(GistManagerWindowControl mainWindowControl)
         {
@@ -47,6 +57,7 @@ namespace GistManager.Utils
             // below used to indicate user cannot save for any async/await events
             saveEnabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/Save.png"));
             saveDisabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/SaveInactive.png"));
+
         }
 
         private void SetSaveButtonOutline(bool visible)
@@ -65,17 +76,20 @@ namespace GistManager.Utils
         }
         private void OnGistFileChanged()
         {
+            // first delete temporary file of last GistFileView
+            if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
+
             // retrieves HasChanges status of the GitFile and updates the Save BUtton if needed
             SetSaveButtonOutline(GistFileVM.HasChanges);
 
             // get the parent GIst (i.e. technically the Gist not GistFile.
             // This can be itself as first gistfile alphabetically if classified as the Gist
-            GistViewModel gistParentFile = _gistFileVM.ParentGist;
+            GistViewModel gistParentFile = gistFileVM.ParentGist;
 
             // update the UIControls to the rleevant VM Data
             mainWindowControl.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
             mainWindowControl.ParentGistDescriptionTB.Text = gistParentFile.Description;
-            mainWindowControl.GistFilenameTB.Text = $"{_gistFileVM.FileName}";
+            mainWindowControl.GistFilenameTB.Text = $"{gistFileVM.FileName}";
 
             // Onto loading the code/contents into the code editor
             // need to create a temp file due to the SyntaxEditor control needing files, not stings
@@ -84,7 +98,7 @@ namespace GistManager.Utils
 
             // Now update to new gistTempFile
             // get rid of the "gist" prefix"
-            gistTempFile = _gistFileVM.FileName.Replace("Gist: ", "");
+            gistTempFile = gistFileVM.FileName.Replace("Gist: ", "");
 
             // replace any illegal chars
             foreach (var c in Path.GetInvalidFileNameChars()) gistTempFile = gistTempFile.Replace(c, '-');
@@ -93,20 +107,41 @@ namespace GistManager.Utils
             gistTempFile = Path.Combine(Path.GetTempPath(), gistTempFile);
 
             // write the code to the tmep file
-            File.WriteAllText(gistTempFile, _gistFileVM.Content);
+            File.WriteAllText(gistTempFile, gistFileVM.Content);
 
             // set the code editor's source to this document
             mainWindowControl.GistCodeEditor.DocumentSource = gistTempFile;
 
-            // once in the editor, no longer needed. Delete. 
-            if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
+            // now try and auto-math the language form any extension
+            string ext = Path.GetExtension(gistTempFile).Replace(".","");
 
+            if (ext != null)
+            {
+                var languageKvp = codeLanguageMappings.Where(x => x.Key.Contains(ext)).FirstOrDefault();
+                if (!languageKvp.Equals(default(KeyValuePair<List<string>, Languages>)))
+                {
+                    ChangeEditorLanguage(languageKvp.Value.ToString());
+                    mainWindowControl.LanguageSelectorCB.Text = languageKvp.Value.ToString();
+                }
+
+
+            }
         }
 
-        internal void ToggleOutline()
+        internal void ToggleOutline(bool? state)
         {
-            mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
-            mainWindowControl.GistCodeEditor.EnableOutlining = !mainWindowControl.GistCodeEditor.EnableOutlining;
+            mainWindowControl.GistCodeEditor.ShowLineNumber = (bool)state;
+            mainWindowControl.GistCodeEditor.EnableOutlining = (bool)state;
+        }
+
+        internal void ToggleIntellisense(bool? state)
+        {
+            mainWindowControl.GistCodeEditor.EnableIntellisense = (bool)state;
+        }
+
+        internal void ToggleAutoIndent(bool? state)
+        {
+            mainWindowControl.GistCodeEditor.IsAutoIndentationEnabled = (bool)state;
         }
 
         /// <summary>
@@ -135,10 +170,15 @@ namespace GistManager.Utils
             // resets gist file has changes indicator
             SetGistFileHasChanges(false);
 
+            mainWindowControl.GistCodeEditor.SaveFile(gistTempFile);
+
             return true;
         }
 
-
+        private void CheckForChangesBeforeGistFileVMChange()
+        {
+            CheckUiWithGistVmForChanges();
+        }
 
         private void UpdateGistViewModel()
         {
@@ -150,13 +190,13 @@ namespace GistManager.Utils
 
         internal void CheckUiWithGistVmForChanges()
         {
-            // checks the UIElement values against the view model for changes
+            if (GistFileVM == null) return;
 
+            // checks the UIElement values against the view model for changes
             if (mainWindowControl.GistCodeEditor.Text != GistFileVM.Content ||
                 mainWindowControl.GistFilenameTB.Text != GistFileVM.FileName ||
                mainWindowControl.ParentGistDescriptionTB.Text != GistFileVM.ParentGist.Description)
             {
-
                 // changes found - do Gist ViewModel update  
                 UpdateGistViewModel();
 
@@ -165,7 +205,11 @@ namespace GistManager.Utils
             }
         }
 
-
+        internal void ChangeEditorLanguage(string languageString)
+        {
+            Languages language = (Languages)Enum.Parse(typeof(Languages), languageString);
+            mainWindowControl.GistCodeEditor.DocumentLanguage = language;
+        }
 
 
 

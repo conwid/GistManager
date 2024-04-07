@@ -16,6 +16,12 @@ using Brush = System.Windows.Media.Brush;
 using System.Management.Instrumentation;
 using System.Threading.Tasks;
 using System;
+using Syncfusion.Themes.FluentDark.WPF;
+using Syncfusion.Themes.MaterialDark.WPF;
+using Syncfusion.Themes.MaterialLight.WPF;
+using System.Diagnostics;
+using Syncfusion.Windows.Edit;
+using System.Linq;
 
 namespace GistManager
 {
@@ -45,7 +51,9 @@ namespace GistManager
             ApplyTheme();
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
+            //GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages.
 
+            LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();              
         }
 
         private void ApplyTheme()
@@ -99,20 +107,25 @@ namespace GistManager
             SolidColorBrush globalTextColorBrushDark = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
             SolidColorBrush backgroundTextBoxTextDark = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
 
-
             // LIGHT MODE
             SolidColorBrush globalTextColorBrushLight = new SolidColorBrush(Color.FromArgb(255, 10, 10, 10));
             SolidColorBrush backgroundTextBoxTextLight = new SolidColorBrush(Color.FromArgb(255, 64, 64, 64));
 
-
+            // wot no working Interface, syncfusion?
             if (darkMode)
             {
+                MaterialDarkThemeSettings themeSettings = new MaterialDarkThemeSettings();
+                themeSettings.Palette = Syncfusion.Themes.MaterialDark.WPF.MaterialPalette.Blue;
+                SfSkinManager.RegisterThemeSettings("MaterialDark", themeSettings);
                 SfSkinManager.SetTheme(this, new Theme("MaterialDark"));
                 UpdateThemeElements(globalTextColorBrushDark, backgroundTextBoxTextDark);
             }
             else
             {
                 SfSkinManager.SetTheme(this, new Theme("MaterialLight"));
+                MaterialLightThemeSettings themeSettings = new MaterialLightThemeSettings();
+                themeSettings.Palette = Syncfusion.Themes.MaterialLight.WPF.MaterialPalette.Blue;
+                SfSkinManager.RegisterThemeSettings("FluentDark", themeSettings);
                 UpdateThemeElements(globalTextColorBrushLight, backgroundTextBoxTextLight);
             }
         }
@@ -168,7 +181,7 @@ namespace GistManager
 
         private void OutlineButton_Click(object sender, RoutedEventArgs e)
         {
-            CodeEditorManager.ToggleOutline();
+            CodeEditorManager.ToggleOutline(OutlineButton.IsChecked);
         }
 
 
@@ -176,7 +189,7 @@ namespace GistManager
 
         private async void SaveButton_ClickAsync(object sender, RoutedEventArgs e)
         {
-          var response = await CodeEditorManager.UpdateGistOnRepositoryAsync();
+            var response = await CodeEditorManager.UpdateGistOnRepositoryAsync();
         }
 
         private void GistTreeScroller_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -185,21 +198,18 @@ namespace GistManager
             Properties.Settings.Default.GistTreeGridLength = converter.ConvertToString(GistTreeRow.Height);
             Properties.Settings.Default.Save();
         }
-
-
         private async void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
         {
             var reposnse = await ViewModel.gistClientService.CreateGistAsync("#New Gist", "Gist File created in Visual Studio", true);
+            ViewModel.RefreshCommand.Execute(null);
 
         }
-
         private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
-        {
-            //if (CodeEditorManager.GistFileVM is null) return;
-
+        {    
             var reposnse = await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
                    $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
                    "Gist file created in Visual Studio Extension.");
+            ViewModel.RefreshCommand.Execute(null);
         }
 
         private void ParentGistDescriptionTB_LostFocus(object sender, RoutedEventArgs e)
@@ -214,19 +224,61 @@ namespace GistManager
         {
             CodeEditorManager.CheckUiWithGistVmForChanges();
         }
-
-        private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter) 
-            { 
-                GistFilenameTB.Focus();
-                GistFilenameTB.Select(GistFilenameTB.Text.Length, GistFilenameTB.Text.Length);
-            }
-        }
-
+        
         private void gistDetailsPanel_LostFocus(object sender, RoutedEventArgs e)
         {
             CodeEditorManager.CheckUiWithGistVmForChanges();
+        }
+
+        private void IntellisenseButton_Click(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.ToggleIntellisense(IntellisenseButton.IsChecked);
+        }
+
+        private void GistCodeEditor_Drop(object sender, DragEventArgs e)
+        {
+            MessageBox.Show(e.Data.ToString());
+        }
+
+        private void GistCodeEditor_DragEnter(object sender, DragEventArgs e)
+        {
+            MessageBox.Show("DragEnter" + e.ToString());
+
+        }
+
+        private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                GistFilenameTB.Focus();
+                //GistFilenameTB.Select(0, GistFilenameTB.Text.Length);
+               GistFilenameTB.SelectAll();
+            }
+        }
+
+        private void GistFilenameTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                GistCodeEditor.Focus();
+                GistCodeEditor.SelectLines(0, GistCodeEditor.Lines.Count, 0, GistCodeEditor.Lines.Count -1);
+            }
+
+        }
+
+        private void GistCodeEditor_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //GistCodeEditor.SelectLines(0, 0, 0, 0);
+        }
+
+        private void AutoIndentButton_Click(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.ToggleAutoIndent(AutoIndentButton.IsChecked);
+        }
+
+        private void LanguageSelectorCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CodeEditorManager.ChangeEditorLanguage(LanguageSelectorCB.SelectedItem.ToString());
         }
     }
 }

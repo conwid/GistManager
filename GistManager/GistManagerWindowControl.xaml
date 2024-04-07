@@ -15,7 +15,7 @@
             xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              mc:Ignorable="d"             
-             Name="GistManager">
+             Name="GistManager" AllowDrop="True">
 
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
@@ -34,10 +34,30 @@
                               Source="{Binding Gists}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
-        <Style x:Key="toolBarButtonStyle" TargetType="Button" >
+  
+        <!-- TOOLBAR BUTTON -->
+
+        <Style x:Key="toolBarButtonStyle" TargetType="ButtonBase" >
             <Setter Property="Height" Value="24" />
             <Setter Property="Width" Value="24" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
+        <!-- TOOLBAR BUTTON IMAGE -->
+        <Style x:Key="toolBarButtonImageStyle" TargetType="Image">
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
+        </Style>
+        <!-- SEPARATOR -->
+
+        <Style x:Key="toolBarSeparatorStyle" TargetType="Separator" >
+            <Setter Property="Background" Value="gray"></Setter>
+            <Setter Property="Margin" Value="4"></Setter>
+
+        </Style>
+        
         <!-- CUSTOM COMBOBOX -->
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -329,12 +349,13 @@
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False">
-                    <Image Source="Resources/login.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" />
+                    <Image Style="{StaticResource toolBarButtonImageStyle}" Source="Resources/login.png"   />
                 </Button>
-                <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
-                    <Image Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant">
+                <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
+                    <Image>
                         <Image.Style>
-                            <Style TargetType="Image">
+                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsAuthenticated}" Value="True">
                                         <Setter Property="Source" Value="Resources/refresh.png" />
@@ -349,30 +370,45 @@
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Image Source="Resources/logout.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                    <Image Source="Resources/logout.png" Style="{StaticResource toolBarButtonImageStyle}"/>
                 </Button >
-                <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining" 
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
                         Click="SaveButton_ClickAsync">
-                    <Image x:Name="SaveButtonIMG" Source="Resources/Save.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save changes"/>
+                    <Image x:Name="SaveButtonIMG" Style="{StaticResource toolBarButtonImageStyle}" 
+                           Source="Resources/Save.png"  ToolTip="Save changes"/>
                 </Button>
                 <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistBT_ClickAsync" >
-                    <Image Source="Resources/AddGist.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+                        Click="AddNewGistBT_ClickAsync" >
+                    <Image Source="Resources/AddGist.png" Style="{StaticResource toolBarButtonImageStyle}" />
                 </Button >
-                <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistFileBT_ClickAsync" >
-                    <Image Source="Resources/AddFile.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+                        Click="AddNewGistFileBT_ClickAsync" >
+                    <Image Source="Resources/AddFile.png" Style="{StaticResource toolBarButtonImageStyle}" />
                 </Button >
-                <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <Button x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
+                <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-		                Click="OutlineButton_Click">
-                    <Image Source="Resources/DocumentOutline.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
-                </Button>
-                <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}"  Width="100"></ComboBox>
-
+		                IsChecked="True" Click="OutlineButton_Click">
+                    <Image Source="Resources/DocumentOutline.png" Style="{StaticResource toolBarButtonImageStyle}" />
+                </ToggleButton>
+                <ToggleButton x:Name="IntellisenseButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Intellisense"
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+                        Click="IntellisenseButton_Click" 		                >
+                    <Image Source="Resources/IntellisenseLightBulb.png" Style="{StaticResource toolBarButtonImageStyle}" />
+                </ToggleButton>
+                <ToggleButton x:Name="AutoIndentButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Auto-Indent"
+	                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+                    Click="AutoIndentButton_Click" IsChecked="True" >
+                    <Image Source="Resources/IncreaseIndent.png" Style="{StaticResource toolBarButtonImageStyle}" />
+                </ToggleButton>
+                <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}" Width="100" Margin="4,1,1,1"
+                          Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+                          SelectionChanged="LanguageSelectorCB_SelectionChanged">
+                </ComboBox>
 
             </controls:OverflowlessToolbar>
         </ToolBarTray>
@@ -382,7 +418,8 @@
                  Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
             <TextBox.Template>
                 <ControlTemplate>
-                    <Border Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2"
+                            BorderThickness="{TemplateBinding BorderThickness}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -499,7 +536,7 @@
             </ScrollViewer>
 
             <DockPanel  x:Name="gistDetailsPanel" Grid.Row="2" LostFocus="gistDetailsPanel_LostFocus" >
-                <Grid  DockPanel.Dock="Top" Grid.Row="2" Margin="4" Height="auto">
+                <Grid  DockPanel.Dock="Top" Grid.Row="2" Margin="4" Height="auto" AllowDrop="True">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -513,24 +550,28 @@
                     <ScrollViewer x:Name="ParentGistDescriptionScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
                         <TextBox x:Name="ParentGistDescriptionTB"  VerticalAlignment="Top" Padding="2,2,2,8" 
                                  FontStyle="Italic" TextWrapping="Wrap" TabIndex="0"
-                                LostFocus="ParentGistDescriptionTB_LostFocus" KeyUp="ParentGistDescriptionTB_KeyUp" ></TextBox>
+                                LostFocus="ParentGistDescriptionTB_LostFocus" 
+                                KeyUp="ParentGistDescriptionTB_KeyUp" ></TextBox>
                     </ScrollViewer>
 
                     <GridSplitter Grid.Row="2" Background="Transparent" BorderThickness="1" BorderBrush="#909090" HorizontalAlignment="Stretch"/>
 
                     <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2"
-                                    TabIndex="1" LostFocus="GistFilenameTB_LostFocus" />
+                                    TabIndex="1" LostFocus="GistFilenameTB_LostFocus" KeyUp="GistFilenameTB_KeyUp"/>
 
                 </Grid>
-
-                <!--<ScrollViewer x:Name="CodeTreeScroller" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >-->
-                <!--<syncfusion:EditControl x:Name="GistCode" >
-                </syncfusion:EditControl>-->
-                <!--</ScrollViewer>-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent"
+                <Grid>
+                <!-- Leave ShowLineNumber, EnableOutlining to True, as otherwise causes control to bug out-->
+                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" 
                                         OutliningAreaBackground="Transparent" Background="Transparent"
-                                        DocumentLanguage="CSharp" FontFamily="Consolas" 
-                                        TabIndex="2" LostFocus="GistCodeEditor_LostFocus" />
+                                        AllowDragDrop="True" AllowDrop="True" Drop="GistCodeEditor_Drop"                                        
+                                        DocumentLanguage="CSharp" FontFamily="Consolas" FontSize="12"
+                                        TabIndex="2"  AcceptsTab="True"
+                                        EnableIntellisense="False" ShowLineNumber="True" EnableOutlining="True"                                          
+                                        LostFocus="GistCodeEditor_LostFocus" GotFocus="GistCodeEditor_GotFocus"
+                                        EnterKeyBehavior="VS" IsAutoLineNumberAreaWidthEnabled="True" Margin="2"
+                                        /> 
+                </Grid>
 
             </DockPanel>
 

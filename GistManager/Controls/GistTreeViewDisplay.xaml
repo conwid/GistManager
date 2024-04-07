@@ -18,6 +18,14 @@
         <styleSelectors:TreeViewItemStyleSelector x:Key="treeViewItemStyleSelector" />
         <SolidColorBrush x:Key="dragEnterBrush" Color="Blue" />
         <SolidColorBrush x:Key="dragLeaveBrush" Color="Transparent" />
+        <!-- TOOLBAR BUTTON IMAGE -->
+        <Style x:Key="toolBarButtonImageStyle" TargetType="Image">
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Stretch" Value="Uniform" />
+            <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
+        </Style>
+
     </UserControl.Resources>
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
@@ -37,10 +45,10 @@
                   Background="Transparent"                                           
             >
             <directDragTree:DirectDragTreeView.Resources>
-                <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />
-                <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" />
-                <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" />
-                <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" />
+                <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+                <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+                <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+                <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -54,13 +62,13 @@
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gist.png" Stretch="Fill" Margin="5,0" />
+                        <Image Source="..\Resources\gist.png" Style="{StaticResource toolBarButtonImageStyle}" Margin="5,0" />
                         <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gistfile.png" Stretch="Fill" Margin="5,0" />
+                        <Image Source="..\Resources\gistfile.png" Style="{StaticResource toolBarButtonImageStyle}" Margin="5,0" />
                         <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
