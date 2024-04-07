@@ -33,7 +33,7 @@
                   AllowDrop="True"
                   KeyDown="TreeView_KeyDown"       
                   BorderThickness="0"
-                  x:Name="TreeView" LostFocus="TreeView_LostFocus"
+                  x:Name="TreeView"
                   Background="Transparent"                                           
             >
             <directDragTree:DirectDragTreeView.Resources>

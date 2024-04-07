@@ -34,6 +34,7 @@ namespace GistManager.Controls.DirectDragTree
             remove => RemoveHandler(DirectDragLeaveEvent, value);
         }
 
+
         protected override DependencyObject GetContainerForItemOverride() => new DirectDragTreeViewItem();
         protected override bool IsItemItsOwnContainerOverride(object item) => item is DirectDragTreeViewItem;
     }

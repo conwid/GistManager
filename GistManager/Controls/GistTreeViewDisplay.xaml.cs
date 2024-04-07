@@ -254,10 +254,7 @@ namespace GistManager.Controls
            
         }
 
-        private void TreeView_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Debug.WriteLine("TreeView_LostFocus");
-        }
+   
     }
 }
 

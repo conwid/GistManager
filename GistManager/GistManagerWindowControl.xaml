@@ -352,15 +352,10 @@
                     <Image Source="Resources/logout.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </Button >
                 <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <Button x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-		                Click="OutlineButton_Click">
-                    <Image Source="Resources/DocumentOutline.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
-                </Button>
-                <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}"  Width="100"></ComboBox>
-                <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="SaveButton_Click">
-                    <Image Source="Resources/exclamationpoint.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save"/>
+                <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining" 
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
+                        Click="SaveButton_ClickAsync">
+                    <Image x:Name="SaveButtonIMG" Source="Resources/Save.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant" ToolTip="Save changes"/>
                 </Button>
                 <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistBT_ClickAsync" >
@@ -370,6 +365,14 @@
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Click="AddNewGistFileBT_ClickAsync" >
                     <Image Source="Resources/AddFile.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
                 </Button >
+                <Separator Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                <Button x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
+		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
+		                Click="OutlineButton_Click">
+                    <Image Source="Resources/DocumentOutline.png" Stretch="Uniform" RenderOptions.BitmapScalingMode="Fant"/>
+                </Button>
+                <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}"  Width="100"></ComboBox>
+
 
             </controls:OverflowlessToolbar>
         </ToolBarTray>
@@ -426,7 +429,7 @@
         <StackPanel x:Name="errorPanel" DockPanel.Dock="Bottom" Background="Transparent"
                     Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
 
-            <ToolBarTray DockPanel.Dock="Top" Background="Transparent">
+            <ToolBarTray x:Name="ErrorTBT" DockPanel.Dock="Top" Background="Transparent">
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                     <Button x:Name="CollapseErrorDialog" Style="{StaticResource toolBarButtonStyle}" ToolTip="Close Error" Click="CollapseErrorDialog_Click"  >
                         <Image Source="Resources/close.png"></Image>
@@ -441,14 +444,14 @@
             </ToolBarTray>
 
             <StackPanel Orientation="Horizontal">
-                <Image Source="Resources/exclamationpoint.png" Width="16"></Image>
+                <Image VerticalAlignment="Top" Source="Resources/exclamationpoint.png" Width="16"></Image>
                 <TextBlock Foreground="Red"  Text="ERROR: " TextWrapping="Wrap" Margin="2" />
-                <TextBlock Foreground="Red"  Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" Margin="2" />
+                <TextBlock Foreground="Red"  Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap" Margin="2" />
             </StackPanel>
 
             <ScrollViewer Width="{Binding ElementName=errorPanel, Path=ActualWidth}" MinHeight="100" >
                 <TextBlock x:Name="ErrorMessageDetailsTB" TextWrapping="Wrap" Margin="2" Foreground="AliceBlue"
-                            Text="{Binding ErrorHandler.ErrorInfo}" />
+                            Text="{Binding ErrorHandler.Error}" />
             </ScrollViewer>
 
         </StackPanel>
@@ -495,7 +498,7 @@
                 </Grid>
             </ScrollViewer>
 
-            <DockPanel  x:Name="gistDetailsPanel" Grid.Row="2" >
+            <DockPanel  x:Name="gistDetailsPanel" Grid.Row="2" LostFocus="gistDetailsPanel_LostFocus" >
                 <Grid  DockPanel.Dock="Top" Grid.Row="2" Margin="4" Height="auto">
 
                     <Grid.RowDefinitions>
@@ -508,12 +511,15 @@
                     <TextBlock x:Name="ParentGistName" Grid.Row="0" FontWeight="ExtraBlack" Padding="2"></TextBlock>
 
                     <ScrollViewer x:Name="ParentGistDescriptionScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" >
-                        <TextBox x:Name="ParentGistDescriptionTB"  VerticalAlignment="Top" Padding="2,2,2,8" FontStyle="Italic" TextWrapping="Wrap" LostFocus="ParentGistDescriptionTB_LostFocus" KeyUp="ParentGistDescriptionTB_KeyUp"></TextBox>
+                        <TextBox x:Name="ParentGistDescriptionTB"  VerticalAlignment="Top" Padding="2,2,2,8" 
+                                 FontStyle="Italic" TextWrapping="Wrap" TabIndex="0"
+                                LostFocus="ParentGistDescriptionTB_LostFocus" KeyUp="ParentGistDescriptionTB_KeyUp" ></TextBox>
                     </ScrollViewer>
 
                     <GridSplitter Grid.Row="2" Background="Transparent" BorderThickness="1" BorderBrush="#909090" HorizontalAlignment="Stretch"/>
 
-                    <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2" LostFocus="GistFilenameTB_LostFocus" KeyUp="GistFilenameTB_KeyUp" />
+                    <TextBox x:Name="GistFilenameTB" Grid.Row="3" DockPanel.Dock="Top" FontWeight="Bold" Padding="2"
+                                    TabIndex="1" LostFocus="GistFilenameTB_LostFocus" />
 
                 </Grid>
 
@@ -524,7 +530,7 @@
                 <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent"
                                         OutliningAreaBackground="Transparent" Background="Transparent"
                                         DocumentLanguage="CSharp" FontFamily="Consolas" 
-                                        TextChanged="GistCodeEditor_TextChanged"/>
+                                        TabIndex="2" LostFocus="GistCodeEditor_LostFocus" />
 
             </DockPanel>
 

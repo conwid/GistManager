@@ -17,11 +17,16 @@ namespace GistManager.ViewModels
     {
         private readonly IAsyncOperationStatusManager asyncOperationStatusManager;
         protected IGistClientService GistClientService { get; }
-        public GistFileModel GistFile { get; }        
+        public GistFileModel GistFile { get; }      
 
         public GistViewModel ParentGist { get; }
 
         public bool Refreshing { get; set; }
+
+        /// <summary>
+        /// Stores whether the code, filename or code has been changed from load
+        /// </summary>
+        public bool HasChanges { get; set; }
 
         #region constructors
         public GistFileViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
@@ -57,6 +62,8 @@ namespace GistManager.ViewModels
             {
                 var originalFileName = fileName;
                 SetProperty(ref fileName, value);
+                // Below removed as don't want autosave on filename change
+                return;
                 if (!Refreshing && !string.IsNullOrWhiteSpace(originalFileName))
                 {
                     OnFileNameChangedAsync(originalFileName, fileName);
@@ -125,10 +132,21 @@ namespace GistManager.ViewModels
         #region command implementation
         private void CopyGistFileUrl() => Clipboard.SetText(Url);
 
+        /// <summary>
+        /// <!-- RETIRED as wanting -->
+        /// </summary>
+        /// <param name="originalName"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
         protected async virtual Task OnFileNameChangedAsync(string originalName, string newName)
         {
-            //if (!string.IsNullOrEmpty(originalName) && newName != originalName)
+            if (!string.IsNullOrEmpty(originalName) && newName != originalName)
                 await FileNameChangedCommand.ExecuteAsync(newName);
+        }
+
+        internal async virtual Task UpdateGistAsync()
+        {
+            await UpdateGistCommand.ExecuteAsync(this.fileName);
         }
         private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content, ParentGist.Description);
 

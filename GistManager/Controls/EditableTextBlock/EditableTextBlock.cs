@@ -40,7 +40,8 @@ namespace GistManager.Controls.EditableTextBlock
             set => SetValue(IsInEditModeProperty, value);
         }
         private static void IsInEditModeUpdate(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
+        {  
+
             if (!(obj is EditableTextBlock textBlock))
                 return;
 
@@ -111,7 +112,7 @@ namespace GistManager.Controls.EditableTextBlock
                 }
                 else if (e.ClickCount == 2)
                 {
-                    IsInEditMode = true;
+                    // IsInEditMode = true;
                 }
 
             }

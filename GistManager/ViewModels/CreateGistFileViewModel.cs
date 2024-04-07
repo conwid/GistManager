@@ -20,11 +20,11 @@ namespace GistManager.ViewModels
         #region command implementation
         private async Task CreateGistFileAsync(string newFileName) =>
             await GistClientService.CreateGistFileAsync(ParentGist.Gist.Id, newFileName, Content);
+        protected async override Task OnFileNameChangedAsync(string originalName, string newName)=>
+            await FileNameChangedCommand.ExecuteAsync(newName);
 
         #endregion
 
-        protected async override Task OnFileNameChangedAsync(string originalName, string newName)=>
-            await FileNameChangedCommand.ExecuteAsync(newName);
         
     }
 }

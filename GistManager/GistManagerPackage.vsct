@@ -20,6 +20,13 @@
 					<ButtonText>Invoke TestCommans</ButtonText>
 				</Strings>
 			</Button>
+			<Button guid="guidGistManagerPackageCmdSet" id="cmdidMyToolsOPtionsPackageCommand" priority="0x0100" type="Button">
+				<Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
+				<Icon guid="guidImages2" id="bmpPic1" />
+				<Strings>
+					<ButtonText>MyToolsOPtionsPackage</ButtonText>
+				</Strings>
+			</Button>
 		</Buttons>
 
 		<Bitmaps>
@@ -37,6 +44,7 @@
 
 		<GuidSymbol name="guidGistManagerPackageCmdSet" value="{6f2acbca-125f-4437-aac9-9293ba6f9f8d}">
 			<IDSymbol name="GistManagerWindowCommandId" value="0x0100" />
+			<IDSymbol value="257" name="cmdidMyToolsOPtionsPackageCommand" />
 		</GuidSymbol>
 
 		<GuidSymbol name="guidImages" value="{a949befa-b584-4af2-aeb1-bdf86133785e}">
@@ -54,6 +62,15 @@
 		</GuidSymbol>
 
 		<GuidSymbol value="{7bcbf887-b344-4892-a00d-6364bcbe93e7}" name="guidImages1">
+			<IDSymbol name="bmpPic1" value="1" />
+			<IDSymbol name="bmpPic2" value="2" />
+			<IDSymbol name="bmpPicSearch" value="3" />
+			<IDSymbol name="bmpPicX" value="4" />
+			<IDSymbol name="bmpPicArrows" value="5" />
+			<IDSymbol name="bmpPicStrikethrough" value="6" />
+		</GuidSymbol>
+
+		<GuidSymbol value="{3e5c679d-3bac-4390-98e7-4ede89f8751b}" name="guidImages2">
 			<IDSymbol name="bmpPic1" value="1" />
 			<IDSymbol name="bmpPic2" value="2" />
 			<IDSymbol name="bmpPicSearch" value="3" />

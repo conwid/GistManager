@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Color = System.Windows.Media.Color;
 
@@ -32,37 +33,53 @@ namespace GistManager.Utils
             }
         }
 
-        public bool GistEdited { get; set; } = false;
-
         private GistFileViewModel _gistFileVM = null;
         private string gistTempFile = null;
-        private bool gistIsDirty = false;
+        private BitmapImage saveEnabled;
+        private BitmapImage saveDisabled;
 
         private GistManagerWindowControl mainWindowControl;
 
         public CodeEditorManager(GistManagerWindowControl mainWindowControl)
         {
             this.mainWindowControl = mainWindowControl;
-            //  mainWindowControl.LanguageSelectorCB.Items = Syncfusion.EditWPFAssembly.
+
+            // below used to indicate user cannot save for any async/await events
+            saveEnabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/Save.png"));
+            saveDisabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/SaveInactive.png"));
         }
 
-        private async void OnGistFileChanged()
+        private void SetSaveButtonOutline(bool visible)
         {
-            // Checks to see if the gist has been edited. If so, saves it. 
-            if (GistEdited)
-            {
-                mainWindowControl.MidPanel.IsEnabled = false;
-                var reposnse = await mainWindowControl.ViewModel.gistClientService.RenameGistFileAsync(GistFileVM.ParentGist.Gist.Id, GistFileVM.FileName, GistFileVM.FileName, GistFileVM.Content, GistFileVM.ParentGist.Description);
-                await UpdateGist();
-            }
+            if (visible)
+                mainWindowControl.SaveButton.BorderBrush = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            else
+                mainWindowControl.SaveButton.BorderBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+        }
 
+        internal void SetGistFileHasChanges(bool isChanged)
+        {
+            // this provide visual cue to user that gist has changes
+            SetSaveButtonOutline(isChanged);
+            GistFileVM.HasChanges = isChanged;
+        }
+        private void OnGistFileChanged()
+        {
+            // retrieves HasChanges status of the GitFile and updates the Save BUtton if needed
+            SetSaveButtonOutline(GistFileVM.HasChanges);
+
+            // get the parent GIst (i.e. technically the Gist not GistFile.
+            // This can be itself as first gistfile alphabetically if classified as the Gist
             GistViewModel gistParentFile = _gistFileVM.ParentGist;
 
+            // update the UIControls to the rleevant VM Data
             mainWindowControl.ParentGistName.Text = $"Gist: {gistParentFile.Name}";
             mainWindowControl.ParentGistDescriptionTB.Text = gistParentFile.Description;
             mainWindowControl.GistFilenameTB.Text = $"{_gistFileVM.FileName}";
 
-            // Now load editor - need to create a temp file
+            // Onto loading the code/contents into the code editor
+            // need to create a temp file due to the SyntaxEditor control needing files, not stings
+            // first check for any old versions and delete
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
 
             // Now update to new gistTempFile
@@ -72,36 +89,80 @@ namespace GistManager.Utils
             // replace any illegal chars
             foreach (var c in Path.GetInvalidFileNameChars()) gistTempFile = gistTempFile.Replace(c, '-');
 
+            // construct tempFile's final filename - stored at a clas level so can compare on load of next Gist
             gistTempFile = Path.Combine(Path.GetTempPath(), gistTempFile);
 
+            // write the code to the tmep file
             File.WriteAllText(gistTempFile, _gistFileVM.Content);
 
+            // set the code editor's source to this document
             mainWindowControl.GistCodeEditor.DocumentSource = gistTempFile;
+
+            // once in the editor, no longer needed. Delete. 
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
 
-            mainWindowControl.MidPanel.IsEnabled = true;
-            GistEdited = false;
         }
 
         internal void ToggleOutline()
         {
-            mainWindowControl.GistCodeEditor.EnableOutlining = !mainWindowControl.GistCodeEditor.EnableOutlining;
             mainWindowControl.GistCodeEditor.ShowLineNumber = !mainWindowControl.GistCodeEditor.ShowLineNumber;
+            mainWindowControl.GistCodeEditor.EnableOutlining = !mainWindowControl.GistCodeEditor.EnableOutlining;
         }
 
-        internal async Task UpdateGist()
+        /// <summary>
+        /// Updates the Gist on the Gist Repository
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<bool> UpdateGistOnRepositoryAsync()
         {
-            GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
-            GistFileVM.ParentGist.Description = mainWindowControl.ParentGistDescriptionTB.Text;
+            // return save button border to normal (aesthetics) 
+            SetSaveButtonOutline(false);
 
-            // Changing the filename causes update to Gists API
+            // update GistFileViewModel for edge cases where changes not caught by UI changes
+            UpdateGistViewModel();
+
+            // disable Save button
+            mainWindowControl.SaveButtonIMG.Source = saveDisabled;
+            mainWindowControl.SaveButton.IsEnabled = false;
+
+            // do repo update
+            await GistFileVM.UpdateGistAsync();
+
+            // enable Save button
+            mainWindowControl.SaveButton.IsEnabled = true;
+            mainWindowControl.SaveButtonIMG.Source = saveEnabled;
+
+            // resets gist file has changes indicator
+            SetGistFileHasChanges(false);
+
+            return true;
+        }
+
+
+
+        private void UpdateGistViewModel()
+        {
+            // update the Gist's viewmodel form the UIElements
+            GistFileVM.ParentGist.Description = mainWindowControl.ParentGistDescriptionTB.Text;
+            GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
             GistFileVM.FileName = mainWindowControl.GistFilenameTB.Text;
         }
 
-        internal void ApplyDarkModeToLanguageSelector()
+        internal void CheckUiWithGistVmForChanges()
         {
-            Debug.WriteLine(mainWindowControl.GistCodeEditor.GetType());
+            // checks the UIElement values against the view model for changes
 
+            if (mainWindowControl.GistCodeEditor.Text != GistFileVM.Content ||
+                mainWindowControl.GistFilenameTB.Text != GistFileVM.FileName ||
+               mainWindowControl.ParentGistDescriptionTB.Text != GistFileVM.ParentGist.Description)
+            {
+
+                // changes found - do Gist ViewModel update  
+                UpdateGistViewModel();
+
+                // set gist file has changes indicator to true
+                SetGistFileHasChanges(true);
+            }
         }
 
 

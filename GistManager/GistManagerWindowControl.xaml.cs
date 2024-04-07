@@ -44,6 +44,8 @@ namespace GistManager
 
             ApplyTheme();
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
+
+
         }
 
         private void ApplyTheme()
@@ -172,12 +174,10 @@ namespace GistManager
 
         #endregion End: MyCode =================================================================================
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_ClickAsync(object sender, RoutedEventArgs e)
         {
-            CodeEditorManager.UpdateGist();
+          var response = await CodeEditorManager.UpdateGistOnRepositoryAsync();
         }
-
-
 
         private void GistTreeScroller_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -186,47 +186,47 @@ namespace GistManager
             Properties.Settings.Default.Save();
         }
 
-        private void ParentGistDescriptionTB_LostFocus(object sender, RoutedEventArgs e)
-        {
-            CodeEditorManager.UpdateGist();
-        }
-
-        private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-                CodeEditorManager.UpdateGist();
-        }
-
-        private void GistFilenameTB_LostFocus(object sender, RoutedEventArgs e)
-        {
-            CodeEditorManager.UpdateGist();
-        }
-
-        private void GistFilenameTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == System.Windows.Input.Key.Enter)
-                CodeEditorManager.UpdateGist();
-        }
 
         private async void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
         {
             var reposnse = await ViewModel.gistClientService.CreateGistAsync("#New Gist", "Gist File created in Visual Studio", true);
-        
+
         }
 
         private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
         {
             //if (CodeEditorManager.GistFileVM is null) return;
 
-          var reposnse =  await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
-                 $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
-                 "Gist file created in Visual Studio Extension.");
-            
+            var reposnse = await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
+                   $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
+                   "Gist file created in Visual Studio Extension.");
         }
 
-        private void GistCodeEditor_TextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void ParentGistDescriptionTB_LostFocus(object sender, RoutedEventArgs e)
         {
-            CodeEditorManager.GistEdited = true;
+            CodeEditorManager.CheckUiWithGistVmForChanges();
+        }
+        private void GistFilenameTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.CheckUiWithGistVmForChanges();
+        }
+        private void GistCodeEditor_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.CheckUiWithGistVmForChanges();
+        }
+
+        private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter) 
+            { 
+                GistFilenameTB.Focus();
+                GistFilenameTB.Select(GistFilenameTB.Text.Length, GistFilenameTB.Text.Length);
+            }
+        }
+
+        private void gistDetailsPanel_LostFocus(object sender, RoutedEventArgs e)
+        {
+            CodeEditorManager.CheckUiWithGistVmForChanges();
         }
     }
 }
