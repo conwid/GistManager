@@ -25,7 +25,9 @@
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
         </Style>
-
+        <Style x:Key="gistImage" TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
+            <Setter Property="Source" Value="../Resources/gist.png"></Setter>
+        </Style>
     </UserControl.Resources>
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
@@ -46,9 +48,22 @@
             >
             <directDragTree:DirectDragTreeView.Resources>
                 <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+                <Image x:Key="checkoutImageLight" Source="..\Resources\checkoutLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+
                 <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+                <Image x:Key="copyUrlImageLight" Source="..\Resources\linkLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+
                 <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+                <Image x:Key="deleteGistImageLight" Source="..\Resources\deleteGistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+
                 <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+                <Image x:Key="deleteFileImageLight"  Source="..\Resources\deleteFileLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+
+                <!--<Image x:Key="gistImage" Source="..\Resources\gist.png" x:Shared="False" />
+                <Image x:Key="gistImageLight" Source="..\Resources\gistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />-->
+
+
+
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -61,14 +76,40 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gist.png" Style="{StaticResource toolBarButtonImageStyle}" Margin="5,0" />
+                    <StackPanel Orientation="Horizontal" MaxHeight="16">
+                        
+                        <Image Margin="3,0" Stretch="Uniform">
+                            <Image.Style>
+                                <Style TargetType="Image" >
+                                    <Setter Property="Source" Value="../Resources/gistLight.png"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                                            <Setter Property="Source" Value="../Resources/gist.png"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        
                         <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gistfile.png" Style="{StaticResource toolBarButtonImageStyle}" Margin="5,0" />
+                    <StackPanel Orientation="Horizontal" MaxHeight="16">
+
+                        <Image Margin="3,0" Stretch="Uniform">
+                            <Image.Style>
+                                <Style TargetType="Image" >
+                                    <Setter Property="Source" Value="../Resources/gistFileLight.png"></Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
+                                            <Setter Property="Source" Value="../Resources/gistFile.png"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+
                         <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
@@ -97,24 +138,46 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
-                                <MenuItem Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
-                                <MenuItem Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
-                                <MenuItem Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
-                                    <MenuItem.ItemTemplate>
-                                        <DataTemplate>
-                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
-                                                <TextBlock>
-                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
-                                                </TextBlock>
-                                            </RadioButton>
-                                        </DataTemplate>
-                                    </MenuItem.ItemTemplate>
-                                    <MenuItem.ItemContainerStyle>
-                                        <Style TargetType="{x:Type MenuItem}">
-                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+
+                                <MenuItem Header="Copy gist URL" Command="{Binding CopyGistUrlCommand}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource copyUrlImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource copyUrlImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </MenuItem.ItemContainerStyle>
+                                    </MenuItem.Style>
                                 </MenuItem>
+
+                                <MenuItem Header="Delete gist"  Command="{Binding DeleteGistCommand}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource deleteGistImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource deleteGistImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+
+                                <MenuItem Header="Checkout version" ItemsSource="{Binding History}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource checkoutImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
@@ -132,10 +195,36 @@
                     <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
+
                             <ContextMenu>
-                                <MenuItem Header="Copy File RawURL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistFileUrlCommand}" />
-                                <MenuItem Header="Delete file" Icon="{DynamicResource deleteFileImage}" Command="{Binding DeleteGistFileCommand}" />
-                                <MenuItem Header="Checkout version" ItemsSource="{Binding History}" Icon="{DynamicResource checkoutImage}">
+                                <MenuItem Header="Copy File RawURL" Command="{Binding CopyGistFileUrlCommand}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource copyUrlImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource copyUrlImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+
+
+                                <MenuItem Header="Delete file" Command="{Binding DeleteGistFileCommand}">
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource deleteFileImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource deleteFileImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.Style>
+                                </MenuItem>
+
+                                <MenuItem Header="Checkout version" ItemsSource="{Binding History}">
                                     <MenuItem.ItemTemplate>
                                         <DataTemplate>
                                             <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
@@ -145,12 +234,19 @@
                                             </RadioButton>
                                         </DataTemplate>
                                     </MenuItem.ItemTemplate>
-                                    <MenuItem.ItemContainerStyle>
-                                        <Style TargetType="{x:Type MenuItem}">
-                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+                                    <MenuItem.Style>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}"></Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
+                                                    <Setter Property="Icon" Value="{DynamicResource checkoutImageLight}"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </MenuItem.ItemContainerStyle>
+                                    </MenuItem.Style>
+
                                 </MenuItem>
+
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>

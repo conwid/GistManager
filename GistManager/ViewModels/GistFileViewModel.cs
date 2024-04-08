@@ -5,6 +5,7 @@ using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
+using GistManager.Utils;
 using Microsoft.VisualStudio;
 using System;
 using System.Threading.Tasks;
@@ -23,6 +24,9 @@ namespace GistManager.ViewModels
 
         public bool Refreshing { get; set; }
 
+        public bool IsDarkMode { get; set; }
+
+
         /// <summary>
         /// Stores whether the code, filename or code has been changed from load
         /// </summary>
@@ -36,6 +40,8 @@ namespace GistManager.ViewModels
             FileNameChangedCommand = new AsyncCommand<string>(RenameGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Renaming gist file" };
             UpdateGistCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
             CheckoutCommand = new AsyncCommand<GistHistoryEntryModel>(RefreshGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Checking out file", SuppressCompletionCommand = true };
+
+            IsDarkMode = Helpers.IsDarkMode();
         }
 
         public GistFileViewModel(GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager commandStatusManager, IErrorHandler errorHandler) : this(gistClientService, commandStatusManager,errorHandler)

@@ -4,12 +4,16 @@ using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
+using GistManager.Utils;
+using Microsoft.VisualStudio.VCProjectEngine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace GistManager.ViewModels
 {
@@ -18,6 +22,9 @@ namespace GistManager.ViewModels
         private readonly IAsyncOperationStatusManager asyncOperationStatusManager;       
         protected IGistClientService GistClientService { get; }
         public GistModel Gist { get; }
+
+        public bool IsDarkMode {  get; set; }
+        public BitmapImage GistImage { get; set; }
 
         #region constructors
         protected GistViewModel(string name, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
@@ -31,6 +38,17 @@ namespace GistManager.ViewModels
             DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager,errorHandler) { ExecutionInfo = "Deleting gist" };
             CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
             CreateNewGistCommand = new AsyncRelayCommand(CreateNewGistAsync, errorHandler);
+
+            IsDarkMode = Helpers.IsDarkMode();
+            if (IsDarkMode)
+            {
+                GistImage = new BitmapImage(new Uri("Resources/gist.png", UriKind.Relative));
+            }
+            else
+            {
+                GistImage = new BitmapImage(new Uri("Resources/gistLight.png", UriKind.Relative));
+            }
+
         }
 
         public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
