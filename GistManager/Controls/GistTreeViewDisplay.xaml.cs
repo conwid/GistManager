@@ -17,17 +17,18 @@ namespace GistManager.Controls
     public partial class GistTreeViewDisplay : UserControl
     {
         private const string ProprietaryDragFormat = "DragSource";
+
+        public bool IsInDarkMode { get; set; }
+
+        //  public IsInDarkMode = Helpers.IsDarkMode();
+
         public GistTreeViewDisplay()
         {
             InitializeComponent();
+            IsInDarkMode = Helpers.IsDarkMode();
 
+            DataContext = this;
 
-            //if (SystemConfiguraiton.DarkModeSelected())
-            //{
-            //    Expander.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-            //    //TreeView.Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32));
-            //    TreeView.Foreground = new SolidColorBrush(Color.FromArgb(255, 236, 236, 236));
-            //}
         }
 
         #region dependency properties
