@@ -29,9 +29,9 @@
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
         </Style>
-        <Style x:Key="gistImage" TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
+        <!--<Style x:Key="gistImage" TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
             <Setter Property="Source" Value="../Resources/gist.png"></Setter>
-        </Style>
+        </Style>-->
     </UserControl.Resources>
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
@@ -51,7 +51,7 @@
                   Background="Transparent"                                           
             >
             <directDragTree:DirectDragTreeView.Resources>
-                <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
+                <!--<Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
                 <Image x:Key="checkoutImageLight" Source="..\Resources\checkoutLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
 
                 <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
@@ -61,7 +61,7 @@
                 <Image x:Key="deleteGistImageLight" Source="..\Resources\deleteGistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
 
                 <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
-                <Image x:Key="deleteFileImageLight"  Source="..\Resources\deleteFileLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
+                <Image x:Key="deleteFileImageLight"  Source="..\Resources\deleteFileLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>-->
 
                 <!--<Image x:Key="gistImage" Source="..\Resources\gist.png" x:Shared="False" />
                 <Image x:Key="gistImageLight" Source="..\Resources\gistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />-->
@@ -134,6 +134,16 @@
                                 </MenuItem>
 
                                 <MenuItem Header="Checkout version" ItemsSource="{Binding History}">
+                                    <MenuItem.ItemTemplate>
+                                        <DataTemplate>
+                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
+                                                <TextBlock>
+                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
+                                                </TextBlock>
+                                            </RadioButton>
+                                        </DataTemplate>
+                                    </MenuItem.ItemTemplate>
+
                                     <MenuItem.Icon>
                                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.CheckOutItem}" />
                                     </MenuItem.Icon>
@@ -160,14 +170,14 @@
                                 <MenuItem Header="Copy File RawURL" Command="{Binding CopyGistFileUrlCommand}">
                                     <MenuItem.Icon>
                                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
-                                    </MenuItem.Icon>                             
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
 
                                 <MenuItem Header="Delete file" Command="{Binding DeleteGistFileCommand}">
                                     <MenuItem.Icon>
                                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DeleteDocument}" />
-                                    </MenuItem.Icon>                       
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
                                 <MenuItem Header="Checkout version" ItemsSource="{Binding History}">

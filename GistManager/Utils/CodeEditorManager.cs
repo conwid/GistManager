@@ -56,11 +56,6 @@ namespace GistManager.Utils
         public CodeEditorManager(GistManagerWindowControl mainWindowControl)
         {
             this.mainWindowControl = mainWindowControl;
-
-            // below used to indicate user cannot save for any async/await events
-            saveEnabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/Save.png"));
-            saveDisabled = new BitmapImage(new Uri("pack://application:,,,/GistManager;component/Resources/SaveInactive.png"));
-
         }
 
         private void SetSaveButtonOutline(bool visible)
@@ -164,7 +159,6 @@ namespace GistManager.Utils
             UpdateGistViewModel();
 
             // disable Save button
-           // mainWindowControl.SaveButtonIMG.Source = saveDisabled;
             mainWindowControl.SaveButton.IsEnabled = false;
 
             // do repo update
@@ -172,7 +166,6 @@ namespace GistManager.Utils
 
             // enable Save button
             mainWindowControl.SaveButton.IsEnabled = true;
-           // mainWindowControl.SaveButtonIMG.Source = saveEnabled;
 
             // resets gist file has changes indicator
             SetGistFileHasChanges(false);
