@@ -22,6 +22,7 @@ using Syncfusion.Themes.MaterialLight.WPF;
 using System.Diagnostics;
 using Syncfusion.Windows.Edit;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace GistManager
 {
@@ -208,6 +209,12 @@ namespace GistManager
         }
         private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
         {    
+            if (CodeEditorManager.GistFileVM == null)
+            {
+                errorPanel.Visibility = Visibility.Visible;
+                ErrorHeader.Text = "Please load a Gist first";
+                return;
+            }
             var reposnse = await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
                    $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
                    "Gist file created in Visual Studio Extension.");

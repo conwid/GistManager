@@ -542,7 +542,7 @@
         </TextBox>
 
         <StackPanel x:Name="LoginPrompt" DockPanel.Dock="Top" Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" >
-            <TextBlock x:Name="LoginPromptTB" TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
+            <TextBlock x:Name="LoginPromptTB" Foreground="White" TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
 
         <StatusBar x:Name="statusBar" DockPanel.Dock="Bottom" Background="Transparent">
@@ -571,7 +571,8 @@
 
             <ToolBarTray x:Name="ErrorTBT" DockPanel.Dock="Top" Background="Transparent">
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
-                    <Button x:Name="CollapseErrorDialog" Style="{StaticResource toolBarButtonStyle}" ToolTip="Close Error" Click="CollapseErrorDialog_Click"  >
+                    <Button x:Name="CollapseErrorDialog" Style="{StaticResource toolBarButtonStyle}" ToolTip="Close Error" 
+                            Click="CollapseErrorDialog_Click"  >
                         <Image>
                             <Image.Style>
                                 <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
@@ -626,10 +627,10 @@
             <StackPanel Orientation="Horizontal">
                 <Image VerticalAlignment="Top" Source="Resources/exclamationpoint.png" Width="16"></Image>
                 <TextBlock Foreground="Red"  Text="ERROR: " TextWrapping="Wrap" Margin="2" />
-                <TextBlock Foreground="Red"  Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap" Margin="2" />
+                <TextBlock x:Name="ErrorHeader" Foreground="Red"  Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap" Margin="2" />
             </StackPanel>
 
-            <ScrollViewer Width="{Binding ElementName=errorPanel, Path=ActualWidth}" MinHeight="100" >
+            <ScrollViewer Width="{Binding ElementName=errorPanel, Path=ActualWidth}" MinHeight="0" MaxHeight="200">
                 <TextBlock x:Name="ErrorMessageDetailsTB" TextWrapping="Wrap" Margin="2" Foreground="AliceBlue"
                             Text="{Binding ErrorHandler.Error}" />
             </ScrollViewer>
@@ -654,7 +655,7 @@
             <ScrollViewer x:Name="GistTreeScroller" Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" SizeChanged="GistTreeScroller_SizeChanged" >
                 <Grid>
                     <StackPanel x:Name="GistTreeSP" Orientation="Vertical" >
-                        <controls:GistTreeViewDisplay x:Name="PublicGistGTVD"
+                        <controls:GistTreeViewDisplay x:Name="PublicGistGTVD" 
                                           ExpanderHeader="Public gists" 
                                           ExpanderIsExpanded="True"
                                           Margin="4,0,4,10"

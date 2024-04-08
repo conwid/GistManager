@@ -18,17 +18,9 @@ namespace GistManager.Controls
     {
         private const string ProprietaryDragFormat = "DragSource";
 
-        public bool IsInDarkMode { get; set; }
-
-        //  public IsInDarkMode = Helpers.IsDarkMode();
-
         public GistTreeViewDisplay()
         {
             InitializeComponent();
-            IsInDarkMode = Helpers.IsDarkMode();
-
-            DataContext = this;
-
         }
 
         #region dependency properties
