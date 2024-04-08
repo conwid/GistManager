@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GistManager.Utils;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,11 +13,10 @@ namespace GistManager.Controls.DirectDragTree
 {
     public class DirectDragTreeView : TreeView
     {
+
         public DirectDragTreeView()
         {
-            this.MouseDoubleClick += DirectDragTreeView_MouseDoubleClick
-                ;
-
+            this.MouseDoubleClick += DirectDragTreeView_MouseDoubleClick;
         }
 
         private void DirectDragTreeView_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
