@@ -48,7 +48,9 @@ namespace GistManager
             GridLengthConverter converter = new GridLengthConverter();
             GistTreeRow.Height = (GridLength)converter.ConvertFromString(Properties.Settings.Default.GistTreeGridLength);
 
-            ApplyTheme();
+            ViewModel.IsInDarkMode = Helpers.IsDarkMode();
+
+            ApplyTheme(ViewModel.IsInDarkMode);
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
             //GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages.
@@ -56,9 +58,9 @@ namespace GistManager
             LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();              
         }
 
-        private void ApplyTheme()
+        private void ApplyTheme(bool inDarkMode)
         {
-            UpdateTheme(Helpers.IsDarkMode());
+            UpdateTheme(inDarkMode);
         }
 
         private void VSColorTheme_ThemeChanged(ThemeChangedEventArgs e)
@@ -70,7 +72,7 @@ namespace GistManager
                 Properties.Settings.Default.DarkMode = Helpers.IsDarkMode();
                 Properties.Settings.Default.Save();
 
-                ApplyTheme(); // this ensures the right text color
+                ApplyTheme(themeChangedToDarkMode); // this ensures the right text color
 
                 ViewModel.IsAuthenticated = false;
                 TopToolbar.Visibility = Visibility.Hidden;

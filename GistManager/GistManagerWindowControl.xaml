@@ -34,7 +34,7 @@
                               Source="{Binding Gists}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
-  
+
         <!-- TOOLBAR BUTTON -->
 
         <Style x:Key="toolBarButtonStyle" TargetType="ButtonBase" >
@@ -57,7 +57,7 @@
             <Setter Property="Margin" Value="4"></Setter>
 
         </Style>
-        
+
         <!-- CUSTOM COMBOBOX -->
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
@@ -393,12 +393,25 @@
                 <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
 		                IsChecked="True" Click="OutlineButton_Click">
-                    <Image Source="Resources/DocumentOutline.png" Style="{StaticResource toolBarButtonImageStyle}" />
+
                 </ToggleButton>
                 <ToggleButton x:Name="IntellisenseButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Intellisense"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
                         Click="IntellisenseButton_Click" 		                >
-                    <Image Source="Resources/IntellisenseLightBulb.png" Style="{StaticResource toolBarButtonImageStyle}" />
+                    <Image>
+                        <Image.Style>
+                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
+                                        <Setter Property="Source" Value="Resources/IntellisenseLightBulb.png" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
+                                        <Setter Property="Source" Value="Resources/IntellisenseLightBulbLight.png" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
                 </ToggleButton>
                 <ToggleButton x:Name="AutoIndentButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Auto-Indent"
 	                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
@@ -561,8 +574,8 @@
 
                 </Grid>
                 <Grid>
-                <!-- Leave ShowLineNumber, EnableOutlining to True, as otherwise causes control to bug out-->
-                <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" 
+                    <!-- Leave ShowLineNumber, EnableOutlining to True, as otherwise causes control to bug out-->
+                    <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" 
                                         OutliningAreaBackground="Transparent" Background="Transparent"
                                         AllowDragDrop="True" AllowDrop="True" Drop="GistCodeEditor_Drop"                                        
                                         DocumentLanguage="CSharp" FontFamily="Consolas" FontSize="12"
@@ -570,7 +583,7 @@
                                         EnableIntellisense="False" ShowLineNumber="True" EnableOutlining="True"                                          
                                         LostFocus="GistCodeEditor_LostFocus" GotFocus="GistCodeEditor_GotFocus"
                                         EnterKeyBehavior="VS" IsAutoLineNumberAreaWidthEnabled="True" Margin="2"
-                                        /> 
+                                        />
                 </Grid>
 
             </DockPanel>

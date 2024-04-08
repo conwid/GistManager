@@ -109,7 +109,10 @@ namespace GistManager.ViewModels
             gistVm.Files.Add(new CreateGistFileViewModel(gistVm, gistClientService, AsyncOperationStatusManager, ErrorHandler) { IsInEditMode = true, Content = content, IsSelected = true });
         #endregion
 
-        #region bound properties              
+        #region bound properties   
+
+        // My props
+        public bool IsInDarkMode { get; set; } = false;
 
         private bool isAuthenticated;
         public bool IsAuthenticated
@@ -117,6 +120,8 @@ namespace GistManager.ViewModels
             get => isAuthenticated;
             set => SetProperty(ref isAuthenticated, value);
         }
+
+
 
         private string searchExpression;
         public string SearchExpression
