@@ -6,14 +6,14 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
-             xmlns:local="clr-namespace:GistManager"
-             xmlns:controls="clr-namespace:GistManager.Controls"             
+             xmlns:controls="clr-namespace:GistManager.Controls"
              xmlns:behaviors="clr-namespace:GistManager.Behaviors"
              xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
              xmlns:converters="clr-namespace:GistManager.Converters"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-            xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-            xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
              mc:Ignorable="d"             
              Name="GistManager" AllowDrop="True">
 
@@ -347,166 +347,48 @@
         <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Top" Background="Transparent">
             <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False">
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/login.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/loginLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False"                        >
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.LoginUser}" />
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/refresh.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/refreshLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/logout.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/logoutLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
                 </Button >
                 <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
                         Click="SaveButton_ClickAsync">
-                    <Image x:Name="SaveButtonIMG">
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/Save.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/SaveLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
                 </Button>
                 <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
                         Click="AddNewGistBT_ClickAsync" >
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/addgist.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/addgistLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
                 </Button >
                 <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
                         Click="AddNewGistFileBT_ClickAsync" >
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/addfile.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/addfileLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
                 </Button >
                 <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
                 <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
 		                IsChecked="True" Click="OutlineButton_Click">
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/documentoutline.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/documentoutlineLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
-
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DocumentOutline}" />
                 </ToggleButton>
                 <ToggleButton x:Name="IntellisenseButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Intellisense"
 		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
                         Click="IntellisenseButton_Click" >
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/IntellisenseLightBulb.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/IntellisenseLightBulbLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IntellisenseLightBulb}" />
                 </ToggleButton>
                 <ToggleButton x:Name="AutoIndentButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Auto-Indent"
 	                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
                     Click="AutoIndentButton_Click" IsChecked="True" >
-                    <Image>
-                        <Image.Style>
-                            <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                        <Setter Property="Source" Value="Resources/increaseindent.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                        <Setter Property="Source" Value="Resources/increaseindentLight.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IncreaseIndent}" />
                 </ToggleButton>
                 <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}" Width="100" Margin="4,1,1,1"
                           Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
@@ -573,53 +455,13 @@
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
                     <Button x:Name="CollapseErrorDialog" Style="{StaticResource toolBarButtonStyle}" ToolTip="Close Error" 
                             Click="CollapseErrorDialog_Click"  >
-                        <Image>
-                            <Image.Style>
-                                <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                            <Setter Property="Source" Value="Resources/close.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                            <Setter Property="Source" Value="Resources/closeLight.png" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Close}" />
                     </Button>
                     <Button x:Name="ToggleErrorWordwrap" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Wordwrap" Click="ToggleErrorWordwrap_Click">
-                        <Image>
-                            <Image.Style>
-                                <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                            <Setter Property="Source" Value="Resources/wordwrap.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                            <Setter Property="Source" Value="Resources/wordwrapLight.png" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.WordWrap}" />
                     </Button>
                     <Button x:Name="CopyErrorText" Style="{StaticResource toolBarButtonStyle}" ToolTip="Copy Text" Click="CopyErrorText_Click" >
-                        <Image>
-                            <Image.Style>
-                                <Style TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="True">
-                                            <Setter Property="Source" Value="Resources/copy.png" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsInDarkMode}" Value="False">
-                                            <Setter Property="Source" Value="Resources/copyLight.png" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Copy}" />
                     </Button>
                 </controls:OverflowlessToolbar>
             </ToolBarTray>

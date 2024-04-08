@@ -11,6 +11,10 @@
              xmlns:converters="clr-namespace:GistManager.Converters"
              xmlns:directDragTree="clr-namespace:GistManager.Controls.DirectDragTree"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+            xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+             xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
+
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:SubstringConverter x:Key="substringConverter" />
@@ -77,38 +81,16 @@
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal" MaxHeight="16">
-                        
-                        <Image Margin="3,0" Stretch="Uniform">
-                            <Image.Style>
-                                <Style TargetType="Image" >
-                                    <Setter Property="Source" Value="../Resources/gistLight.png"></Setter>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
-                                            <Setter Property="Source" Value="../Resources/gist.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                        
+
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Item}" />
+
                         <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
                     <StackPanel Orientation="Horizontal" MaxHeight="16">
 
-                        <Image Margin="3,0" Stretch="Uniform">
-                            <Image.Style>
-                                <Style TargetType="Image" >
-                                    <Setter Property="Source" Value="../Resources/gistFileLight.png"></Setter>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsDarkMode}" Value="True">
-                                            <Setter Property="Source" Value="../Resources/gistFile.png"></Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Document}" />
 
                         <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
@@ -140,44 +122,22 @@
                             <ContextMenu>
 
                                 <MenuItem Header="Copy gist URL" Command="{Binding CopyGistUrlCommand}">
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource copyUrlImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource copyUrlImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
                                 <MenuItem Header="Delete gist"  Command="{Binding DeleteGistCommand}">
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource deleteGistImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource deleteGistImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DeleteListItem}" />
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
                                 <MenuItem Header="Checkout version" ItemsSource="{Binding History}">
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource checkoutImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.CheckOutItem}" />
+                                    </MenuItem.Icon>
                                 </MenuItem>
-
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>
@@ -198,30 +158,16 @@
 
                             <ContextMenu>
                                 <MenuItem Header="Copy File RawURL" Command="{Binding CopyGistFileUrlCommand}">
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource copyUrlImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource copyUrlImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                                    </MenuItem.Icon>                             
                                 </MenuItem>
 
 
                                 <MenuItem Header="Delete file" Command="{Binding DeleteGistFileCommand}">
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource deleteFileImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource deleteFileImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DeleteDocument}" />
+                                    </MenuItem.Icon>                       
                                 </MenuItem>
 
                                 <MenuItem Header="Checkout version" ItemsSource="{Binding History}">
@@ -234,17 +180,9 @@
                                             </RadioButton>
                                         </DataTemplate>
                                     </MenuItem.ItemTemplate>
-                                    <MenuItem.Style>
-                                        <Style TargetType="MenuItem">
-                                            <Setter Property="Icon" Value="{DynamicResource checkoutImage}"></Setter>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsDarkMode}" Value="False">
-                                                    <Setter Property="Icon" Value="{DynamicResource checkoutImageLight}"></Setter>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </MenuItem.Style>
-
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.CheckOutForEdit}" />
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
                             </ContextMenu>

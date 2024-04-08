@@ -114,6 +114,9 @@ namespace GistManager.Utils
             // write the code to the tmep file
             File.WriteAllText(gistTempFile, gistFileVM.Content);
 
+            // Reset the language
+            mainWindowControl.GistCodeEditor.DocumentLanguage = Languages.Text;
+
             // set the code editor's source to this document
             mainWindowControl.GistCodeEditor.DocumentSource = gistTempFile;
 
@@ -161,7 +164,7 @@ namespace GistManager.Utils
             UpdateGistViewModel();
 
             // disable Save button
-            mainWindowControl.SaveButtonIMG.Source = saveDisabled;
+           // mainWindowControl.SaveButtonIMG.Source = saveDisabled;
             mainWindowControl.SaveButton.IsEnabled = false;
 
             // do repo update
@@ -169,7 +172,7 @@ namespace GistManager.Utils
 
             // enable Save button
             mainWindowControl.SaveButton.IsEnabled = true;
-            mainWindowControl.SaveButtonIMG.Source = saveEnabled;
+           // mainWindowControl.SaveButtonIMG.Source = saveEnabled;
 
             // resets gist file has changes indicator
             SetGistFileHasChanges(false);
