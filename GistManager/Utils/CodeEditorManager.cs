@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Color = System.Windows.Media.Color;
+using Cursors = System.Windows.Input.Cursors;
 
 namespace GistManager.Utils
 {
@@ -76,6 +79,8 @@ namespace GistManager.Utils
         }
         private void OnGistFileChanged()
         {
+            Mouse.OverrideCursor = Cursors.Wait;
+
             // first delete temporary file of last GistFileView
             if (File.Exists(gistTempFile)) File.Delete(gistTempFile);
 
@@ -123,9 +128,8 @@ namespace GistManager.Utils
                     ChangeEditorLanguage(languageKvp.Value.ToString());
                     mainWindowControl.LanguageSelectorCB.Text = languageKvp.Value.ToString();
                 }
-
-
             }
+            Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         internal void ToggleOutline(bool? state)

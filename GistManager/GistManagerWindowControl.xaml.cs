@@ -23,6 +23,7 @@ using System.Diagnostics;
 using Syncfusion.Windows.Edit;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Windows.Input;
 
 namespace GistManager
 {
@@ -203,22 +204,33 @@ namespace GistManager
         }
         private async void AddNewGistBT_ClickAsync(object sender, RoutedEventArgs e)
         {
+            Mouse.OverrideCursor = Cursors.Wait;
+
             var reposnse = await ViewModel.gistClientService.CreateGistAsync("#New Gist", "Gist File created in Visual Studio", true);
             ViewModel.RefreshCommand.Execute(null);
 
+            Mouse.OverrideCursor = Cursors.Arrow;
+
         }
         private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
-        {    
+        {
+
             if (CodeEditorManager.GistFileVM == null)
             {
                 errorPanel.Visibility = Visibility.Visible;
                 ErrorHeader.Text = "Please load a Gist first";
                 return;
             }
+
+            Mouse.OverrideCursor = Cursors.Wait;
+
             var reposnse = await ViewModel.gistClientService.CreateGistFileAsync(CodeEditorManager.GistFileVM.ParentGist.Gist.Id,
                    $"New File - {Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Replace("=", "")}.txt",
                    "Gist file created in Visual Studio Extension.");
             ViewModel.RefreshCommand.Execute(null);
+
+            Mouse.OverrideCursor = Cursors.Arrow;
+
         }
 
         private void ParentGistDescriptionTB_LostFocus(object sender, RoutedEventArgs e)
