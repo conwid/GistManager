@@ -47,7 +47,7 @@
                   x:Name="TreeView"
                   Background="Transparent"                                           
             >
-            <directDragTree:DirectDragTreeView.Resources>
+            <directDragTree:DirectDragTreeView.Resources >
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -59,22 +59,31 @@
                      Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" />
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
+
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal" MaxHeight="16">
-
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Item}" />
-
-                        <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
+                        <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded" Width="400" Background="DarkBlue"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
-                    <StackPanel Orientation="Horizontal" MaxHeight="16">
 
-                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Document}" />
+                <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}" >
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="ImageGridColumn" Width="auto"/>
+                            <ColumnDefinition x:Name="TextBoxGridColumn" Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
-                    </StackPanel>
+                        <imaging:CrispImage DockPanel.Dock="Left" Grid.Column="0" Width="16" Height="16" Margin="0,0,2,0" Moniker="{x:Static catalog:KnownMonikers.Document}" />
+
+                        <editable:EditableTextBlock x:Name="GistEditableName" Grid.Column="1" Text="{Binding FileName, Mode=TwoWay}"
+                               MinWidth="50" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" HorizontalAlignment="Stretch"
+                                Background="green"/>
+
+                    </Grid>
                 </DataTemplate>
+
+
                 <Style TargetType="ToolTip">
                     <Style.Triggers>
                         <Trigger Property="Content" Value="{x:Static sys:String.Empty}">

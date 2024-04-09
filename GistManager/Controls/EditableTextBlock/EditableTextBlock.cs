@@ -17,11 +17,7 @@ namespace GistManager.Controls.EditableTextBlock
     {
         public EditableTextBlock()
         {
-            if (SystemConfiguraiton.DarkModeSelected())
-            {
-                this.Background = new SolidColorBrush(Color.FromArgb(00, 32, 32, 32));
-                this.Foreground = new SolidColorBrush(Color.FromArgb(255, 240, 240, 240));
-            }
+          
         }
 
         private EditableTextBlockAdorner adorner;
