@@ -14,7 +14,6 @@
             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:SubstringConverter x:Key="substringConverter" />
@@ -72,7 +71,7 @@
 
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Document}" />
 
-                        <editable:EditableTextBlock x:Name="GistEditableName"  Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
+                        <editable:EditableTextBlock x:Name="GistEditableName" MinWidth="300" Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
                 <Style TargetType="ToolTip">

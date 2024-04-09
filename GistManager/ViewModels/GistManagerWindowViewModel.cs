@@ -23,6 +23,10 @@ namespace GistManager.ViewModels
         internal IGistClientService gistClientService;
         public IAsyncOperationStatusManager AsyncOperationStatusManager { get; }
         public IErrorHandler ErrorHandler { get; }
+
+        public CreateGistCommandArgs CreateGistCommandArgs { get; }
+
+
         public GistManagerWindowViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
         {
             this.gistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
@@ -40,6 +44,10 @@ namespace GistManager.ViewModels
             RefreshCommand = new AsyncRelayCommand(RefreshAsync, () => IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
             LogoutCommand = new AsyncRelayCommand(LogoutAsync, () => IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Logging out", SuppressCompletionCommand = true };
             this.AsyncOperationStatusManager.CompletionCommand = new AsyncRelayCommand(this.RefreshAsync, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
+
+            CreateGistCommandArgs = new CreateGistCommandArgs($"New File created successfully at: {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}");
+
+
         }
 
 

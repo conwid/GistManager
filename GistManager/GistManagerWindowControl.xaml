@@ -379,8 +379,10 @@
                 </controls:OverflowlessToolbar>
             </ToolBarTray>
 
-            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent"    >
-                <ToolBar >
+            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent"  
+                    Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
+              
+                <ToolBar Style="{StaticResource ToolbarNoOverlflow}">
                     <Button ToolTip="Refresh" Command="{Binding RefreshCommand}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
                     </Button>
@@ -393,7 +395,7 @@
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
                     </Button>
                     <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
-                        Click="AddNewGistBT_ClickAsync" >
+                         Command="{Binding CreatePrivateGistCommand}" CommandParameter="{Binding CreateGistCommandArgs}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
                     </Button >
                     <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
