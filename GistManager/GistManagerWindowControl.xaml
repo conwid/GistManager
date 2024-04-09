@@ -51,10 +51,10 @@
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
         </Style>
-        <!-- TOOLBAR No OVERFLOW -->
+        <!-- TOOLBAR NO OVERFLOW -->
         <Style x:Key="ToolbarNoOverlflow" TargetType="{x:Type ToolBar}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <!--<Setter Property="OverridesDefaultStyle" Value="true"/>-->
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
@@ -379,17 +379,16 @@
                 </controls:OverflowlessToolbar>
             </ToolBarTray>
 
-            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent" 
-                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                <ToolBar Style="{StaticResource ToolbarNoOverlflow}" Background="red">
-                    <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
+            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent"    >
+                <ToolBar >
+                    <Button ToolTip="Refresh" Command="{Binding RefreshCommand}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
                     </Button>
                     <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
                     </Button >
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                    <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
+                    <Button x:Name="SaveButton"  Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
                         Click="SaveButton_ClickAsync">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
                     </Button>

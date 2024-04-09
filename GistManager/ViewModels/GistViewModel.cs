@@ -4,16 +4,12 @@ using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
-using GistManager.Utils;
-using Microsoft.VisualStudio.VCProjectEngine;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 
 namespace GistManager.ViewModels
 {

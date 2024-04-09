@@ -2,6 +2,7 @@
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncCommand;
+using Octokit;
 using System.Threading.Tasks;
 
 namespace GistManager.ViewModels
@@ -38,7 +39,13 @@ namespace GistManager.ViewModels
             }
         }
         private async Task CreateGistAsync() =>
-            await GistClientService.CreateGistAsync(createGistFileViewModel.FileName, createGistFileViewModel.Content, Public);
+            await CreateGistAndUpdateCollectionAsync();
+
+        private async Task CreateGistAndUpdateCollectionAsync()
+        {
+            Gist createdGist = await GistClientService.CreateGistAsync(createGistFileViewModel.FileName, createGistFileViewModel.Content, Public);
+        }
+
 
     }
 }

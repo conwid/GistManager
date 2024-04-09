@@ -1,30 +1,20 @@
 ﻿using GistManager.Utils;
 using GistManager.ViewModels;
-using Microsoft.VisualStudio.Shell.Interop;
-using Octokit;
-using Syncfusion.SfSkinManager;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Microsoft.VisualStudio.PlatformUI;
-using System.Drawing;
-using Color = System.Windows.Media.Color;
-using Brush = System.Windows.Media.Brush;
-using System.Management.Instrumentation;
-using System.Threading.Tasks;
-using System;
-using Syncfusion.Themes.FluentDark.WPF;
+using Syncfusion.SfSkinManager;
 using Syncfusion.Themes.MaterialDark.WPF;
 using Syncfusion.Themes.MaterialLight.WPF;
-using System.Diagnostics;
 using Syncfusion.Windows.Edit;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Windows.Input;
+using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
 
 namespace GistManager
 {
