@@ -100,10 +100,10 @@
                         <Setter.Value>
                             <ContextMenu>
 
-                                <MenuItem Header="Create New Parent Gist" Command="{Binding CreateNewGistCommand}">
-                                    <!--<MenuItem.Icon>
-                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
-                                    </MenuItem.Icon>-->
+                                <MenuItem Header="Create New Gist File" Command="{Binding CreateNewGistCommand}">
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
+                                    </MenuItem.Icon>
                                 </MenuItem>
 
                                 <MenuItem Header="Copy gist URL" Command="{Binding CopyGistUrlCommand}">

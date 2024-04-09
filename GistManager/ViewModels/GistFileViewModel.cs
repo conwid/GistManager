@@ -48,6 +48,7 @@ namespace GistManager.ViewModels
             fileName = file.Name;
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
             Url = file.Url;
+            Content = file.Content;
             DeleteGistFileCommand = new AsyncRelayCommand(DeleteGistFileAsync, commandStatusManager, errorHandler) { ExecutionInfo = "Deleting file from gist" };
             CopyGistFileUrlCommand = new RelayCommand(CopyGistFileUrl, errorHandler);
         }

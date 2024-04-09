@@ -31,8 +31,6 @@ namespace GistManager.Utils
 
         private GistFileViewModel gistFileVM = null;
         private string gistTempFile = null;
-        private BitmapImage saveEnabled;
-        private BitmapImage saveDisabled;
 
         private GistManagerWindowControl mainWindowControl;
 

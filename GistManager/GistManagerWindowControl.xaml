@@ -398,10 +398,10 @@
                          Command="{Binding CreatePrivateGistCommand}" CommandParameter="{Binding CreateGistCommandArgs}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
                     </Button >
-                    <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
+                    <!--<Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
                         Click="AddNewGistFileBT_ClickAsync" >
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
-                    </Button >
+                    </Button >-->
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
                     <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                IsChecked="True" Click="OutlineButton_Click">

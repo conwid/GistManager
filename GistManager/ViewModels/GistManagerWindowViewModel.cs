@@ -8,6 +8,7 @@ using GistManager.Mvvm.Commands.RelayCommand;
 using GistManager.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
@@ -47,8 +48,16 @@ namespace GistManager.ViewModels
 
             CreateGistCommandArgs = new CreateGistCommandArgs($"New File created successfully at: {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}");
 
-
+            Gists.CollectionChanged += Gists_CollectionChanged;
         }
+
+        private void Gists_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            Debug.WriteLine(e.NewItems.Count);
+        }
+
+
 
 
         #region commands
@@ -128,8 +137,6 @@ namespace GistManager.ViewModels
             get => isAuthenticated;
             set => SetProperty(ref isAuthenticated, value);
         }
-
-
 
         private string searchExpression;
         public string SearchExpression
