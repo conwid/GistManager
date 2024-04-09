@@ -100,7 +100,7 @@
                         <Setter.Value>
                             <ContextMenu>
 
-                                <MenuItem Header="Create New Gist File" Command="{Binding CreateNewGistCommand}">
+                                <MenuItem Header="Create New Gist File" Command="{Binding CreateNewGistCommand}" >
                                     <MenuItem.Icon>
                                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
                                     </MenuItem.Icon>

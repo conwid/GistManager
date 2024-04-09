@@ -385,6 +385,7 @@
                 <ToolBar Style="{StaticResource ToolbarNoOverlflow}">
                     <Button ToolTip="Refresh" Command="{Binding RefreshCommand}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
+                        
                     </Button>
                     <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
