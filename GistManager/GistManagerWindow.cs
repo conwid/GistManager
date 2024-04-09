@@ -29,7 +29,6 @@ namespace GistManager
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             this.Content = gistManagerWindowControl;
-
         }
     }
 }
