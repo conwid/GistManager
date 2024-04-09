@@ -18,16 +18,14 @@ namespace GistManager.GistService.Model
         public string Url => gistFile.RawUrl;
         public string Name => gistFile.Filename;
         public string Content => gistFile.Content;
-        public string Filename => gistFile.Filename;
 
-            public string Id
+        public string Id
         {
             get
             {
                 var data = Url.Split('/');
                 return data[data.Length - 1];
             }
-
         }
     }
 }

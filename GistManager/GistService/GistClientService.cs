@@ -1,9 +1,13 @@
 ﻿using GistManager.GistService.Model;
+using GistManager.GistService.Wpf;
+using Microsoft.VisualStudio.Settings;
+using Microsoft.VisualStudio.Shell.Settings;
 using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GistManager.GistService
@@ -37,10 +41,9 @@ namespace GistManager.GistService
         {
             var update = new GistUpdate();
             update.Files.Add(fileName, new GistFileUpdate { Content = fileContent, NewFileName = fileName });
-            Gist response = await gistClient.Edit(gistId, update);            
+            Gist response = await gistClient.Edit(gistId, update);
             return response;
         }
-
 
         public async Task<Gist> CreateNewGistFileAsync(string gistId, string filename, string comment, string content)
         {

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GistManager.Controls"
              mc:Ignorable="d" 
              xmlns:editable="clr-namespace:GistManager.Controls.EditableTextBlock"             
              xmlns:viewmodels="clr-namespace:GistManager.ViewModels"     
@@ -57,7 +58,6 @@
                      Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" />
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
-                
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal" MaxHeight="16">
 
@@ -100,10 +100,10 @@
                         <Setter.Value>
                             <ContextMenu>
 
-                                <MenuItem Header="Create New Gist File" Command="{Binding CreateGistFileCommand}" >
+                                <MenuItem Header="Create New Parent Gist" Command="{Binding CreateNewGistCommand}">
                                     <!--<MenuItem.Icon>
-                                     <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
-                                     </MenuItem.Icon>-->
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                                    </MenuItem.Icon>-->
                                 </MenuItem>
 
                                 <MenuItem Header="Copy gist URL" Command="{Binding CopyGistUrlCommand}">
@@ -152,14 +152,12 @@
                         <Setter.Value>
 
                             <ContextMenu>
-
-  
-
                                 <MenuItem Header="Copy File RawURL" Command="{Binding CopyGistFileUrlCommand}">
                                     <MenuItem.Icon>
                                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
                                     </MenuItem.Icon>
                                 </MenuItem>
+
 
                                 <MenuItem Header="Delete file" Command="{Binding DeleteGistFileCommand}">
                                     <MenuItem.Icon>

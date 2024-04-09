@@ -251,7 +251,7 @@ namespace GistManager
 
         private void GistCodeEditor_Drop(object sender, DragEventArgs e)
         {
-            //MessageBox.Show(e.Data.ToString());
+            MessageBox.Show(e.Data.ToString());
         }
 
         private void GistCodeEditor_DragEnter(object sender, DragEventArgs e)
