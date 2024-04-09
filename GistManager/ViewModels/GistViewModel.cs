@@ -64,7 +64,7 @@ namespace GistManager.ViewModels
         #region command implementations
         private async Task DeleteGistAsync() => await GistClientService.DeleteGistAsync(Gist.Id);
         private void CopyGistUrl() => Clipboard.SetText(this.Url);
-        private async Task CreateNewGistAsync() => await GistClientService.CreateGistAsync($"NewGist {Guid.NewGuid().ToString()}",  "New Gist File - consider renaming" , false);
+        private async Task CreateNewGistAsync() => await GistClientService.CreateGistAsync("NewGist.txt",  "New Gist File - consider renaming" , true);
 
         #endregion
 

@@ -54,7 +54,7 @@
         <!-- TOOLBAR NO OVERFLOW -->
         <Style x:Key="ToolbarNoOverlflow" TargetType="{x:Type ToolBar}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
-            <!--<Setter Property="OverridesDefaultStyle" Value="true"/>-->
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
             <Setter Property="Background" Value="Transparent"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
@@ -379,13 +379,12 @@
                 </controls:OverflowlessToolbar>
             </ToolBarTray>
 
-            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent" 
-                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                <ToolBar Style="{StaticResource ToolbarNoOverlflow}">
-                    <Button x:Name="RefreshBT"   Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
+            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent"    >
+                <ToolBar >
+                    <Button ToolTip="Refresh" Command="{Binding RefreshCommand}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
                     </Button>
-                    <Button x:Name="LogoutBT"  Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
+                    <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
                     </Button >
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
@@ -394,7 +393,7 @@
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
                     </Button>
                     <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
-                         Command="{Binding CreatePrivateGistCommand}" CommandParameter="{Binding CreateGistParameters}">
+                        Click="AddNewGistBT_ClickAsync" >
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
                     </Button >
                     <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"

@@ -6,7 +6,6 @@ using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.GistCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
 using GistManager.Utils;
-using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,8 +41,6 @@ namespace GistManager.ViewModels
             LogoutCommand = new AsyncRelayCommand(LogoutAsync, () => IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Logging out", SuppressCompletionCommand = true };
             this.AsyncOperationStatusManager.CompletionCommand = new AsyncRelayCommand(this.RefreshAsync, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
         }
-
-
 
 
         #region commands
@@ -85,27 +82,6 @@ namespace GistManager.ViewModels
             {
                 HandleExistingGist(existingGist, gists.Single(g => g.Id == existingGist.Gist.Id));
             }
-        }
-
-        private async Task CreateNewParentGist()
-        {
-            //GistFile rootGistFile = new GistFile(0, $"New Gist {Gists.Count()}", null, null, "", "");
-
-
-            //var newGist = new Gist()
-            //{
-
-            //}
-            GistViewModel newGistVM = new GistViewModel(gistClientService, AsyncOperationStatusManager, ErrorHandler);
-            newGistVM.CreateNewGistCommand.Execute("dave");
-
-            Gists.Add(newGistVM);
-
-           //var newGist= gistClientService.CreateGistAsync($"New Gist ({Gists.Count})", "Gist created from GistManagerWindowViewModel", false);
-
-           // Gists.Add(newGist);
-
-
 
         }
 
@@ -145,9 +121,6 @@ namespace GistManager.ViewModels
             set => SetProperty(ref isAuthenticated, value);
         }
 
-        public CreateGistCommandArgs CreateGistParameters {
-            get { return new CreateGistCommandArgs($"New Gist. NUmber of Gists = {Gists.Count}"); }
-        }
 
 
         private string searchExpression;
