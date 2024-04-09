@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,6 +26,9 @@ namespace GistManager.GistService.Model
         public bool IsPublic => gist.Public;
         public string Description => gist.Description;
         public string Name => GetGistName();
+
+        public IReadOnlyDictionary<string,GistFile> GistFiles => gist.Files; 
+
         private string GetGistName()
         {
             if (gist.Files.Count == 0)
@@ -33,8 +37,15 @@ namespace GistManager.GistService.Model
         }
         public string Url => gist.HtmlUrl;
 
+        
+
         private readonly SortedList<string, GistFileModel> files;
         public IList<GistFileModel> Files => files.Values;
+
+        internal void AddGistFileModelToFiles(GistFileModel gistFileModel)
+        {
+            files.Add(gistFileModel.Filename, gistFileModel);
+        }
 
         public GistFileModel GetFileByName(string name)
         {

@@ -37,17 +37,16 @@ namespace GistManager.ViewModels
             PublicFilterCommand = new RelayCommand<FilterEventArgs>(FilterPublicGists, errorHandler);
             PrivateFilterCommand = new RelayCommand<FilterEventArgs>(FilterPrivateGists, errorHandler);
             LoginCommand = new AsyncRelayCommand(LoginAsync, () => !IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Logging in", SuppressCompletionCommand = true };
-            CreatePublicGistCommand = new CreateGistCommand(e => InitCreate(e.Content, true), errorHandler);
+            CreatePublicGistCommand = new CreateGistCommand(e => InitCreate(e.Content, true), errorHandler)  ;
             CreatePrivateGistCommand = new CreateGistCommand(e => InitCreate(e.Content, false), errorHandler);
             CreateGistFileCommand = new CreateGistFileCommand(e => InitCreate(e.Content, e.ParentGist), errorHandler);
             RemoveGistCommand = new RelayCommand<GistViewModel>(g => Gists.Remove(g), errorHandler);
             RefreshCommand = new AsyncRelayCommand(RefreshAsync, () => IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
             LogoutCommand = new AsyncRelayCommand(LogoutAsync, () => IsAuthenticated, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Logging out", SuppressCompletionCommand = true };
-            this.AsyncOperationStatusManager.CompletionCommand = new AsyncRelayCommand(this.RefreshAsync, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
+           
+            AsyncOperationStatusManager.CompletionCommand = new AsyncRelayCommand(this.RefreshAsync, asyncOperationStatusManager, ErrorHandler) { ExecutionInfo = "Refreshing gists", SuppressCompletionCommand = true };
 
             CreateGistCommandArgs = new CreateGistCommandArgs($"New File created successfully at: {DateTime.Now.ToShortDateString()} - {DateTime.Now.ToShortTimeString()}");
-
-
         }
 
 

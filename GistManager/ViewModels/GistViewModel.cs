@@ -4,6 +4,7 @@ using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
 using GistManager.Mvvm.Commands.Async.AsyncRelayCommand;
 using GistManager.Mvvm.Commands.RelayCommand;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace GistManager.ViewModels
 {
     public class GistViewModel : BindableBase, IViewModelWithHistory
     {
-        private readonly IAsyncOperationStatusManager asyncOperationStatusManager;       
+        private readonly IAsyncOperationStatusManager asyncOperationStatusManager;
         protected IGistClientService GistClientService { get; }
         public GistModel Gist { get; }
 
@@ -28,9 +29,10 @@ namespace GistManager.ViewModels
             Name = name;
             Files = new ObservableRangeCollection<GistFileViewModel>();
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
-            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager,errorHandler) { ExecutionInfo = "Deleting gist" };
+            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Deleting gist" };
             CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
             CreateNewGistCommand = new AsyncRelayCommand(CreateNewGistAsync, errorHandler);
+            CreateGistFileCommand = new AsyncRelayCommand(CreateGistFileAsync, errorHandler);
         }
 
         public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
@@ -59,14 +61,46 @@ namespace GistManager.ViewModels
         public ICommand DeleteGistCommand { get; }
         public ICommand CopyGistUrlCommand { get; }
         public ICommand CreateNewGistCommand { get; }
+        public ICommand CreateGistFileCommand { get; }
         #endregion
 
         #region command implementations
         private async Task DeleteGistAsync() => await GistClientService.DeleteGistAsync(Gist.Id);
         private void CopyGistUrl() => Clipboard.SetText(this.Url);
-        private async Task CreateNewGistAsync() => await GistClientService.CreateGistAsync("NewGist.txt",  "New Gist File - consider renaming" , true);
+        private async Task CreateNewGistAsync() => await GistClientService.CreateGistAsync("NewGist.txt", "New Gist File - consider renaming", true);
+        private async Task CreateGistFileAsync() => await CreateGistWithUniqueFilenameAsync();
+
 
         #endregion
+
+
+        private async Task<Gist> CreateGistWithUniqueFilenameAsync()
+        {
+            string filenameBase = "NewGistFile";
+            int count = 0;            
+                
+            while (Gist.Files.Any( gfm => gfm.Filename == $"{filenameBase}({count}).txt"))
+            {
+                count += 1;
+            }
+
+            string filename = $"{filenameBase}({count}).txt";
+            string content = $"New Gist file created on {DateTime.Now}";
+
+            // WARNING: conwid's original implementation has the Gist.ID set to the filename, not the Parent Gist.Id
+            // If you try with the filename above GistClientService.CreateGistFileAsync - you get an error. It seems to need
+            // the correct parent ID to insert the file against the parent. Thoughts: not sure why he's using filename as the ID??
+            // NOT SURE THIS BREAKS ANYTHING YET, BUT MIGHT DO!!
+            // TODO: check the RefreshGists routine as I guess this is where Ids are being set, as when you start anew, any checked in 
+            // gists have the filename as ID. Could try altering the read in routine?
+            Gist response =  await GistClientService.CreateGistFileAsync(Gist.Id, filename,content);
+
+            // Difference in GistFileModel.ID between newly added and those rad at startup explained above. 
+            Gist.AddGistFileModelToFiles(new GistFileModel(new GistFile(0, filename, null, null, content, response.HtmlUrl)));
+
+            return response;
+        }
+
 
         #region bound properties
 
