@@ -18,14 +18,10 @@ namespace GistManager.ViewModels
     {
         private readonly IAsyncOperationStatusManager asyncOperationStatusManager;
         protected IGistClientService GistClientService { get; }
-        public GistFileModel GistFile { get; }      
-
+        public GistFileModel GistFile { get; }
         public GistViewModel ParentGist { get; }
 
         public bool Refreshing { get; set; }
-
-        public bool IsDarkMode { get; set; }
-
 
         /// <summary>
         /// Stores whether the code, filename or code has been changed from load
@@ -40,15 +36,13 @@ namespace GistManager.ViewModels
             FileNameChangedCommand = new AsyncCommand<string>(RenameGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Renaming gist file" };
             UpdateGistCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
             CheckoutCommand = new AsyncCommand<GistHistoryEntryModel>(RefreshGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Checking out file", SuppressCompletionCommand = true };
-
-            IsDarkMode = Helpers.IsDarkMode();
         }
 
-        public GistFileViewModel(GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager commandStatusManager, IErrorHandler errorHandler) : this(gistClientService, commandStatusManager,errorHandler)
+        public GistFileViewModel(GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager commandStatusManager, IErrorHandler errorHandler) : this(gistClientService, commandStatusManager, errorHandler)
         {
             ParentGist = parent;
         }
-        public GistFileViewModel(GistFileModel file, GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager commandStatusManager, IErrorHandler errorHandler) : this(parent, gistClientService, commandStatusManager,errorHandler)
+        public GistFileViewModel(GistFileModel file, GistViewModel parent, IGistClientService gistClientService, IAsyncOperationStatusManager commandStatusManager, IErrorHandler errorHandler) : this(parent, gistClientService, commandStatusManager, errorHandler)
         {
             this.GistFile = file;
             fileName = file.Name;
@@ -125,13 +119,13 @@ namespace GistManager.ViewModels
         #region commands
         public ICommand DeleteGistFileCommand { get; }
         public ICommand CopyGistFileUrlCommand { get; }
+        public ICommand CreateNewGist { get; }
         private AsyncCommand<GistHistoryEntryModel> CheckoutCommand { get; }
-        
+
         // HACK: Command should be readonly
         protected AsyncCommand<string> FileNameChangedCommand { get; set; }
 
         internal AsyncCommand<string> UpdateGistCommand { get; set; }
-
 
         #endregion
 

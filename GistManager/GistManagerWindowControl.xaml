@@ -14,7 +14,8 @@
              xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
              xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
              xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-             mc:Ignorable="d"             
+             mc:Ignorable="d"
+            xmlns:local="clr-namespace:GistManager"
              Name="GistManager" AllowDrop="True">
 
     <UserControl.Resources>
@@ -36,12 +37,12 @@
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
 
         <!-- TOOLBAR BUTTON -->
-
         <Style x:Key="toolBarButtonStyle" TargetType="ButtonBase" >
             <Setter Property="Height" Value="24" />
             <Setter Property="Width" Value="24" />
             <Setter Property="Padding" Value="2" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
         <!-- TOOLBAR BUTTON IMAGE -->
         <Style x:Key="toolBarButtonImageStyle" TargetType="Image">
@@ -49,6 +50,28 @@
             <Setter Property="Width" Value="16" />
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
+        </Style>
+        <!-- TOOLBAR No OVERFLOW -->
+        <Style x:Key="ToolbarNoOverlflow" TargetType="{x:Type ToolBar}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <!--<Setter Property="OverridesDefaultStyle" Value="true"/>-->
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToolBar}">
+                        <DockPanel >
+                            <ToggleButton Visibility="Collapsed"  DockPanel.Dock="Right" IsEnabled="False" IsChecked="False" ClickMode="Press">
+                                <Popup x:Name="OverflowPopup" AllowsTransparency="true" Placement="Bottom" IsOpen="{Binding Path=IsOverflowOpen,RelativeSource={RelativeSource TemplatedParent}}" StaysOpen="false" Focusable="false" PopupAnimation="Slide">
+                                    <Border x:Name="DropDownBorder" Background="pink" BorderThickness="1" BorderBrush="pink">
+                                        <ToolBarOverflowPanel x:Name="PART_ToolBarOverflowPanel" Margin="2" WrapWidth="200" Focusable="true"  FocusVisualStyle="{x:Null}" KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.DirectionalNavigation="Cycle" Visibility="Collapsed"/>
+                                    </Border>
+                                </Popup>
+                            </ToggleButton>
+                            <ToolBarPanel x:Name="PART_ToolBarPanel" IsItemsHost="true" Margin="0,1,2,2"/>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <!-- SEPARATOR -->
 
@@ -343,60 +366,65 @@
 
     </UserControl.Resources>
 
-    <DockPanel >
-        <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Top" Background="Transparent">
-            <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
-                <Button x:Name="LogInButton" Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Focusable="False"                        >
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.LoginUser}" />
-                </Button>
-                <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
-                </Button>
-                <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
-                </Button >
-                <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"
-                        Click="SaveButton_ClickAsync">
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
-                </Button>
-                <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-                        Click="AddNewGistBT_ClickAsync" >
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
-                </Button >
-                <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-                        Click="AddNewGistFileBT_ClickAsync" >
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
-                </Button >
-                <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
-                <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-		                IsChecked="True" Click="OutlineButton_Click">
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DocumentOutline}" />
-                </ToggleButton>
-                <ToggleButton x:Name="IntellisenseButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Intellisense"
-		                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-                        Click="IntellisenseButton_Click" >
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IntellisenseLightBulb}" />
-                </ToggleButton>
-                <ToggleButton x:Name="AutoIndentButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Auto-Indent"
-	                Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-                    Click="AutoIndentButton_Click" IsChecked="True" >
-                    <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IncreaseIndent}" />
-                </ToggleButton>
-                <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}" Width="100" Margin="4,1,1,1"
-                          Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" 
-                          SelectionChanged="LanguageSelectorCB_SelectionChanged">
-                </ComboBox>
+    <DockPanel>
+        <DockPanel x:Name ="ToolbarDP" DockPanel.Dock="Top">
+            <ToolBarTray x:Name="LogInToolbar"  DockPanel.Dock="Left" Background="Transparent" 
+                         Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
+                <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
+                    <Button  x:Name="LogInButton"  Command="{Binding LoginCommand}" ToolTip="Log in"
+                     Focusable="False" 
+                    Style="{StaticResource toolBarButtonStyle}">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.LoginUser}" />
+                    </Button>
+                </controls:OverflowlessToolbar>
+            </ToolBarTray>
 
-            </controls:OverflowlessToolbar>
-        </ToolBarTray>
+            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent" 
+                         Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
+                <ToolBar Style="{StaticResource ToolbarNoOverlflow}" Background="red">
+                    <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
+                    </Button>
+                    <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
+                    </Button >
+                    <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <Button x:Name="SaveButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
+                        Click="SaveButton_ClickAsync">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
+                    </Button>
+                    <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
+                        Click="AddNewGistBT_ClickAsync" >
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
+                    </Button >
+                    <Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
+                        Click="AddNewGistFileBT_ClickAsync" >
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
+                    </Button >
+                    <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+                    <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
+		                IsChecked="True" Click="OutlineButton_Click">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.DocumentOutline}" />
+                    </ToggleButton>
+                    <ToggleButton x:Name="IntellisenseButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Intellisense"
+                        Click="IntellisenseButton_Click" >
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IntellisenseLightBulb}" />
+                    </ToggleButton>
+                    <ToggleButton x:Name="AutoIndentButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Auto-Indent"
+                    Click="AutoIndentButton_Click" IsChecked="True" >
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.IncreaseIndent}" />
+                    </ToggleButton>
+                    <ComboBox x:Name="LanguageSelectorCB" Style="{DynamicResource CustomComboBoxStyle}" Width="100" Margin="4,1,1,1"
+                          SelectionChanged="LanguageSelectorCB_SelectionChanged">
+                    </ComboBox>
+                </ToolBar>
+                <!--<controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
+
+
+                </controls:OverflowlessToolbar>-->
+            </ToolBarTray>
+
+        </DockPanel>
 
         <TextBox x:Name="searchBox" DockPanel.Dock="Top" Margin="6,8"
                  Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 

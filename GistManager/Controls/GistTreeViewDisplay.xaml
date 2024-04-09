@@ -29,9 +29,6 @@
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
         </Style>
-        <!--<Style x:Key="gistImage" TargetType="Image" BasedOn="{StaticResource toolBarButtonImageStyle}">
-            <Setter Property="Source" Value="../Resources/gist.png"></Setter>
-        </Style>-->
     </UserControl.Resources>
     <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
@@ -51,23 +48,6 @@
                   Background="Transparent"                                           
             >
             <directDragTree:DirectDragTreeView.Resources>
-                <!--<Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
-                <Image x:Key="checkoutImageLight" Source="..\Resources\checkoutLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
-
-                <Image x:Key="copyUrlImage" Source="..\Resources\link.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
-                <Image x:Key="copyUrlImageLight" Source="..\Resources\linkLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />
-
-                <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
-                <Image x:Key="deleteGistImageLight" Source="..\Resources\deleteGistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
-
-                <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>
-                <Image x:Key="deleteFileImageLight"  Source="..\Resources\deleteFileLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}"/>-->
-
-                <!--<Image x:Key="gistImage" Source="..\Resources\gist.png" x:Shared="False" />
-                <Image x:Key="gistImageLight" Source="..\Resources\gistLight.png" x:Shared="False" Style="{StaticResource toolBarButtonImageStyle}" />-->
-
-
-
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -120,6 +100,12 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>
+
+                                <MenuItem Header="Create New Parent Gist" Command="{Binding CreateNewGistCommand}">
+                                    <!--<MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Link}" />
+                                    </MenuItem.Icon>-->
+                                </MenuItem>
 
                                 <MenuItem Header="Copy gist URL" Command="{Binding CopyGistUrlCommand}">
                                     <MenuItem.Icon>

@@ -25,8 +25,10 @@ namespace GistManager.Controls
 
             if (this.Template.FindName("MainPanelBorder", this) is FrameworkElement mainPanelBorder)
             {
-                mainPanelBorder.Margin = new Thickness();
+                mainPanelBorder.Margin = new Thickness(0);
             }
+
         }
+
     }
 }

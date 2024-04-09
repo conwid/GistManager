@@ -24,6 +24,7 @@ using Syncfusion.Windows.Edit;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Windows.Input;
+using System.ComponentModel;
 
 namespace GistManager
 {
@@ -76,7 +77,9 @@ namespace GistManager
 
                 ApplyTheme(themeChangedToDarkMode); // this ensures the right text color
 
-                ViewModel.IsAuthenticated = false;
+                if (DesignerProperties.GetIsInDesignMode(this) == true) ViewModel.IsAuthenticated = true;
+
+                //ViewModel.IsAuthenticated = false;
                 TopToolbar.Visibility = Visibility.Hidden;
                 LoginPromptTB.Text = "Visual Studio Restart needed to reset theme.";
             }

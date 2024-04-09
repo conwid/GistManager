@@ -67,7 +67,6 @@ namespace GistManager.GistService
             newGist.Files.Add(gistName, firstFileContent);
             Gist response = await gistClient.Create(newGist);
             return response;
-
         }
 
         public async Task<Gist> RenameGistFileAsync(string gistId, string originalFileName, string newFileName, string content, string comment)
