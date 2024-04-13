@@ -41,8 +41,9 @@
             <Setter Property="Height" Value="24" />
             <Setter Property="Width" Value="24" />
             <Setter Property="Padding" Value="2" />
-            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Background" Value="Transparent"/>
+            <!--<Setter Property="OverridesDefaultStyle" Value="True"/>-->
         </Style>
         <!-- TOOLBAR BUTTON IMAGE -->
         <Style x:Key="toolBarButtonImageStyle" TargetType="Image">
@@ -50,7 +51,9 @@
             <Setter Property="Width" Value="16" />
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
-        </Style>
+        </Style>      
+   
+        
         <!-- TOOLBAR NO OVERFLOW -->
         <Style x:Key="ToolbarNoOverlflow" TargetType="{x:Type ToolBar}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
@@ -367,7 +370,8 @@
     </UserControl.Resources>
 
     <DockPanel>
-        <DockPanel x:Name ="ToolbarDP" DockPanel.Dock="Top">
+        <DockPanel x:Name ="ToolbarDP" DockPanel.Dock="Top" Margin="4">
+
             <ToolBarTray x:Name="LogInToolbar"  DockPanel.Dock="Left" Background="Transparent" 
                          Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
@@ -379,30 +383,41 @@
                 </controls:OverflowlessToolbar>
             </ToolBarTray>
 
-            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent"  
+            <ToolBarTray x:Name="TopToolbar" DockPanel.Dock="Left" Background="Transparent" IsLocked="True"
                     Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-              
-                <ToolBar Style="{StaticResource ToolbarNoOverlflow}">
-                    <Button ToolTip="Refresh" Command="{Binding RefreshCommand}">
+
+                <ToolBar SizeChanged="ToolBar_SizeChanged" Background="Transparent" >
+                    <Button ToolTip="Refresh" Command="{Binding RefreshCommand}" Style="{StaticResource toolBarButtonStyle}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Refresh}" />
-                        
                     </Button>
                     <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
-                    </Button >
+                    </Button >  
+
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+
                     <Button x:Name="SaveButton"  Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes" 
-                        Click="SaveButton_ClickAsync">
+                           BorderBrush="Transparent" BorderThickness="1" Click="SaveButton_ClickAsync">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Save}" />
                     </Button>
+
+                    <Button x:Name="SaveAllButton"  Style="{StaticResource toolBarButtonStyle}" ToolTip="Save Changes to all Gist Files" 
+                      BorderBrush="Transparent" BorderThickness="1" Click="SaveAllButton_Click">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.SaveAll}" />
+                    </Button>
+
+                    <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
+
                     <Button x:Name="AddNewGistBT" Style="{StaticResource toolBarButtonStyle}"  ToolTip="Add New Gist"
-                         Command="{Binding CreatePrivateGistCommand}" CommandParameter="{Binding CreateGistCommandArgs}">
+                            Click="AddNewGistBT_Click">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewListItem}" />
                     </Button >
-                    <!--<Button x:Name="AddNewGistFileBT" Style="{StaticResource toolBarButtonStyle}" ToolTip="Add New Gist File"
-                        Click="AddNewGistFileBT_ClickAsync" >
-                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.NewDocument}" />
-                    </Button >-->
+
+                    <ToggleButton x:Name="CreatePrivateGistToggle" Style="{StaticResource toolBarButtonStyle}" 
+                                  ToolTip="Toggle create Private/Public" IsChecked="False">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Key}"/>
+                    </ToggleButton>
+
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
                     <ToggleButton x:Name="OutlineButton" Style="{StaticResource toolBarButtonStyle}" ToolTip="Toggle Outlining"
 		                IsChecked="True" Click="OutlineButton_Click">
@@ -428,7 +443,7 @@
 
         </DockPanel>
 
-        <TextBox x:Name="searchBox" DockPanel.Dock="Top" Margin="6,8"
+        <TextBox x:Name="searchBox" DockPanel.Dock="Top" Margin="4"
                  Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                  Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
             <TextBox.Template>
@@ -576,7 +591,7 @@
                                     TabIndex="1" LostFocus="GistFilenameTB_LostFocus" KeyUp="GistFilenameTB_KeyUp"/>
 
                 </Grid>
-                <Grid>
+                <Grid AllowDrop="true">
                     <!-- Leave ShowLineNumber, EnableOutlining to True, as otherwise causes control to bug out-->
                     <syncfusion:EditControl x:Name="GistCodeEditor" LineNumberAreaBackground="Transparent" 
                                         OutliningAreaBackground="Transparent" Background="Transparent"

@@ -19,8 +19,8 @@ namespace GistManager.GistService.Model
             {
                 files.Add(file.Key, new GistFileModel(file.Value));
             }
+            
         }
-
         public string Id => gist.Id;
         public bool IsPublic => gist.Public;
         public string Description => gist.Description;

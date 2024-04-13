@@ -44,7 +44,8 @@
                   KeyDown="TreeView_KeyDown"       
                   BorderThickness="0"
                   x:Name="TreeView"
-                  Background="Transparent"                                           
+                  Background="Transparent" 
+                    Margin="0,4,0,4"
             >
             <directDragTree:DirectDragTreeView.Resources>
                 <Storyboard x:Key="dragEnterStoryBoard">
@@ -59,19 +60,19 @@
                 <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}"
                      Color="{DynamicResource {x:Static SystemColors.HighlightTextColorKey}}"/>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
-                    <StackPanel Orientation="Horizontal" MaxHeight="16">
+                    <StackPanel Orientation="Horizontal" >
 
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Item}" />
 
-                        <TextBlock Text="{Binding Name}" Loaded="TextBlock_Loaded"  />
+                        <TextBlock Text="{Binding Name}" Margin="4,0,0,0" Loaded="TextBlock_Loaded"  />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
-                    <StackPanel Orientation="Horizontal" MaxHeight="16">
+                    <StackPanel Orientation="Horizontal" >
 
-                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Document}" />
+                        <imaging:CrispImage  Moniker="{x:Static catalog:KnownMonikers.Document}" />
 
-                        <editable:EditableTextBlock x:Name="GistEditableName" MinWidth="300" Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
+                        <editable:EditableTextBlock x:Name="GistEditableName" Margin="4,0,0,0" MinWidth="300" Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
                 <Style TargetType="ToolTip">

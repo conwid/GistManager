@@ -74,6 +74,7 @@ namespace GistManager.GistService
             var update = new GistUpdate() { Description = comment };
             update.Files.Add(originalFileName, new GistFileUpdate { Content = content, NewFileName = newFileName});
             Gist response = await gistClient.Edit(gistId, update);
+            
             return response;
         }
 

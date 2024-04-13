@@ -1,4 +1,5 @@
-﻿using GistManager.Utils;
+﻿using GistManager.Mvvm.Commands.GistCommand;
+using GistManager.Utils;
 using GistManager.ViewModels;
 using Microsoft.VisualStudio.PlatformUI;
 using Syncfusion.SfSkinManager;
@@ -48,8 +49,11 @@ namespace GistManager
 
             //GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages.
 
-            LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();              
+            LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
         }
+
+
+
 
         private void ApplyTheme(bool inDarkMode)
         {
@@ -202,7 +206,7 @@ namespace GistManager
             var reposnse = await ViewModel.gistClientService.CreateGistAsync("#New Gist", "Gist File created in Visual Studio", true);
             ViewModel.RefreshCommand.Execute(null);
 
-            Mouse.OverrideCursor = Cursors.Arrow;
+            Mouse.OverrideCursor = null;
 
         }
         private async void AddNewGistFileBT_ClickAsync(object sender, RoutedEventArgs e)
@@ -222,7 +226,7 @@ namespace GistManager
                    "Gist file created in Visual Studio Extension.");
             ViewModel.RefreshCommand.Execute(null);
 
-            Mouse.OverrideCursor = Cursors.Arrow;
+            Mouse.OverrideCursor = null;
 
         }
 
@@ -238,7 +242,7 @@ namespace GistManager
         {
             CodeEditorManager.CheckUiWithGistVmForChanges();
         }
-        
+
         private void gistDetailsPanel_LostFocus(object sender, RoutedEventArgs e)
         {
             CodeEditorManager.CheckUiWithGistVmForChanges();
@@ -254,11 +258,7 @@ namespace GistManager
             MessageBox.Show(e.Data.ToString());
         }
 
-        private void GistCodeEditor_DragEnter(object sender, DragEventArgs e)
-        {
-            MessageBox.Show("DragEnter" + e.ToString());
 
-        }
 
         private void ParentGistDescriptionTB_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -266,7 +266,7 @@ namespace GistManager
             {
                 GistFilenameTB.Focus();
                 //GistFilenameTB.Select(0, GistFilenameTB.Text.Length);
-               GistFilenameTB.SelectAll();
+                GistFilenameTB.SelectAll();
             }
         }
 
@@ -275,7 +275,7 @@ namespace GistManager
             if (e.Key == System.Windows.Input.Key.Enter)
             {
                 GistCodeEditor.Focus();
-                GistCodeEditor.SelectLines(0, GistCodeEditor.Lines.Count, 0, GistCodeEditor.Lines.Count -1);
+                GistCodeEditor.SelectLines(0, GistCodeEditor.Lines.Count, 0, GistCodeEditor.Lines.Count - 1);
             }
 
         }
@@ -293,6 +293,66 @@ namespace GistManager
         private void LanguageSelectorCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CodeEditorManager.ChangeEditorLanguage(LanguageSelectorCB.SelectedItem.ToString());
+        }
+
+        private void AddPresetButton_Click(object sender, RoutedEventArgs e)
+        {
+            var addButton = sender as FrameworkElement;
+            if (addButton != null)
+            {
+                addButton.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private void AddNewGistBT_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)CreatePrivateGistToggle.IsChecked)
+            {
+                ViewModel.CreatePrivateGistCommand.Execute(new CreateGistCommandArgs($"New Gist Created on {DateTime.Now}"));
+            }
+            else
+            {
+                ViewModel.CreatePublicGistCommand.Execute(new CreateGistCommandArgs($"New Gist Created on {DateTime.Now}"));
+            }
+        }
+
+ 
+        private async void SaveAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            await CodeEditorManager.SaveAllAsync();
+        }
+
+        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                mainPanelBorder.Margin = new Thickness(0);
+            }
+        }
+
+        private void ToolBar_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = toolBar.HasOverflowItems ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                var defaultMargin = new Thickness(0, 0, 11, 0);
+                mainPanelBorder.Margin = toolBar.HasOverflowItems ? defaultMargin : new Thickness(0);
+            }
         }
     }
 }

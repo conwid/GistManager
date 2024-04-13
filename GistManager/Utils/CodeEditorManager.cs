@@ -56,6 +56,21 @@ namespace GistManager.Utils
             this.mainWindowControl = mainWindowControl;
         }
 
+        internal async Task SaveAllAsync()
+        {
+            //TODO: Meed to reveiw this - buggy
+            foreach (GistViewModel gistVM in mainWindowControl.ViewModel.Gists)
+            {
+                foreach (GistFileViewModel gistFileVM in gistVM.Files)
+                {
+                    if (gistFileVM.HasChanges)
+                    {
+                        await UpdateGistOnRepositoryAsync(gistFileVM);
+                    }
+                }
+            }
+        }
+
         private void SetSaveButtonOutline(bool visible)
         {
             if (visible)
@@ -114,7 +129,7 @@ namespace GistManager.Utils
             mainWindowControl.GistCodeEditor.DocumentSource = gistTempFile;
 
             // now try and auto-math the language form any extension
-            string ext = Path.GetExtension(gistTempFile).Replace(".","");
+            string ext = Path.GetExtension(gistTempFile).Replace(".", "");
 
             if (ext != null)
             {
@@ -125,7 +140,7 @@ namespace GistManager.Utils
                     mainWindowControl.LanguageSelectorCB.Text = languageKvp.Value.ToString();
                 }
             }
-            Mouse.OverrideCursor = Cursors.Arrow;
+            Mouse.OverrideCursor = null;
         }
 
         internal void ToggleOutline(bool? state)
@@ -148,8 +163,12 @@ namespace GistManager.Utils
         /// Updates the Gist on the Gist Repository
         /// </summary>
         /// <returns></returns>
-        internal async Task<bool> UpdateGistOnRepositoryAsync()
+        internal async Task<bool> UpdateGistOnRepositoryAsync(GistFileViewModel gistFileViewModel = null)
         {
+            // if 
+            if (gistFileViewModel == null) gistFileViewModel = this.gistFileVM;
+
+
             // return save button border to normal (aesthetics) 
             SetSaveButtonOutline(false);
 
@@ -160,7 +179,7 @@ namespace GistManager.Utils
             mainWindowControl.SaveButton.IsEnabled = false;
 
             // do repo update
-            await GistFileVM.UpdateGistAsync();
+            await gistFileViewModel.UpdateGistAsync();
 
             // enable Save button
             mainWindowControl.SaveButton.IsEnabled = true;
