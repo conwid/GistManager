@@ -166,8 +166,8 @@ namespace GistManager.Utils
         internal async Task<bool> UpdateGistOnRepositoryAsync(GistFileViewModel gistFileViewModel = null)
         {
             // if 
-            if (gistFileViewModel == null) gistFileViewModel = this.gistFileVM;
-
+            if (gistFileViewModel == null ) gistFileViewModel = this.gistFileVM;
+            if (gistFileViewModel == null) return false;
 
             // return save button border to normal (aesthetics) 
             SetSaveButtonOutline(false);
@@ -199,6 +199,8 @@ namespace GistManager.Utils
 
         private void UpdateGistViewModel()
         {
+            if (gistFileVM == null) return;
+
             // update the Gist's viewmodel form the UIElements
             GistFileVM.ParentGist.Description = mainWindowControl.ParentGistDescriptionTB.Text;
             GistFileVM.Content = mainWindowControl.GistCodeEditor.Text;
