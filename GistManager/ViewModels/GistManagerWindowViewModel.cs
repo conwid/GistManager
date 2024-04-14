@@ -57,9 +57,6 @@ namespace GistManager.ViewModels
             Debug.WriteLine(e.NewItems.Count);
         }
 
-
-
-
         #region commands
         public ICommand PublicFilterCommand { get; }
         public ICommand PrivateFilterCommand { get; }

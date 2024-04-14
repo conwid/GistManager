@@ -31,6 +31,9 @@ namespace GistManager.GistService.Model
                 return $"gist:{Guid.NewGuid().ToString("N").ToLower()}";
             return gist.Files.FirstOrDefault().Value.Filename;
         }
+
+ 
+
         public string Url => gist.HtmlUrl;
 
         private readonly SortedList<string, GistFileModel> files;

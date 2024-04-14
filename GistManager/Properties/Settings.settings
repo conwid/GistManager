@@ -8,5 +8,11 @@
     <Setting Name="GistTreeGridLength" Type="System.String" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
+    <Setting Name="ClientId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{Please Set}</Value>
+    </Setting>
+    <Setting Name="ClientSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{Please Set}</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

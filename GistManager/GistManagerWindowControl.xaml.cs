@@ -1,4 +1,5 @@
-﻿using GistManager.Mvvm.Commands.GistCommand;
+﻿using EnvDTE90;
+using GistManager.Mvvm.Commands.GistCommand;
 using GistManager.Utils;
 using GistManager.ViewModels;
 using Microsoft.VisualStudio.PlatformUI;
@@ -8,6 +9,7 @@ using Syncfusion.Themes.MaterialLight.WPF;
 using Syncfusion.Windows.Edit;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
@@ -47,9 +49,10 @@ namespace GistManager
             ApplyTheme(ViewModel.IsInDarkMode);
             VSColorTheme.ThemeChanged += VSColorTheme_ThemeChanged;
 
-            //GistCodeEditor.DocumentLanguage = Syncfusion.Windows.Edit.Languages.
-
             LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
+
+            ClientIdTB.Text  = Properties.Settings.Default.ClientId;
+            ClientSecretTB.Text = Properties.Settings.Default.ClientSecret;
         }
 
 
@@ -321,23 +324,6 @@ namespace GistManager
         {
             await CodeEditorManager.SaveAllAsync();
         }
-
-        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
-        {
-            ToolBar toolBar = sender as ToolBar;
-            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
-            if (overflowGrid != null)
-            {
-                overflowGrid.Visibility = Visibility.Collapsed;
-            }
-
-            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
-            if (mainPanelBorder != null)
-            {
-                mainPanelBorder.Margin = new Thickness(0);
-            }
-        }
-
         private void ToolBar_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             ToolBar toolBar = sender as ToolBar;
@@ -353,6 +339,35 @@ namespace GistManager
                 var defaultMargin = new Thickness(0, 0, 11, 0);
                 mainPanelBorder.Margin = toolBar.HasOverflowItems ? defaultMargin : new Thickness(0);
             }
+        }
+
+        private void GistCodeEditor_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) CodeEditorManager.CheckUiWithGistVmForChanges();
+        }
+
+        private void LoginSettingsBT_Click(object sender, RoutedEventArgs e)
+        {
+            var loginSettingsBT = sender as FrameworkElement;
+            if (loginSettingsBT != null)
+            {
+                loginSettingsBT.ContextMenu.IsOpen = true;
+            }
+        }
+
+ 
+
+        private void ClientIdTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ClientId = ClientIdTB.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void ClientSecretTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ClientSecret = ClientSecretTB.Text;
+            Properties.Settings.Default.Save();
+
         }
     }
 }

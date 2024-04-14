@@ -58,6 +58,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeView.cs" />
     <Compile Include="Controls\DirectDragTree\DirectDragTreeViewItem.cs" />
+    <Compile Include="Controls\DropDownButton.cs" />
     <Compile Include="Controls\EditableTextBlock\EditableTextBlock.cs" />
     <Compile Include="Controls\EditableTextBlock\EditableTextBlockAdorner.cs" />
     <Compile Include="Controls\EditableTextBlock\SaveMode.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="StyleSelectors\TreeViewItemStyleSelector.cs" />
     <Compile Include="Utils\FuncEqualityComparer`2.cs" />
     <Compile Include="Utils\Helpers.cs" />
+    <Compile Include="Utils\SettingBindingExtension.cs" />
     <Compile Include="Utils\SystemConfiguraitons.cs" />
     <Compile Include="Utils\CodeEditorManager.cs" />
     <Compile Include="ViewModels\CreateGistFileViewModel.cs" />

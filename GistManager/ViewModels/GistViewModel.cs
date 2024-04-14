@@ -1,4 +1,6 @@
-﻿using GistManager.GistService;
+﻿using GistManager.Controls;
+using GistManager.Controls.DirectDragTree;
+using GistManager.GistService;
 using GistManager.GistService.Model;
 using GistManager.Mvvm;
 using GistManager.Mvvm.Commands.Async;
@@ -22,9 +24,7 @@ namespace GistManager.ViewModels
         protected IGistClientService GistClientService { get; }
         public GistModel Gist { get; }
 
-        private IErrorHandler errorHandler;
-
-        
+        private IErrorHandler errorHandler;        
 
         #region constructors
         protected GistViewModel(string name, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
@@ -35,7 +35,7 @@ namespace GistManager.ViewModels
             Name = name;
             Files = new ObservableRangeCollection<GistFileViewModel>();
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
-            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Deleting gist" };
+            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Deleting gist" , SuppressCompletionCommand = true};
             CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
             CreateNewGistCommand = new AsyncRelayCommand(CreateNewGistAsync, errorHandler);
             this.errorHandler = errorHandler;
@@ -70,11 +70,18 @@ namespace GistManager.ViewModels
         #endregion
 
         #region command implementations
-        private async Task DeleteGistAsync() => await GistClientService.DeleteGistAsync(Gist.Id);
+        private async Task DeleteGistAsync() => await DeleteGistFileAsync();
         private void CopyGistUrl() => Clipboard.SetText(this.Url);
         private async Task CreateNewGistAsync() => await CreateNewGistUniqueFilenameAsync();
 
         #endregion
+
+
+        private async Task DeleteGistFileAsync()
+        {         
+            await GistClientService.DeleteGistAsync(Gist.Id);
+            Files.Clear();
+        }
 
         private async Task CreateNewGistUniqueFilenameAsync()
         {
@@ -88,17 +95,15 @@ namespace GistManager.ViewModels
             string finalFilename = $"{filenameRoot} ({count})";
             string fileContent = $"New Gist File created at {DateTime.Now}: {finalFilename}";
 
-
             var result = await GistClientService.CreateGistFileAsync(Gist.Id, finalFilename, fileContent);
 
             GistFile gistFile = result.Files[finalFilename];
-            
-            GistFileModel gfm = new GistFileModel(gistFile);            
+
+            GistFileModel gfm = new GistFileModel(gistFile);
 
             GistFileViewModel newGistFileViewModel = new GistFileViewModel(gfm, this, GistClientService, asyncOperationStatusManager, errorHandler);
 
             Files.Add(newGistFileViewModel);
-
         }
 
         #region bound properties

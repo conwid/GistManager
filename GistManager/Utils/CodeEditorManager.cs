@@ -79,11 +79,13 @@ namespace GistManager.Utils
                 mainWindowControl.SaveButton.BorderBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         }
 
-        internal void SetGistFileHasChanges(bool isChanged)
+        internal void SetGistFileHasChanges(bool isChanged, GistFileViewModel gistFileVM = null)
         {
+            if (gistFileVM == null) gistFileVM = this.gistFileVM;
+
             // this provide visual cue to user that gist has changes
             SetSaveButtonOutline(isChanged);
-            GistFileVM.HasChanges = isChanged;
+            gistFileVM.HasChanges = isChanged;
         }
         private void OnGistFileChanged()
         {
@@ -166,7 +168,7 @@ namespace GistManager.Utils
         internal async Task<bool> UpdateGistOnRepositoryAsync(GistFileViewModel gistFileViewModel = null)
         {
             // if 
-            if (gistFileViewModel == null ) gistFileViewModel = this.gistFileVM;
+            if (gistFileViewModel == null) gistFileViewModel = this.gistFileVM;
             if (gistFileViewModel == null) return false;
 
             // return save button border to normal (aesthetics) 
@@ -185,7 +187,7 @@ namespace GistManager.Utils
             mainWindowControl.SaveButton.IsEnabled = true;
 
             // resets gist file has changes indicator
-            SetGistFileHasChanges(false);
+            SetGistFileHasChanges(false, gistFileViewModel);
 
             mainWindowControl.GistCodeEditor.SaveFile(gistTempFile);
 

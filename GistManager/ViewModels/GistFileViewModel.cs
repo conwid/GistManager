@@ -34,7 +34,7 @@ namespace GistManager.ViewModels
             GistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
             this.asyncOperationStatusManager = asyncOperationStatusManager ?? throw new ArgumentNullException(nameof(asyncOperationStatusManager));
             FileNameChangedCommand = new AsyncCommand<string>(RenameGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Renaming gist file" };
-            UpdateGistCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file" };
+            UpdateGistCommand = new AsyncCommand<string>(UpdateGistFilenameAndContentAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Updating gist file", SuppressCompletionCommand = true };
             CheckoutCommand = new AsyncCommand<GistHistoryEntryModel>(RefreshGistFileAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Checking out file", SuppressCompletionCommand = true };
         }
 
@@ -49,7 +49,7 @@ namespace GistManager.ViewModels
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
             Url = file.Url;
             Content = file.Content;
-            DeleteGistFileCommand = new AsyncRelayCommand(DeleteGistFileAsync, commandStatusManager, errorHandler) { ExecutionInfo = "Deleting file from gist" };
+            DeleteGistFileCommand = new AsyncRelayCommand(DeleteGistFileAsync, commandStatusManager, errorHandler) { ExecutionInfo = "Deleting file from gist", SuppressCompletionCommand = true };
             CopyGistFileUrlCommand = new RelayCommand(CopyGistFileUrl, errorHandler);
         }
         #endregion           
@@ -147,13 +147,25 @@ namespace GistManager.ViewModels
 
         internal async virtual Task UpdateGistAsync()
         {
+           // await GistClientService.
+
+
             await UpdateGistCommand.ExecuteAsync(this.fileName);
         }
         private async Task RenameGistFileAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content, ParentGist.Description);
 
         private async Task UpdateGistFilenameAndContentAsync(string newName) => await GistClientService.RenameGistFileAsync(ParentGist.Gist.Id, GistFile.Name, newName, Content, ParentGist.Description);
 
-        private async Task DeleteGistFileAsync() => await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
+        private async Task DeleteGistFileAsync() => await DeleteGistFileUpdateUiAsync();
+
+
+        private async Task DeleteGistFileUpdateUiAsync()
+        {
+
+            await GistClientService.DeleteGistFileAsync(ParentGist.Gist.Id, FileName);
+            ParentGist.Files.Remove(this);
+        }
+
 
         private async Task RefreshGistFileAsync(GistHistoryEntryModel historyEntry)
         {

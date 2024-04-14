@@ -5,6 +5,7 @@ using GistManager.Utils;
 using GistManager.ViewModels;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Syncfusion.Windows.Tools.Controls;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -198,7 +199,7 @@ namespace GistManager.Controls
                     RemoveItemsInEdit(treeView);
                     break;
                 case Key.Delete:
-                    DeleteSelectedAsync(treeView);
+                    DeleteSelected(treeView);
                     break;
                 default:
                     return;
@@ -220,15 +221,21 @@ namespace GistManager.Controls
             }
         }
 
-        private void DeleteSelectedAsync(TreeView treeView)
+        private void DeleteSelected(TreeView treeView)
         {
             if (treeView.SelectedItem is GistFileViewModel gistFile)
-            {
+            {                
                 CheckAndExecute(gistFile.DeleteGistFileCommand, null);
+             
             }
             else if (treeView.SelectedItem is GistViewModel gist)
             {
                 CheckAndExecute(gist.DeleteGistCommand, null);
+
+                foreach (var item in TreeViewItemsSource)
+                {
+                    Debug.WriteLine(item.ToString());
+                }
             }
         }
         private void DirectDragTreeView_DragLeave(object sender, DragEventArgs e) => RaiseDirectEventForCurrentTreeViewItem(DirectDragTreeViewItem.DirectDragLeaveEvent, e.OriginalSource);

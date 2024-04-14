@@ -1,22 +1,24 @@
-﻿<UserControl x:Class="GistManager.GistManagerWindowControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
-             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
-             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
-             xmlns:controls="clr-namespace:GistManager.Controls"
-             xmlns:behaviors="clr-namespace:GistManager.Behaviors"
-             xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
-             xmlns:converters="clr-namespace:GistManager.Converters"
-             xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-             xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
-             xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
-             xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"
-             mc:Ignorable="d"
-            xmlns:local="clr-namespace:GistManager"
-             Name="GistManager" AllowDrop="True">
+﻿<UserControl    x:Class="GistManager.GistManagerWindowControl"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+                 Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                 Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+                 xmlns:controls="clr-namespace:GistManager.Controls"
+                 xmlns:behaviors="clr-namespace:GistManager.Behaviors"
+                 xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
+                 xmlns:converters="clr-namespace:GistManager.Converters"
+                 xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+                 xmlns:imaging="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.Imaging"
+                 xmlns:catalog="clr-namespace:Microsoft.VisualStudio.Imaging;assembly=Microsoft.VisualStudio.ImageCatalog"
+                 xmlns:theme="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0"             
+                 xmlns:utils="clr-namespace:GistManager.Utils"
+                 xmlns:local="clr-namespace:GistManager"
+                 mc:Ignorable="d"
+                 Name="GistManager" AllowDrop="True">
+
 
     <UserControl.Resources>
         <converters:CommandFailedConverter x:Key="commandFailedConverter" />
@@ -36,6 +38,29 @@
                               behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
 
+        <!-- DROPDOWNBUTTON -->
+        <Style x:Key="dropDownButtonStyle" TargetType="controls:DropDownButton" >
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Padding" Value="2" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:DropDownButton}">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#80808080" TargetName="Border" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- TOOLBAR BUTTON -->
         <Style x:Key="toolBarButtonStyle" TargetType="ButtonBase" >
             <Setter Property="Height" Value="24" />
@@ -45,15 +70,16 @@
             <Setter Property="Background" Value="Transparent"/>
             <!--<Setter Property="OverridesDefaultStyle" Value="True"/>-->
         </Style>
+
         <!-- TOOLBAR BUTTON IMAGE -->
         <Style x:Key="toolBarButtonImageStyle" TargetType="Image">
             <Setter Property="Height" Value="16" />
             <Setter Property="Width" Value="16" />
             <Setter Property="Stretch" Value="Uniform" />
             <Setter Property="RenderOptions.BitmapScalingMode" Value="Fant" />
-        </Style>      
-   
-        
+        </Style>
+
+
         <!-- TOOLBAR NO OVERFLOW -->
         <Style x:Key="ToolbarNoOverlflow" TargetType="{x:Type ToolBar}">
             <Setter Property="SnapsToDevicePixels" Value="true"/>
@@ -367,6 +393,25 @@
         </Style>
         <!-- CUSTOM COMBOBOX END -->
 
+        <Style x:Key="ContextMenuCheckless" TargetType="{x:Type ContextMenu}" >
+            <!--<Setter Property="OverridesDefaultStyle" Value="True" />-->
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border BorderThickness="1" CornerRadius="4" BorderBrush="Black" x:Name="Border" Background="White">
+                            <StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </UserControl.Resources>
 
     <DockPanel>
@@ -375,11 +420,47 @@
             <ToolBarTray x:Name="LogInToolbar"  DockPanel.Dock="Left" Background="Transparent" 
                          Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
                 <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
+
                     <Button  x:Name="LogInButton"  Command="{Binding LoginCommand}" ToolTip="Log in"
-                     Focusable="False" 
-                    Style="{StaticResource toolBarButtonStyle}">
+                     Focusable="False"  Style="{StaticResource toolBarButtonStyle}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.LoginUser}" />
                     </Button>
+
+                    <controls:DropDownButton Focusable="False" Background="Transparent" Style="{StaticResource dropDownButtonStyle}">
+                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Settings}" />
+                        <controls:DropDownButton.Menu>
+                            <ContextMenu>
+
+                                <MenuItem>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.WebUserControl}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Client ID:"/>
+                                            <TextBox x:Name="ClientIdTB" Width="200" LostFocus="ClientIdTB_LostFocus"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+
+                                <MenuItem>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Key}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Secret:"/>
+                                            <TextBox  x:Name="ClientSecretTB" Width="200" LostFocus="ClientSecretTB_LostFocus"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </controls:DropDownButton.Menu>
+                    </controls:DropDownButton>
+
+
+
                 </controls:OverflowlessToolbar>
             </ToolBarTray>
 
@@ -392,7 +473,7 @@
                     </Button>
                     <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.UserError}" />
-                    </Button >  
+                    </Button >
 
                     <Separator Style="{StaticResource toolBarSeparatorStyle}" Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}"/>
 
@@ -601,6 +682,7 @@
                                         EnableIntellisense="False" ShowLineNumber="True" EnableOutlining="True"                                          
                                         LostFocus="GistCodeEditor_LostFocus" GotFocus="GistCodeEditor_GotFocus"
                                         EnterKeyBehavior="VS" IsAutoLineNumberAreaWidthEnabled="True" Margin="2"
+                                            PreviewKeyUp="GistCodeEditor_PreviewKeyUp"
                                         />
                 </Grid>
 
