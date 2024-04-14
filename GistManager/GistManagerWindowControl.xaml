@@ -426,8 +426,10 @@
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.LoginUser}" />
                     </Button>
 
-                    <controls:DropDownButton Focusable="False" Background="Transparent" Style="{StaticResource dropDownButtonStyle}">
+                    <controls:DropDownButton Focusable="False" Background="Transparent" ToolTip="Login Credentials"
+                                             Style="{StaticResource dropDownButtonStyle}">
                         <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.Settings}" />
+                        
                         <controls:DropDownButton.Menu>
                             <ContextMenu>
 
@@ -437,7 +439,7 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Client ID:"/>
+                                            <TextBlock Text="Client ID:" Width="75"/>
                                             <TextBox x:Name="ClientIdTB" Width="200" LostFocus="ClientIdTB_LostFocus"/>
                                         </StackPanel>
                                     </MenuItem.Header>
@@ -449,8 +451,20 @@
                                     </MenuItem.Icon>
                                     <MenuItem.Header>
                                         <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Secret:"/>
-                                            <TextBox  x:Name="ClientSecretTB" Width="200" LostFocus="ClientSecretTB_LostFocus"/>
+                                            <TextBlock Text="Secret:" Width="75"/>
+                                            <TextBox  x:Name="ClientSecretTB" Width="250" LostFocus="ClientSecretTB_LostFocus"/>
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+
+                                <MenuItem>
+                                    <MenuItem.Icon>
+                                        <imaging:CrispImage Width="16" Height="16" Moniker="{x:Static catalog:KnownMonikers.WebDestination}" />
+                                    </MenuItem.Icon>
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Callback URL:" Width="75"/>
+                                            <TextBox  x:Name="CallbackUrlTB" Width="250" LostFocus="CallbackUrlTB_LostFocus"/>
                                         </StackPanel>
                                     </MenuItem.Header>
                                 </MenuItem>

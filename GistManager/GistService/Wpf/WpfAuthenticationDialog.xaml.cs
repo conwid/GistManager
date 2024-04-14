@@ -26,7 +26,7 @@ namespace GistManager.GistService.Wpf
 
         private async void WebBrowser_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
-            if (webBrowser.Source.AbsoluteUri.StartsWith(Constants.RedirectUri))
+            if (webBrowser.Source.AbsoluteUri.StartsWith(Properties.Settings.Default.ClientCallbackUrl))
             {
                 if (webBrowser.Source.AbsoluteUri.Contains("code="))
                 {

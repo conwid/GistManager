@@ -20,7 +20,9 @@ namespace GistManager.ViewModels
 
         private AsyncCommand CreateGistCommand { get; }
 
-        public CreateGistViewModel(bool isPublic, string content, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager,
+        // HACK but meh. Enables removal of a Gist from the MainTreeView from within GistViewModel
+
+        public CreateGistViewModel( bool isPublic, string content, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager,
             IErrorHandler errorHandler) : base(gistClientService, asyncOperationStatusManager, errorHandler)
         {
             Public = isPublic;
@@ -41,12 +43,13 @@ namespace GistManager.ViewModels
         }
         private async void PropertyChangedAsync(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(CreateGistFileViewModel.FileName))
-            {
-                if (!string.IsNullOrWhiteSpace(createGistFileViewModel.FileName))
+            //if (e.PropertyName == nameof(CreateGistFileViewModel.FileName))
+            //{
+            //    if (!string.IsNullOrWhiteSpace(createGistFileViewModel.FileName))
                     
-                    await CreateGistCommand.ExecuteAsync();
-            }
+            //         // removed due to breaking new system
+            //        // await CreateGistCommand.ExecuteAsync();
+            //}
         }
         private async Task CreateGistAsync() =>
             await CreateGistAndUpdateCollectionAsync();

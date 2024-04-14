@@ -70,5 +70,17 @@ namespace GistManager.Properties {
                 this["ClientSecret"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://stigzler.github.io")]
+        public string ClientCallbackUrl {
+            get {
+                return ((string)(this["ClientCallbackUrl"]));
+            }
+            set {
+                this["ClientCallbackUrl"] = value;
+            }
+        }
     }
 }

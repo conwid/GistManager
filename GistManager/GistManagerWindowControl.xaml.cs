@@ -51,8 +51,10 @@ namespace GistManager
 
             LanguageSelectorCB.ItemsSource = Enum.GetValues(typeof(Languages)).Cast<Languages>();
 
-            ClientIdTB.Text  = Properties.Settings.Default.ClientId;
+            ClientIdTB.Text = Properties.Settings.Default.ClientId;
             ClientSecretTB.Text = Properties.Settings.Default.ClientSecret;
+            CallbackUrlTB.Text = Properties.Settings.Default.ClientCallbackUrl;
+
         }
 
 
@@ -319,7 +321,7 @@ namespace GistManager
             }
         }
 
- 
+
         private async void SaveAllButton_Click(object sender, RoutedEventArgs e)
         {
             await CodeEditorManager.SaveAllAsync();
@@ -355,7 +357,7 @@ namespace GistManager
             }
         }
 
- 
+
 
         private void ClientIdTB_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -367,7 +369,12 @@ namespace GistManager
         {
             Properties.Settings.Default.ClientSecret = ClientSecretTB.Text;
             Properties.Settings.Default.Save();
+        }
 
+        private void CallbackUrlTB_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.ClientCallbackUrl = CallbackUrlTB.Text;
+            Properties.Settings.Default.Save();
         }
     }
 }

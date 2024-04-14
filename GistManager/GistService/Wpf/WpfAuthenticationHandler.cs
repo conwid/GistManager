@@ -20,7 +20,7 @@ namespace GistManager.GistService.Wpf
         {
             try
             {
-                var url = string.Format("https://github.com/login/oauth/authorize?client_id={0}&scope={1}", ClientInfo.ClientId, Constants.Scope);
+                var url = string.Format("https://github.com/login/oauth/authorize?client_id={0}&scope={1}", Properties.Settings.Default.ClientId, Constants.Scope);
                 var authDialog = new WpfAuthenticationDialog(url);
                 authDialog.Background = new SolidColorBrush(Color.FromArgb(255, 13, 17, 23));
                 authDialog.ShowDialog();

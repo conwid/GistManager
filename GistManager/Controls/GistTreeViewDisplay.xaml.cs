@@ -5,6 +5,7 @@ using GistManager.Utils;
 using GistManager.ViewModels;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Octokit;
 using Syncfusion.Windows.Tools.Controls;
 using System.Diagnostics;
 using System.Windows;
@@ -224,17 +225,25 @@ namespace GistManager.Controls
         private void DeleteSelected(TreeView treeView)
         {
             if (treeView.SelectedItem is GistFileViewModel gistFile)
-            {                
+            {
                 CheckAndExecute(gistFile.DeleteGistFileCommand, null);
-             
+                //TODO: Do equiv of below here
+
             }
             else if (treeView.SelectedItem is GistViewModel gist)
             {
                 CheckAndExecute(gist.DeleteGistCommand, null);
 
-                foreach (var item in TreeViewItemsSource)
+                // Now remove gist from the TreeView
+                foreach (GistViewModel item in TreeViewItemsSource)
                 {
-                    Debug.WriteLine(item.ToString());
+                    if (item.Gist.Id == gist.Gist.Id)
+                    {
+                        GistManagerWindowControl baseControl = Helpers.FindParentOfType<GistManagerWindowControl>(this);
+                        baseControl.ViewModel.Gists.Remove(item);
+                        break;
+                    }
+                    //Debug.WriteLine(item.ToString());
                 }
             }
         }
@@ -251,10 +260,10 @@ namespace GistManager.Controls
 
         private void Expander_LostFocus(object sender, RoutedEventArgs e)
         {
-           
+
         }
 
-   
+
     }
 }
 

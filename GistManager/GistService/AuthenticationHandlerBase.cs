@@ -25,7 +25,9 @@ namespace GistManager.GistService
             if (!authenticationResult.IsAuthenticationSuccessful)
                 return new TokenResult(false);
             
-            var requestUri = new Uri($"https://github.com/login/oauth/access_token?client_id={ClientInfo.ClientId}&client_secret={ClientInfo.ClientSecret}&code={authenticationResult.AuthenticationCode}");
+            var requestUri = new Uri($"https://github.com/login/oauth/access_token?client_id={Properties.Settings.Default.ClientId}" +
+                $"&client_secret={Properties.Settings.Default.ClientSecret}" +
+                $"&code={authenticationResult.AuthenticationCode}");
             using (var response = await httpClient.PostAsync(requestUri, null))
             {
                 string responseString = await response.EnsureSuccessStatusCode().Content.ReadAsStringAsync();

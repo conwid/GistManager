@@ -24,10 +24,7 @@ namespace GistManager.ViewModels
         internal IGistClientService gistClientService;
         public IAsyncOperationStatusManager AsyncOperationStatusManager { get; }
         public IErrorHandler ErrorHandler { get; }
-
         public CreateGistCommandArgs CreateGistCommandArgs { get; }
-
-
         public GistManagerWindowViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
         {
             this.gistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
@@ -90,13 +87,12 @@ namespace GistManager.ViewModels
             var existingGists = Gists.Where(g => gists.Contains(g.Gist, gistEqualityComparer)).ToList();
 
             Gists.RemoveRange(deletedGists);
-            Gists.AddRange(newGists.Select(ng => new GistViewModel(ng, gistClientService, AsyncOperationStatusManager, ErrorHandler)));
+            Gists.AddRange(newGists.Select(ng => new GistViewModel(ng, gistClientService, AsyncOperationStatusManager, ErrorHandler, this)));
 
             foreach (var existingGist in existingGists)
             {
                 HandleExistingGist(existingGist, gists.Single(g => g.Id == existingGist.Gist.Id));
             }
-
         }
 
         private async Task LogoutAsync()
@@ -143,6 +139,7 @@ namespace GistManager.ViewModels
         }
 
         public ObservableRangeCollection<GistViewModel> Gists { get; private set; }
+
         #endregion               
         private void HandleExistingGist(GistViewModel existingGist, GistModel gistModel)
         {

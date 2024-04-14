@@ -24,10 +24,13 @@ namespace GistManager.ViewModels
         protected IGistClientService GistClientService { get; }
         public GistModel Gist { get; }
 
-        private IErrorHandler errorHandler;        
+        private GistManagerWindowViewModel mainViewModel;
+
+        private IErrorHandler errorHandler;
 
         #region constructors
-        protected GistViewModel(string name, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler)
+        protected GistViewModel(string name, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager,
+            IErrorHandler errorHandler)
         {
             this.asyncOperationStatusManager = asyncOperationStatusManager ?? throw new ArgumentNullException(nameof(asyncOperationStatusManager));
             GistClientService = gistClientService ?? throw new ArgumentNullException(nameof(gistClientService));
@@ -35,16 +38,18 @@ namespace GistManager.ViewModels
             Name = name;
             Files = new ObservableRangeCollection<GistFileViewModel>();
             History = new ObservableRangeCollection<GistHistoryEntryViewModel>();
-            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Deleting gist" , SuppressCompletionCommand = true};
+            DeleteGistCommand = new AsyncRelayCommand(DeleteGistAsync, asyncOperationStatusManager, errorHandler) { ExecutionInfo = "Deleting gist", SuppressCompletionCommand = true };
             CopyGistUrlCommand = new RelayCommand(CopyGistUrl, errorHandler);
             CreateNewGistCommand = new AsyncRelayCommand(CreateNewGistAsync, errorHandler);
             this.errorHandler = errorHandler;
         }
 
-        public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
+        public GistViewModel(IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager,
+            IErrorHandler errorHandler) : this((string)null, gistClientService, asyncOperationStatusManager, errorHandler)
         {
         }
-        public GistViewModel(GistModel gist, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager, IErrorHandler errorHandler) : this(gist.Name, gistClientService, asyncOperationStatusManager, errorHandler)
+        public GistViewModel(GistModel gist, IGistClientService gistClientService, IAsyncOperationStatusManager asyncOperationStatusManager,
+            IErrorHandler errorHandler, GistManagerWindowViewModel mainViewModel = null) : this(gist.Name, gistClientService, asyncOperationStatusManager, errorHandler)
         {
             Gist = gist;
             Description = gist.Description;
@@ -60,6 +65,7 @@ namespace GistManager.ViewModels
             Files.AddRange(files);
             History.AddRange(gist.History.Select(h => new GistHistoryEntryViewModel(h, this)));
             History.First().IsCheckedOut = true;
+            this.mainViewModel = mainViewModel;
         }
         #endregion
 
@@ -67,6 +73,7 @@ namespace GistManager.ViewModels
         public ICommand DeleteGistCommand { get; }
         public ICommand CopyGistUrlCommand { get; }
         public ICommand CreateNewGistCommand { get; }
+
         #endregion
 
         #region command implementations
@@ -77,10 +84,11 @@ namespace GistManager.ViewModels
         #endregion
 
 
+
         private async Task DeleteGistFileAsync()
         {         
             await GistClientService.DeleteGistAsync(Gist.Id);
-            Files.Clear();
+            mainViewModel.Gists.Remove(this);
         }
 
         private async Task CreateNewGistUniqueFilenameAsync()
