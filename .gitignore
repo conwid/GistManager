@@ -6,3 +6,5 @@
 /.vs/GistManager
 /GistManager/bin/Debug
 /GistManager/obj
+/GistManager/.vs
+/.vs
