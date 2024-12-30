@@ -5,12 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GistManager.Controls"
              mc:Ignorable="d" 
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:editable="clr-namespace:GistManager.Controls.EditableTextBlock"             
              xmlns:viewmodels="clr-namespace:GistManager.ViewModels"     
              xmlns:styleSelectors="clr-namespace:GistManager.StyleSelectors"
              xmlns:converters="clr-namespace:GistManager.Converters"
              xmlns:directDragTree="clr-namespace:GistManager.Controls.DirectDragTree"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
+              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converters:SubstringConverter x:Key="substringConverter" />
@@ -19,7 +21,9 @@
         <SolidColorBrush x:Key="dragEnterBrush" Color="Blue" />
         <SolidColorBrush x:Key="dragLeaveBrush" Color="Transparent" />
     </UserControl.Resources>
-    <Expander Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
+    <Expander Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+              Header="{Binding ExpanderHeader, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
               IsExpanded="{Binding ExpanderIsExpanded, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"              
               IsEnabled="{Binding ExpanderIsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
         <directDragTree:DirectDragTreeView ItemsSource="{Binding TreeViewItemsSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" 
@@ -32,12 +36,14 @@
                   AllowDrop="True"
                   KeyDown="TreeView_KeyDown"       
                   BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                  Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
             >
             <directDragTree:DirectDragTreeView.Resources>
-                <Image x:Key="checkoutImage" Source="..\Resources\checkout.png" x:Shared="False" />
-                <Image x:Key="copyUrlImage" Source="..\Resources\copyurl.png" x:Shared="False" />
-                <Image x:Key="deleteGistImage" Source="..\Resources\deleteGist.png" x:Shared="False" />
-                <Image x:Key="deleteFileImage"  Source="..\Resources\deleteFile.png" x:Shared="False" />
+                <system:String x:Key="checkoutImage" x:Shared="False">&#x2B07;</system:String>
+                <system:String x:Key="copyUrlImage" x:Shared="False">&#x2398;</system:String>
+                <system:String x:Key="deleteGistImage" x:Shared="False">&#x2326;</system:String>
+                <system:String x:Key="deleteFileImage" x:Shared="False">&#x2326;</system:String>
                 <Storyboard x:Key="dragEnterStoryBoard">
                     <ColorAnimation Storyboard.TargetProperty="Background.Color" To="Blue" Duration="0:0:000000.1" />
                 </Storyboard>
@@ -46,17 +52,24 @@
                 </Storyboard>
                 <HierarchicalDataTemplate DataType="{x:Type viewmodels:GistViewModel}" ItemsSource="{Binding Files}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gist.png" Stretch="Fill" Margin="5,0" />
-                        <TextBlock Text="{Binding Name}" />
+                        <TextBlock Text="&#x29c9;" Padding="0" Margin="0,0,5,0" Background="Transparent"
+                                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
+                        <TextBlock Text="{Binding Name}" Background="Transparent"
+                                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:GistFileViewModel}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="..\Resources\gistfile.png" Stretch="Fill" Margin="5,0" />
-                        <editable:EditableTextBlock Text="{Binding FileName, Mode=TwoWay}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
+                        <TextBlock Text="&#x25a4;" Padding="0" Margin="0,0,5,0" Background="Transparent"
+                                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
+                        <editable:EditableTextBlock Text="{Binding FileName, Mode=TwoWay}"
+                                                    Background="Transparent"
+                                                    Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" IsInEditMode="{Binding IsInEditMode, Mode=TwoWay}" />
                     </StackPanel>
                 </DataTemplate>
                 <Style TargetType="ToolTip">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                     <Style.Triggers>
                         <Trigger Property="Content" Value="{x:Static sys:String.Empty}">
                             <Setter Property="Visibility" Value="Collapsed" />
@@ -78,17 +91,27 @@
                     <Setter Property="ToolTip" Value="{Binding Description}" />
                     <Setter Property="IsEnabled" Value="True" />
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu>
-                                <MenuItem Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
-                                <MenuItem Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
-                                <MenuItem Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
+                            <ContextMenu Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" Header="Copy gist URL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistUrlCommand}" />
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Header="Delete gist" Icon ="{DynamicResource deleteGistImage}" Command="{Binding DeleteGistCommand}" />
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Header="Checkout version" Icon="{DynamicResource checkoutImage}" ItemsSource="{Binding History}">
                                     <MenuItem.ItemTemplate>
                                         <DataTemplate>
-                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
-                                                <TextBlock>
-                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
+                                            <RadioButton Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
+                                                <TextBlock Background="Transparent"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                                                    <Run Background="Transparent"
+                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
                                                 </TextBlock>
                                             </RadioButton>
                                         </DataTemplate>
@@ -96,11 +119,14 @@
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="{x:Type MenuItem}">
                                             <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+                                            <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                                         </Style>
                                     </MenuItem.ItemContainerStyle>
                                 </MenuItem>
                             </ContextMenu>
                         </Setter.Value>
+                        
                     </Setter>
                 </Style>
                 <Style TargetType="{x:Type directDragTree:DirectDragTreeViewItem}" x:Key="gistFileStyle">
@@ -114,17 +140,31 @@
                     </Style.Triggers>
                     <Setter Property="IsEnabled" Value="{Binding IsEnabled}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu>
-                                <MenuItem Header="Copy File RawURL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistFileUrlCommand}" />
-                                <MenuItem Header="Delete file" Icon="{DynamicResource deleteFileImage}" Command="{Binding DeleteGistFileCommand}" />
-                                <MenuItem Header="Checkout version" ItemsSource="{Binding History}" Icon="{DynamicResource checkoutImage}">
+                            <ContextMenu  Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                          BorderBrush="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                          Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                          Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Header="Copy File RawURL" Icon="{DynamicResource copyUrlImage}" Command="{Binding CopyGistFileUrlCommand}" />
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                          Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" 
+                                          Header="Delete file" Icon="{DynamicResource deleteFileImage}" Command="{Binding DeleteGistFileCommand}" />
+                                <MenuItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                          Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" 
+                                          Header="Checkout version" ItemsSource="{Binding History}" Icon="{DynamicResource checkoutImage}">
                                     <MenuItem.ItemTemplate>
                                         <DataTemplate>
-                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}">
-                                                <TextBlock>
-                                                    <Run Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
+                                            <RadioButton IsChecked="{Binding IsCheckedOut, Mode=TwoWay}" 
+                                                         Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+                                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                                                <TextBlock Background="Transparent"
+                                                           Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
+                                                    <Run Background="Transparent"
+                                                         Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" 
+                                                         Text="{Binding Version, Converter={StaticResource substringConverter}, Mode=OneWay}" /> at <Run Text="{Binding Committed, Mode=OneWay}" />
                                                 </TextBlock>
                                             </RadioButton>
                                         </DataTemplate>
@@ -132,6 +172,8 @@
                                     <MenuItem.ItemContainerStyle>
                                         <Style TargetType="{x:Type MenuItem}">
                                             <Setter Property="Icon" Value="{DynamicResource checkoutImage}" />
+                                            <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" />
+                                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
                                         </Style>
                                     </MenuItem.ItemContainerStyle>
                                 </MenuItem>

@@ -32,8 +32,14 @@
                               behaviors:CollectionViewSourceFilterBehavior.FilterCommand="{Binding PrivateFilterCommand}"
                               behaviors:CollectionViewSourceFilterBehavior.FilterTextBox="{Binding ElementName=searchBox}" />
         <Style x:Key="toolBarButtonStyle" TargetType="Button" >
-            <Setter Property="Height" Value="16" />
-            <Setter Property="Width" Value="16" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" />
+            <Setter Property="Height" Value="64" />
+            <Setter Property="Width" Value="54" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontWeight" Value="ExtraBold" />
+            <Setter Property="FontStretch" Value="UltraExpanded" />
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -44,38 +50,27 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ToolBarTray Background="Transparent" Grid.Row="0" >
-            <controls:OverflowlessToolbar Background="Transparent" ToolBarTray.IsLocked="True">
+            <controls:OverflowlessToolbar Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Background="Transparent" ToolBarTray.IsLocked="True">
                 <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LoginCommand}" ToolTip="Log in"
+                        Content="&#x2386;"
                         Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}">
-                    <Image Source="Resources/login.png" Stretch="Uniform" />
                 </Button>
-                <Button Style="{StaticResource toolBarButtonStyle}" ToolTip="Refresh" Command="{Binding RefreshCommand}">
-                    <Image Stretch="Uniform">
-                        <Image.Style>
-                            <Style TargetType="Image">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsAuthenticated}" Value="True">
-                                        <Setter Property="Source" Value="Resources/refresh.png" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsAuthenticated}" Value="False">
-                                        <Setter Property="Source" Value="Resources/refresh_disabled.png" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Image.Style>
-                    </Image>
+                <Button Style="{StaticResource toolBarButtonStyle}" 
+                        Content="&#x27f3;" 
+                        ToolTip="Refresh" Command="{Binding RefreshCommand}" IsEnabled="{Binding IsAuthenticated}" >
                 </Button>
                 <Button Style="{StaticResource toolBarButtonStyle}" Command="{Binding LogoutCommand}" ToolTip="Log out"
-                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}">
-                    <Image Source="Resources/logout.png" Stretch="Uniform" />
+                        Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Content="&#x23fb;">
                 </Button>
             </controls:OverflowlessToolbar>
         </ToolBarTray>
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource inverseBoolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
-            <TextBlock TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
+            <TextBlock Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" TextWrapping="Wrap" TextAlignment="Center" Margin="4,10,4,10" Text="To access your gists, please log in with your Github account first." />
         </StackPanel>
         <StackPanel Visibility="{Binding IsAuthenticated, Converter={StaticResource boolToVisibilityConverter}}" Orientation="Vertical" Grid.Row="1">
-            <TextBox Name="searchBox" Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
+            <TextBox Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Name="searchBox"  Text="{Binding SearchExpression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="6,8">
                 <TextBox.Template>
                     <ControlTemplate>
                         <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="2" BorderThickness="{TemplateBinding BorderThickness}">
@@ -85,11 +80,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <ScrollViewer Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
-                                <Label Margin="2" Grid.Column="0" Foreground="Black" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
+                                <ScrollViewer Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Margin="2" x:Name="PART_ContentHost" Grid.Column="0" VerticalAlignment="Center"/>
+                                <Label Margin="2" Grid.Column="0" Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Content="Search" Padding="2,0,0,0" FontStyle="Italic" 
                                        VerticalAlignment="Center" Visibility="{Binding SearchExpression, Converter={StaticResource emptyStringToVisibilityConverter}}" />
-                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="1">
-                                    <Image Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/search.png"  />
+                                <Border Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Padding="1" Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}">
+                                    <Label Padding="0"  HorizontalAlignment="Center" FontWeight="ExtraBold" VerticalAlignment="Center" Content="&#x2315;" />
                                 </Border>
                             </Grid>
                         </Border>
@@ -104,6 +100,8 @@
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePublicGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
+                                          Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
             <controls:GistTreeViewDisplay ExpanderHeader="Private gists" 
                                           Margin="4,0,4,10"
@@ -113,16 +111,21 @@
                                           Visibility="{Binding IsInErrorMode, Converter={StaticResource inverseBoolToVisibilityConverter}}"
                                           CreateGistCommand="{Binding CreatePrivateGistCommand}"
                                           RemoveGistCommand="{Binding RemoveGistCommand}"
+                                          Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
                                           CreateGistFileCommand="{Binding CreateGistFileCommand}"/>
         </StackPanel>
         <StackPanel Grid.Row="2">
-            <TextBlock Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
-                <TextBlock Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
+            <TextBlock Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"  Visibility="{Binding ErrorHandler.HasError, Converter={StaticResource boolToVisibilityConverter}}">
+                <TextBlock Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Text="{Binding ErrorHandler.ErrorInfo}" TextWrapping="Wrap"/>                
                 <LineBreak />
-                <TextBlock Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
+                <TextBlock Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Text="{Binding ErrorHandler.Error}" TextWrapping="Wrap" />
            </TextBlock>
         </StackPanel>
-        <StatusBar Grid.Row="3">
+        <StatusBar Grid.Row="3" Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}" Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -133,11 +136,15 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem Grid.Column="0" Margin="5,0">
-                <TextBlock Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
+            <StatusBarItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Grid.Column="0" Margin="5,0">
+                <TextBlock Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Text="{Binding AsyncOperationStatusManager.CurrentOperation.ExecutionInfo}" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10,0">
-                <ProgressBar Height="2" Foreground="Blue" IsIndeterminate="True"
+            <StatusBarItem Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" Grid.Column="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="10,0">
+                <ProgressBar  Height="2" Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}" IsIndeterminate="True"
                              Visibility="{Binding AsyncOperationStatusManager.CurrentOperation.Execution.IsNotCompleted, Converter={StaticResource boolToVisibilityConverter}, FallbackValue=Collapsed}"/>
             </StatusBarItem>
         </StatusBar>

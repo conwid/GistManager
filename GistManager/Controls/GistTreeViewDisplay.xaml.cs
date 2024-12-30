@@ -203,7 +203,7 @@ namespace GistManager.Controls
                     RemoveItemsInEdit(treeView);
                     break;
                 case Key.Delete:
-                    DeleteSelectedAsync(treeView);
+                    DeleteSelected(treeView);
                     break;
                 default:
                     return;
@@ -225,7 +225,7 @@ namespace GistManager.Controls
             }
         }
 
-        private void DeleteSelectedAsync(TreeView treeView)
+        private void DeleteSelected(TreeView treeView)
         {
             if (treeView.SelectedItem is GistFileViewModel gistFile)
             {
